@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(
   cors({
-    origin: "https://localhost:5173",
+    origin: ["http://localhost:5173", "https://localhost:5173", "https://brilliant-paprenjak-994f24.netlify.app"],
     credentials: true,
   })
 );
@@ -47,7 +47,7 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://localhost:5173",
+    origin: ["http://localhost:5173", "https://localhost:5173", "https://brilliant-paprenjak-994f24.netlify.app"],
     methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"],
