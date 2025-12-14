@@ -10,7 +10,7 @@ import { Label } from "../components/ui/label";
 import { Mail, Lock, Eye, EyeOff, MessageSquare, Laugh } from "lucide-react";
 import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
-import { API_URL } from "../lib/config";
+import { API_URL, SOCKET_URL } from "../lib/config";
 import cover from "/service-bg.jpg";
 import { io } from "socket.io-client";
 
