@@ -1,8 +1,10 @@
+```javascript
 import { useState } from "react";
 import { useCustomer } from "../contexts/CustomerContext";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../lib/config";
 
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
@@ -10,7 +12,7 @@ import { Label } from "../components/ui/label";
 import { Mail, Lock, Eye, EyeOff, Laugh } from "lucide-react";
 import { useAuthModal } from "../contexts/AuthModelContext";
 
-export function CustomerLoginForm() {
+const CustomerLoginForm = () => {
   const { login, setCustomer, setCustomerToken } = useCustomer();
   const { setIsAuthOpen } = useAuthModal();
   const navigate = useNavigate();
@@ -49,17 +51,6 @@ export function CustomerLoginForm() {
     }
   };
 
-  const handleGoogleLogin = async (res) => {
-    try {
-      const decoded = jwtDecode(res.credential);
-
-      const api = await fetch("https://localhost:5000/api/users/google/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: res.credential }),
-      });
-
-      const data = await api.json();
       if (!api.ok) throw new Error(data.message);
 
       setCustomer(data.user);

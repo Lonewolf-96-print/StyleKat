@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useCustomer } from "../contexts/CustomerContext";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from "../lib/config";
+import { FcGoogle } from "react-icons/fc";
 
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Mail, Lock, User, MessageSquare, Store, Eye, Laugh } from "lucide-react";
+import { Mail, Lock, User, MessageSquare, Store, Eye, Laugh, EyeOff } from "lucide-react";
 import { useAuthModal } from "../contexts/AuthModelContext";
 
 export function CustomerSignupForm() {
-  const { register, setCustomer, setCustomerToken } = useCustomer();
+  const { setCustomer, setCustomerToken } = useCustomer();
   const { setIsAuthOpen } = useAuthModal();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -31,7 +33,16 @@ export function CustomerSignupForm() {
     setIsLoading(true);
 
     try {
-      const data = await register(form.name, form.email, form.password);
+      const res = await fetch(`${API_URL}/api/users/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          password: form.password,
+        }),
+      });
+      const data = await res.json();
 
       if (!data.success) throw new Error(data.message);
 
@@ -49,6 +60,33 @@ export function CustomerSignupForm() {
       setIsLoading(false);
     }
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      try {
+        const res = await fetch(`${API_URL}/api/users/google-login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: tokenResponse.access_token }),
+        });
+        const data = await res.json();
+
+        if (!data.success) throw new Error(data.message);
+
+        setCustomer(data.user);
+        setCustomerToken(data.token);
+
+        localStorage.setItem("customerUser", JSON.stringify(data.user));
+        localStorage.setItem("customerToken", data.token);
+
+        setIsAuthOpen(false);
+        navigate("/user/dashboard");
+      } catch (err) {
+        setError(err.message);
+      }
+    },
+    onError: () => console.log("Google Login Failed"),
+  });
 
   return (
     <div className="min-h-screen w-full flex">
@@ -156,17 +194,15 @@ export function CustomerSignupForm() {
             </div>
 
             {/* Google */}
-            <GoogleLogin
-              theme="outline"
-              size="large"
-              width="100%"
-              shape="rectangular"
-              onSuccess={(cred) => {
-                let decoded = jwtDecode(cred.credential);
-                console.log(decoded);
-              }}
-              onError={() => console.log("Google Login Failed")}
-            />
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full h-11 flex items-center justify-center gap-2 text-base"
+              onClick={() => googleLogin()}
+            >
+              <FcGoogle className="h-5 w-5" />
+              Sign up with Google
+            </Button>
 
             {/* Login Redirect */}
             <p className="text-center text-sm text-muted-foreground">

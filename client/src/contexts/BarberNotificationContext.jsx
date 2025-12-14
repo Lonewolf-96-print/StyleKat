@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
+import { SOCKET_URL } from "../lib/config";
 
 const BarberNotificationContext = createContext();
 export const useBarberNotifications = () => useContext(BarberNotificationContext);
@@ -76,7 +77,7 @@ export const BarberNotificationProvider = ({ children }) => {
       return;
     }
 
-    const socket = io("https://localhost:5000", {
+    const socket = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
       reconnectionAttempts: 5,

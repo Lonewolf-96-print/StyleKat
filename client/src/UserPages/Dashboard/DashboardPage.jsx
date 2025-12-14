@@ -11,6 +11,7 @@ import { DashboardLayout } from "../../components/dashboard-layout";
 import { useBookings } from "../../contexts/BookingsContext";
 import { useCustomer } from "../../contexts/CustomerContext";
 import { useNavigate } from "react-router-dom";
+import { SOCKET_URL } from "../../lib/config";
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { userBookings, setUserBookings, fetchUserBookings, loading, error } = useBookings();
@@ -32,7 +33,7 @@ export default function DashboardPage() {
     if (!customerToken) return;
 
     // init socket with auth token
-    const s = io("https://localhost:5000", { auth: { token: customerToken } });
+    const s = io(SOCKET_URL, { auth: { token: customerToken } });
     setSocket(s);
 
     s.on("connect", () => {

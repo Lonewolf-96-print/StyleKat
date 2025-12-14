@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import bgImg from '/barbershop4.jpg';
 import { DashboardLayout } from "../components/dashboard-layout";
 
+import { API_URL } from "../lib/config";
 import { Loader2, MapPin, Search, Star, Phone, ChevronRight, Calendar } from "lucide-react";
 
 export const ServiceInfo = () => {
@@ -31,7 +32,7 @@ export const ServiceInfo = () => {
 
     try {
       setIsLoading(true);
-      const res = await fetch(`https://localhost:5000/api/shops/${city}`);
+      const res = await fetch(`${API_URL}/api/shops/${city}`);
       const data = await res.json();
 
       setResults(data);

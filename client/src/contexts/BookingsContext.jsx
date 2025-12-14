@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { jwtDecode } from "jwt-decode";
 import { useCustomer } from "./CustomerContext";
+import { API_URL, SOCKET_URL } from "../lib/config";
 const BookingContext = createContext();
 
 export function BookingProvider({ children }) {
@@ -111,7 +112,7 @@ export function BookingProvider({ children }) {
   const fetchAllBookings = async (token) => {
     try {
       setLoading(true);
-      const res = await fetch("https://localhost:5000/api/bookings", {
+      const res = await fetch(`${API_URL}/api/bookings`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -127,7 +128,7 @@ export function BookingProvider({ children }) {
   const fetchTodayBookings = async (token) => {
     try {
       setLoading(true);
-      const res = await fetch("https://localhost:5000/api/bookings/today", {
+      const res = await fetch(`${API_URL}/api/bookings/today`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -143,7 +144,7 @@ export function BookingProvider({ children }) {
   const fetchUserBookings = async (token) => {
     try {
       setLoading(true);
-      const res = await fetch("https://localhost:5000/api/bookings/my", {
+      const res = await fetch(`${API_URL}/api/bookings/my`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -161,7 +162,7 @@ export function BookingProvider({ children }) {
   // Socket Setup: Barber
   // =========================
   const initBarberSocket = (token) => {
-    const socket = io("https://localhost:5000", { auth: { token } });
+    const socket = io(SOCKET_URL, { auth: { token } });
     socketRef.current = socket;
 
     socket.on("connect", () => {
@@ -240,7 +241,7 @@ export function BookingProvider({ children }) {
   // =========================
   const initUserSocket = (customerToken) => {
     console.log("In the user socket handler")
-    const socket = io("https://localhost:5000", { auth: { token: customerToken } });
+    const socket = io(SOCKET_URL, { auth: { token: customerToken } });
     socketRef.current = socket;
 
     socket.on("connect", () => console.log("✅ User socket connected:", socket.id));

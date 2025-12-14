@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://localhost:5173",
     credentials: true,
   })
 );
@@ -47,7 +47,7 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://localhost:5173",
     methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"],
@@ -110,62 +110,62 @@ io.use(async (socket, next) => {
    - Ensures booking.duration, startTime, endTime are present & normalized
    - Emits the payload to the shop room
 --------------------------------------------------------- */
-async function broadcastShopQueue(shopId,targetDate = null) {
+async function broadcastShopQueue(shopId, targetDate = null) {
   if (!shopId) return [];
-const findQuery = {
-  shopId: shopId,
-  status: { $in: ["pending", "confirmed", "accepted", "ongoing", "in-service"] }
-};
+  const findQuery = {
+    shopId: shopId,
+    status: { $in: ["pending", "confirmed", "accepted", "ongoing", "in-service"] }
+  };
   // 1. Load all bookings for this shop (only relevant statuses)
   if (targetDate) {
-  findQuery.date = targetDate; // "YYYY-MM-DD"
-}
+    findQuery.date = targetDate; // "YYYY-MM-DD"
+  }
 
-// Now fetch
-const bookings = await Booking.find(findQuery).lean();
+  // Now fetch
+  const bookings = await Booking.find(findQuery).lean();
   // 2. Load all staff of this shop
   const staffList = await Staff.find({ barberId: shopId }).lean();
 
   // Helper: build a normalized startTime (Date) from date + time strings
   const computeStartAndEndTimes = (b) => {
-  const durationNum = Number(b.duration ?? b.serviceDuration ?? 30);
+    const durationNum = Number(b.duration ?? b.serviceDuration ?? 30);
 
-  // force parse 12-hour time like "09:40 PM"
-  const dateStr = b.date;          // "2025-12-02"
-  const timeStr = b.time;          // "09:40 PM"
+    // force parse 12-hour time like "09:40 PM"
+    const dateStr = b.date;          // "2025-12-02"
+    const timeStr = b.time;          // "09:40 PM"
 
-  const start = new Date(`${dateStr} ${timeStr}`);
-  if (isNaN(start)) {
-    console.log("❌ BAD TIME PARSE:", dateStr, timeStr);
+    const start = new Date(`${dateStr} ${timeStr}`);
+    if (isNaN(start)) {
+      console.log("❌ BAD TIME PARSE:", dateStr, timeStr);
+      return {
+        startTime: new Date().toISOString(),
+        endTime: new Date(Date.now() + durationNum * 60000).toISOString(),
+      };
+    }
+
+    const end = new Date(start.getTime() + durationNum * 60000);
+
     return {
-      startTime: new Date().toISOString(),
-      endTime: new Date(Date.now() + durationNum * 60000).toISOString(),
+      startTime: start.toISOString(),
+      endTime: end.toISOString()
     };
-  }
-
-  const end = new Date(start.getTime() + durationNum * 60000);
-
-  return {
-    startTime: start.toISOString(),
-    endTime: end.toISOString()
   };
-};
 
 
   const payload = staffList.map((staff) => {
     // find bookings for this staff and normalize them
-   const staffBookings = bookings
-  .filter((b) => String(b.staffId) === String(staff._id))
-  .map((b) => {
-    const { startTime, endTime } = computeStartAndEndTimes(b);
+    const staffBookings = bookings
+      .filter((b) => String(b.staffId) === String(staff._id))
+      .map((b) => {
+        const { startTime, endTime } = computeStartAndEndTimes(b);
 
-    return {
-      ...b,
-      startTime,
-      endTime,
-    };
-  })
-  .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
+        return {
+          ...b,
+          startTime,
+          endTime,
+        };
+      })
+      .sort((a, b) => new Date(a.startTime) - new Date(b.startTime));
     const current = staffBookings[0] || null;
     const queue = staffBookings.slice(1);
 
@@ -257,8 +257,8 @@ io.on("connection", (socket) => {
       io.to(staffRoom).emit("staff:bookingAdded", created);
 
       // 6️⃣ MATCH REST API → Emit queueUpdated
-     // 6️⃣ Correct queue broadcast
-await broadcastShopQueue(created.barberId, created.date);
+      // 6️⃣ Correct queue broadcast
+      await broadcastShopQueue(created.barberId, created.date);
 
     } catch (err) {
       console.error("newBookingRequest error:", err);
@@ -291,7 +291,7 @@ await broadcastShopQueue(created.barberId, created.date);
       }
 
       // 2️⃣ MATCH REST API → queueUpdated
-     await broadcastShopQueue(booking.barberId, booking.date);
+      await broadcastShopQueue(booking.barberId, booking.date);
 
 
       // 3️⃣ Keep your socket-specific event
@@ -302,12 +302,12 @@ await broadcastShopQueue(created.barberId, created.date);
     }
   });
   socket.on("requestShopQueue", async (shopId) => {
-  if (!shopId) return;
-  console.log("⏳ Shop requested queue:", shopId);
+    if (!shopId) return;
+    console.log("⏳ Shop requested queue:", shopId);
 
-  const payload = await broadcastShopQueue(shopId);
-  io.to(`shop-${shopId}`).emit("shopQueueUpdate", { [shopId]: payload });
-});
+    const payload = await broadcastShopQueue(shopId);
+    io.to(`shop-${shopId}`).emit("shopQueueUpdate", { [shopId]: payload });
+  });
 
   /* ---------------------------------------------
      DELETE BOOKING (Socket Version)
@@ -393,9 +393,9 @@ app.use("/api/shops", shopRoutes);
 app.get("/api/live/:barberId", async (req, res) => {
   try {
     const shopId = req.params.barberId;
-    const payload = await broadcastShopQueue(shopId) 
-     // pure, no sockets
-     return res.json({ [shopId]: payload });
+    const payload = await broadcastShopQueue(shopId)
+    // pure, no sockets
+    return res.json({ [shopId]: payload });
   } catch (err) {
     console.error("Error in /api/live/:barberId", err);
     return res.status(500).json({ message: err.message });

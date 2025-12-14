@@ -1,28 +1,24 @@
+```javascript
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
-import { io } from "socket.io-client";
+import { useGoogleLogin } from "@react-oauth/google";
+import { ArrowLeft, Upload, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { API_URL } from "../lib/config";
 import { useApp } from "../contexts/AppContext";
 import {
   Mail,
   Lock,
-  Eye,
-  EyeOff,
   User,
   Phone,
   MapPinHouse,
   Store,
-  MessageSquare,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-const socket = io("https://localhost:5000", { autoConnect: false });
-
-export function SignupForm() {
+const SignupForm = () => {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
 
   const [ownerName, setOwnerName] = useState("");
@@ -42,7 +38,7 @@ export function SignupForm() {
   async function BarberSignup(userData) {
     try {
       const response = await fetch(
-        "https://localhost:5000/api/auth/signup/barber",
+        `${ API_URL } /api/auth / register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -70,9 +66,9 @@ export function SignupForm() {
       // SOCKET
       socket.auth = { token: data.token };
       socket.connect();
-      socket.emit("joinshopRoom", `shop-${data.barber.id}`);
+      socket.emit("joinshopRoom", `shop - ${ data.barber.id } `);
 
-      toast.success(`Account created successfully for ${data.barber.ownerName}`);
+      toast.success(`Account created successfully for ${ data.barber.ownerName }`);
 
       return data;
     } catch (error) {
@@ -97,7 +93,7 @@ export function SignupForm() {
     try {
       const result = await BarberSignup(barberData);
 
-      toast.success(`Account created for ${barberData.salonName}`);
+      toast.success(`Account created for ${ barberData.salonName }`);
       navigate("/dashboard");
       socket.emit("joinshopRoom", result.barber.id);
     } catch (err) {

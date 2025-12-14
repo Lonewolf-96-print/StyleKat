@@ -8,15 +8,16 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Mail, Lock, Eye, EyeOff, MessageSquare, Laugh } from "lucide-react";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { API_URL } from "../lib/config";
 import cover from "/service-bg.jpg";
 import { io } from "socket.io-client";
 
 // Create socket once
 const socket = io("https://localhost:5000", { autoConnect: false });
 
-export function LoginForm() {
+const LoginForm = () => {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
   const { setToken: setBookingToken } = useBookings();
 
@@ -39,7 +40,7 @@ export function LoginForm() {
     setError(null);
 
     try {
-      const res = await fetch("https://localhost:5000/api/auth/login/barber", {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
