@@ -1,4 +1,4 @@
-```javascript
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-const SignupForm = () => {
+export const SignupForm = () => {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
 
   const [ownerName, setOwnerName] = useState("");
@@ -38,7 +38,7 @@ const SignupForm = () => {
   async function BarberSignup(userData) {
     try {
       const response = await fetch(
-        `${ API_URL } /api/auth / register`,
+        `${API_URL} /api/auth / register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -66,9 +66,9 @@ const SignupForm = () => {
       // SOCKET
       socket.auth = { token: data.token };
       socket.connect();
-      socket.emit("joinshopRoom", `shop - ${ data.barber.id } `);
+      socket.emit("joinshopRoom", `shop - ${data.barber.id} `);
 
-      toast.success(`Account created successfully for ${ data.barber.ownerName }`);
+      toast.success(`Account created successfully for ${data.barber.ownerName}`);
 
       return data;
     } catch (error) {
@@ -93,7 +93,7 @@ const SignupForm = () => {
     try {
       const result = await BarberSignup(barberData);
 
-      toast.success(`Account created for ${ barberData.salonName }`);
+      toast.success(`Account created for ${barberData.salonName}`);
       navigate("/dashboard");
       socket.emit("joinshopRoom", result.barber.id);
     } catch (err) {

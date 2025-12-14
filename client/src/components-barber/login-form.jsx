@@ -17,7 +17,7 @@ import { io } from "socket.io-client";
 // Create socket once
 const socket = io("https://localhost:5000", { autoConnect: false });
 
-const LoginForm = () => {
+export const LoginForm = () => {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
   const { setToken: setBookingToken } = useBookings();
 

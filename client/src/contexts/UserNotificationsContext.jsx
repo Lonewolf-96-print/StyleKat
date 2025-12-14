@@ -1,4 +1,4 @@
-```javascript
+
 "use client";
 
 import React, {
@@ -153,187 +153,187 @@ export const NotificationProvider = ({ children }) => {
       // join user or shop room
       if (role === "barber" && shopId) {
         // backend expects `shop - <barberId>` sometimes — be consistent with your backend
-  socket.emit("joinShopRoom", shopId);
-  console.log("🔗 Joined shop room:", shopId);
+        socket.emit("joinShopRoom", shopId);
+        console.log("🔗 Joined shop room:", shopId);
       } else if (role === "user" && userId) {
-    socket.emit("joinUserRoom", userId);
-  console.log("🔗 Joined user room:", userId);
+        socket.emit("joinUserRoom", userId);
+        console.log("🔗 Joined user room:", userId);
       } else {
         // still try a safe join if possible
         if (userId) socket.emit("joinUserRoom", userId);
-  if (shopId) socket.emit("joinShopRoom", shopId);
+        if (shopId) socket.emit("joinShopRoom", shopId);
       }
     });
 
     socket.on("connect_error", (err) => {
-    console.error("Notification socket connect error:", err?.message || err);
+      console.error("Notification socket connect error:", err?.message || err);
     });
 
     socket.on("disconnect", (reason) => {
-    console.log("🔌 Notification socket disconnected:", reason);
+      console.log("🔌 Notification socket disconnected:", reason);
     });
 
     // ---------- Event listeners ----------
     // Barber events
     socket.on("newBookingRequest", (booking) => {
-    // Happens on barber side usually
-    console.log("📩 newBookingRequest:", booking);
-  addNotification({
-    id: booking._id ?? booking.id,
-  type: "newBookingRequest",
-  message: `New booking from ${booking.customerName} for ${booking.shopName}`,
-  ...booking,
-  read: false,
-  timestamp: new Date().toISOString(),
+      // Happens on barber side usually
+      console.log("📩 newBookingRequest:", booking);
+      addNotification({
+        id: booking._id ?? booking.id,
+        type: "newBookingRequest",
+        message: `New booking from ${booking.customerName} for ${booking.shopName}`,
+        ...booking,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     socket.on("booking:new", (booking) => {
-    console.log("📩 booking:new:", booking);
-  addNotification({
-    id: booking._id ?? booking.id,
-  type: "newBookingRequest",
-  message: `New booking from ${booking.customerName} for ${booking.shopName}`,
-  ...booking,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("📩 booking:new:", booking);
+      addNotification({
+        id: booking._id ?? booking.id,
+        type: "newBookingRequest",
+        message: `New booking from ${booking.customerName} for ${booking.shopName}`,
+        ...booking,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // User events — booking created for user
     socket.on("user:bookingCreated", (data) => {
-    // if(data.userId !== userId) return; // Removed redundant check
-    console.log("📩 DEBUG: user:bookingCreated received:", data);
-  addNotification({
-    id: data._id ?? data.id,
-  type: "user:bookingCreated",
-  message: `Your booking at ${data.shopName} is created.`,
-  ...data,
-  read: false,
-  timestamp: new Date().toISOString(),
+      // if(data.userId !== userId) return; // Removed redundant check
+      console.log("📩 DEBUG: user:bookingCreated received:", data);
+      addNotification({
+        id: data._id ?? data.id,
+        type: "user:bookingCreated",
+        message: `Your booking at ${data.shopName} is created.`,
+        ...data,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     socket.on("bookingCreated", (data) => {
-    console.log("📩 bookingCreated:", data);
-  addNotification({
-    id: data._id ?? data.id,
-  type: "user:bookingCreated",
-  message: `Your booking at ${data.shopName} is created.`,
-  ...data,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("📩 bookingCreated:", data);
+      addNotification({
+        id: data._id ?? data.id,
+        type: "user:bookingCreated",
+        message: `Your booking at ${data.shopName} is created.`,
+        ...data,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // Status updates (both barber and user relevant; guard by role inside handler if needed)
     socket.on("bookingStatusUpdate", (info) => {
-    // if(info.userId !== userId) return; // Removed redundant check
-    console.log("📢 DEBUG: bookingStatusUpdate received:", info);
+      // if(info.userId !== userId) return; // Removed redundant check
+      console.log("📢 DEBUG: bookingStatusUpdate received:", info);
       // backend may send different shapes: {bookingId, status} or full booking
-  const id = info._id ?? info.bookingId ?? info.id;
-  const status = info.status;
-  const shopName = info.shopName ?? info.shop?.name;
+      const id = info._id ?? info.bookingId ?? info.id;
+      const status = info.status;
+      const shopName = info.shopName ?? info.shop?.name;
 
-  addNotification({
-    id: id ?? String(Date.now()),
-  type: "bookingStatusUpdate",
-  message: `Booking ${id} is now ${status}`,
-  bookingId: id,
-  status,
-  shopName,
-  ...info,
-  read: false,
-  timestamp: new Date().toISOString(),
+      addNotification({
+        id: id ?? String(Date.now()),
+        type: "bookingStatusUpdate",
+        message: `Booking ${id} is now ${status}`,
+        bookingId: id,
+        status,
+        shopName,
+        ...info,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // Generic booking updated event from other emitters
     socket.on("booking:updated", (info) => {
 
-    console.log("📢 booking:updated:", info);
-  addNotification({
-    id: info._id ?? info.id ?? String(Date.now()),
-  type: "bookingUpdated",
-  message: `Booking updated: ${info.status || "updated"}`,
-  ...info,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("📢 booking:updated:", info);
+      addNotification({
+        id: info._id ?? info.id ?? String(Date.now()),
+        type: "bookingUpdated",
+        message: `Booking updated: ${info.status || "updated"}`,
+        ...info,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     socket.on("bookingUpdated", (info) => {
-    console.log("📢 bookingUpdated:", info);
-  addNotification({
-    id: info._id ?? info.id ?? String(Date.now()),
-  type: "bookingUpdated",
-  message: `Booking updated: ${info.status || "updated"}`,
-  ...info,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("📢 bookingUpdated:", info);
+      addNotification({
+        id: info._id ?? info.id ?? String(Date.now()),
+        type: "bookingUpdated",
+        message: `Booking updated: ${info.status || "updated"}`,
+        ...info,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // reminders
     socket.on("booking:reminder", (payload) => {
-    console.log("⏰ booking:reminder:", payload);
-  addNotification({
-    id: payload.bookingId ?? String(Date.now()),
-  type: "reminder",
-  message: payload.message ?? `Reminder for booking ${payload.bookingId}`,
-  ...payload,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("⏰ booking:reminder:", payload);
+      addNotification({
+        id: payload.bookingId ?? String(Date.now()),
+        type: "reminder",
+        message: payload.message ?? `Reminder for booking ${payload.bookingId}`,
+        ...payload,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     socket.on("upcomingBookingReminder", (payload) => {
       if (payload.id !== userId) return;
-  console.log("⏰ upcomingBookingReminder:", payload);
-  addNotification({
-    id: payload._id ?? String(Date.now()),
-  type: "reminder",
-  message: payload.message ?? `Upcoming booking at ${payload.time}`,
-  ...payload,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("⏰ upcomingBookingReminder:", payload);
+      addNotification({
+        id: payload._id ?? String(Date.now()),
+        type: "reminder",
+        message: payload.message ?? `Upcoming booking at ${payload.time}`,
+        ...payload,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // shop related
     socket.on("toggleShop", (payload) => {
-    console.log("🏷 toggleShop:", payload);
-  addNotification({
-    id: String(Date.now()),
-  type: "shopUpdated",
-  message: `Shop info updated`,
-  ...payload,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("🏷 toggleShop:", payload);
+      addNotification({
+        id: String(Date.now()),
+        type: "shopUpdated",
+        message: `Shop info updated`,
+        ...payload,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // Defensive: handle generic server notices
     socket.on("notification", (n) => {
-    console.log("🔔 server notification:", n);
-  addNotification({
-    id: n._id ?? n.id ?? String(Date.now()),
-  type: n.type ?? "system",
-  message: n.message ?? "Notification",
-  ...n,
-  read: false,
-  timestamp: new Date().toISOString(),
+      console.log("🔔 server notification:", n);
+      addNotification({
+        id: n._id ?? n.id ?? String(Date.now()),
+        type: n.type ?? "system",
+        message: n.message ?? "Notification",
+        ...n,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
     });
 
     // cleanup on unmount
     return () => {
       try {
-    socket.disconnect();
+        socket.disconnect();
       } catch (e) {
-    /* ignore */
-  }
-  socketRef.current = null;
+        /* ignore */
+      }
+      socketRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer, addNotification]); // re-run if customer object changes
@@ -341,25 +341,25 @@ export const NotificationProvider = ({ children }) => {
   // keep unreadCount synced if notifications change externally
   useEffect(() => {
     setUnreadCount(notifications.filter((n) => !n.read).length);
-  persist(notifications);
+    persist(notifications);
   }, [notifications]);
 
   return (
-  <NotificationContext.Provider
-    value={{
-      notifications,
-      unreadCount,
-      notificationsOpen,
-      setNotificationsOpen,
-      addNotification,
-      markAsRead,
-      markAsUnread,
-      markAllAsRead,
-      deleteNotification,
-      clearAll,
-    }}
-  >
-    {children}
-  </NotificationContext.Provider>
+    <NotificationContext.Provider
+      value={{
+        notifications,
+        unreadCount,
+        notificationsOpen,
+        setNotificationsOpen,
+        addNotification,
+        markAsRead,
+        markAsUnread,
+        markAllAsRead,
+        deleteNotification,
+        clearAll,
+      }}
+    >
+      {children}
+    </NotificationContext.Provider>
   );
 };

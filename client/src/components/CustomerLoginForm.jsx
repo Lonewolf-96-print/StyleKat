@@ -1,7 +1,6 @@
-```javascript
 import { useState } from "react";
 import { useCustomer } from "../contexts/CustomerContext";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../lib/config";
@@ -12,7 +11,7 @@ import { Label } from "../components/ui/label";
 import { Mail, Lock, Eye, EyeOff, Laugh } from "lucide-react";
 import { useAuthModal } from "../contexts/AuthModelContext";
 
-const CustomerLoginForm = () => {
+export const CustomerLoginForm = () => {
   const { login, setCustomer, setCustomerToken } = useCustomer();
   const { setIsAuthOpen } = useAuthModal();
   const navigate = useNavigate();
@@ -51,6 +50,17 @@ const CustomerLoginForm = () => {
     }
   };
 
+  const handleGoogleLogin = async (res) => {
+    try {
+      const decoded = jwtDecode(res.credential);
+
+      const api = await fetch(`${API_URL}/api/users/google-login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: res.credential }), // Note: backend expects 'token' usually
+      });
+
+      const data = await api.json();
       if (!api.ok) throw new Error(data.message);
 
       setCustomer(data.user);
@@ -62,6 +72,7 @@ const CustomerLoginForm = () => {
       setIsAuthOpen(false);
       navigate("/user/dashboard");
     } catch (err) {
+      console.error(err);
       setError("Google Login failed");
     }
   };
