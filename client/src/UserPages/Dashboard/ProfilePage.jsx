@@ -18,9 +18,9 @@ import { Upload } from "lucide-react"
 // }
 
 export default function ProfilePage() {
-    return(
-    <DashboardLayout>
+    return (
+        // <DashboardLayout>
         <UserProfile />
-    </DashboardLayout>
+        // </DashboardLayout>
     )
 }

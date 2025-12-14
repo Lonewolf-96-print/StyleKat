@@ -9,7 +9,7 @@ import { useUser } from "../contexts/BarberContext.jsx";
 import { useCustomer } from "../contexts/CustomerContext.jsx";
 import { useApp } from "../contexts/AppContext.jsx";
 import { io } from "socket.io-client";
-
+import { SOCKET_URL, API_URL } from "../lib/config.js";
 import { Button } from "../components/ui/button.jsx";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";

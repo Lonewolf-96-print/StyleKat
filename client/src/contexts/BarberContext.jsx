@@ -3,9 +3,9 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../lib/config";
 
-const BarberContext = createContext();
+const UserContext = createContext();
 
-export const BarberProvider = ({ children }) => {
+export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
