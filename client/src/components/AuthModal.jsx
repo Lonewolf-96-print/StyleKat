@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Button } from "../components/ui/button";
+import { API_URL } from "../lib/config";
 import Modal from "./Modal";
 
 export default function AuthModal({ open, onClose }) {
@@ -50,7 +51,7 @@ export default function AuthModal({ open, onClose }) {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      const res = await fetch("https://localhost:5000/api/users/google/user", {
+      const res = await fetch(`${API_URL}/api/users/google/user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

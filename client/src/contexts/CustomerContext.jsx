@@ -2,6 +2,9 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import { API_URL } from "../lib/config";
+
 const CustomerContext = createContext();
 
 export const CustomerProvider = ({ children }) => {
@@ -34,7 +37,7 @@ export const CustomerProvider = ({ children }) => {
       LOGIN (EMAIL + PASSWORD)
   ---------------------------------------------- */
   const login = async (email, password) => {
-    const res = await fetch("https://localhost:5000/api/users/login", {
+    const res = await fetch(`${API_URL}/api/users/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -59,7 +62,7 @@ export const CustomerProvider = ({ children }) => {
       REGISTER USER
   ---------------------------------------------- */
   const register = async (name, email, password, phone) => {
-    const res = await fetch("https://localhost:5000/api/users/register", {
+    const res = await fetch(`${API_URL}/api/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, phone }),
@@ -82,7 +85,7 @@ export const CustomerProvider = ({ children }) => {
       LOGIN WITH GOOGLE (COMMON FOR ANY PAGE)
   ---------------------------------------------- */
   const googleLogin = async (credential) => {
-    const res = await fetch("https://localhost:5000/api/users/google/user", {
+    const res = await fetch(`${API_URL}/api/users/google/user`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: credential }),

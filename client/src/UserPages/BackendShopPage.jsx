@@ -85,7 +85,7 @@ const BackendShopPage = () => {
 
   // SOCKET
   const token = localStorage.getItem("customerToken");
-  const socket = io("https://localhost:5000", {
+  const socket = io(SOCKET_URL, {
     auth: { token },
     transports: ["websocket"],
   });
@@ -94,7 +94,7 @@ const BackendShopPage = () => {
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        const res = await fetch(`https://localhost:5000/api/barbers/${barberId}`);
+        const res = await fetch(`${API_URL}/api/barbers/${barberId}`);
         if (!res.ok) throw new Error("Failed to fetch shop");
         const data = await res.json();
         console.log("Data fetched ", data)

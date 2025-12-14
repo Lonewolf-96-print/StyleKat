@@ -9,6 +9,7 @@ import { Search, X, Plus, MoreHorizontal, Calendar, Clock } from "lucide-react";
 import { useApp } from "../../contexts/AppContext.jsx";
 import { io } from "socket.io-client";
 import { useBookings } from "../../contexts/BookingsContext.jsx";
+import { API_URL, SOCKET_URL } from "../../lib/config";
 import { format } from "date-fns";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import toast from "react-hot-toast";
@@ -89,7 +90,7 @@ export default function BookingsDashboardPage() {
           return;
         }
 
-        const res = await fetch("https://localhost:5000/api/bookings/my", {
+        const res = await fetch(`${API_URL}/api/bookings/my`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -118,7 +119,7 @@ export default function BookingsDashboardPage() {
     const userId = localStorage.getItem("userId");
     if (!token) return;
 
-    const userSocket = io("https://localhost:5000", {
+    const userSocket = io(SOCKET_URL, {
       auth: { token },
       transports: ["polling", "websocket"],
     });

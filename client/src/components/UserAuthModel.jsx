@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useCustomer } from "../contexts/CustomerContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { API_URL } from "../lib/config";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
@@ -63,7 +64,7 @@ export default function AuthPage({ isModal = true }) {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      const res = await fetch("https://localhost:5000/api/users/google/user", {
+      const res = await fetch(`${API_URL}/api/users/google/user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

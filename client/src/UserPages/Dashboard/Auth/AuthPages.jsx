@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../../lib/config";
 import { useCustomer } from "../../../contexts/CustomerContext";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
@@ -56,7 +58,7 @@ export default function AuthPage() {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      const res = await fetch("https://localhost:5000/api/auth/google-login", {
+      const res = await fetch(`${API_URL}/api/auth/google-login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

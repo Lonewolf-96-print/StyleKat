@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
+import { SOCKET_URL } from "../lib/config";
 import { useApp } from "../contexts/AppContext";
 import { useBookings } from "../contexts/BookingsContext";
 import { statusColors } from "./recent-appointments";
@@ -27,7 +27,7 @@ export default function DashboardContent() {
   console.log("DashboardContent - Current User:", currentUser);
   useEffect(() => {
     if (!shopId) return;
-    const room = `shop-${shopId}`;
+    const room = `shop - ${shopId} `;
     socket.emit("joinRoom", room);
     console.log("💈 Barber joined:", room);
   }, [shopId]);
@@ -42,7 +42,7 @@ export default function DashboardContent() {
     console.log("Token used in the dashboard socket connection:", token);
 
     // ✅ Initialize socket only once
-    socketRef.current = io("https://localhost:5000", {
+    socketRef.current = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
     });
@@ -69,7 +69,7 @@ export default function DashboardContent() {
       });
     }, 3000);
     socket.on("bookingNotification", (data) => {
-      alert(`New booking: ${data.customerName} booked ${data.service} at ${data.time}`);
+      alert(`New booking: ${data.customerName} booked ${data.service} at ${data.time} `);
     });
 
     socket.on("connect_error", (err) => {

@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useApp } from "../contexts/AppContext";
+import { API_URL } from "../lib/config";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components-barber/ui/button"
 import { Badge } from "../components/ui/badge"
@@ -27,16 +29,16 @@ export function ServicesList() {
   const [editingService, setEditingService] = useState(null);
 
   // const [filteredServices,setFilteredServices]=useState("")
-  const API_URL = "https://localhost:5000/api/services";
+
   useEffect(() => {
     const fetchServices = async () => {
       const token = localStorage.getItem("token");
 
       try {
 
-        const res = await fetch(`https://localhost:5000/api/services/`, {
+        const res = await fetch(`${API_URL} /api/services / `, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token} `,
           },
         });
         console.log("📡 Raw response:", res)

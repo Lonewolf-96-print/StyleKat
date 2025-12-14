@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Bell, Search, User } from "lucide-react";
 import { useApp } from "../contexts/AppContext";
+import { API_URL } from "../lib/config";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import {
@@ -47,7 +48,7 @@ export function DashboardHeader() {
     if (!token) return;
 
     try {
-      const res = await fetch("https://localhost:5000/api/auth/me", {
+      const res = await fetch(`${API_URL}/api/auth/me`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

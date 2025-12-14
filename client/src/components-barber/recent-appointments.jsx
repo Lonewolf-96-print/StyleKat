@@ -7,7 +7,8 @@ import { useApp } from "../contexts/AppContext"
 import { useBookings } from "../contexts/BookingsContext"
 
 import { useLanguage } from "./language-provider"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react";
+import { API_URL } from "../lib/config";
 import { format } from "date-fns"
 // import { io } from "socket.io-client"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
@@ -31,7 +32,7 @@ export function RecentAppointments() {
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const res = await fetch(
-        `https://localhost:5000/api/bookings/status/${bookingId}`,
+        `${API_URL}/api/bookings/status/${bookingId}`,
         {
           method: "PUT",
           headers: {
@@ -61,7 +62,7 @@ export function RecentAppointments() {
     async function fetchBookings() {
 
       try {
-        const res = await fetch("https://localhost:5000/api/bookings/today", {
+        const res = await fetch(`${API_URL}/api/bookings/today`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,  // ← this must exist

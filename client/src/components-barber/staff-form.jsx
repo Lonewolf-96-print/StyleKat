@@ -1,11 +1,11 @@
 
-
 import { useState, useEffect } from "react"
 // import { useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { useApp } from "../contexts/AppContext"
+import { API_URL } from "../lib/config"
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select"
 import { Switch } from "../components-barber/ui/switch"
@@ -103,8 +103,8 @@ export function StaffForm({ staffId, initialData, onSuccess, isModal = false }) 
     try {
       const token = localStorage.getItem("token");
       const url = staffId || initialData?._id
-        ? `https://localhost:5000/api/staff/${staffId || initialData._id}`
-        : "https://localhost:5000/api/staff";
+        ? `${API_URL}/api/staff/${staffId || initialData._id}`
+        : `${API_URL}/api/staff`;
 
       const method = staffId || initialData?._id ? "PUT" : "POST";
 

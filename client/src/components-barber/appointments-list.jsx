@@ -17,6 +17,7 @@ import { Clock, Phone, MoreHorizontal, Check, X, Calendar, Edit } from "lucide-r
 import { format, isToday } from "date-fns";
 import { useBookings } from "../contexts/BookingsContext";
 import { io } from "socket.io-client";
+import { API_URL, SOCKET_URL } from "../lib/config";
 import { Navigate } from "react-router-dom";
 import CalendarStrip from "./CalenderStrip";
 import { DashboardSidebar } from "./sidebar";
@@ -50,7 +51,7 @@ export function AppointmentsList() {
   useEffect(() => {
     if (!token) return;
 
-    const socket = io("https://localhost:5000", {
+    const socket = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
     });
@@ -90,7 +91,7 @@ export function AppointmentsList() {
   const handleStatusChange = async (bookingId, newStatus, staffId) => {
     try {
       const res = await fetch(
-        `https://localhost:5000/api/bookings/status/${bookingId}`,
+        `${API_URL}/api/bookings/status/${bookingId}`,
         {
           method: "PUT",
           headers: {
@@ -124,7 +125,7 @@ export function AppointmentsList() {
     try {
       // 👇 CALL THE NEW "delete-for-barber" endpoint
       const res = await fetch(
-        `https://localhost:5000/api/bookings/${bookingId}`,
+        `${API_URL}/api/bookings/${bookingId}`,
 
         {
           method: "DELETE",

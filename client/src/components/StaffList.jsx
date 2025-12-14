@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from "../lib/config";
 import { Card, CardHeader, CardContent, CardTitle } from "../components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "../components-barber/ui/avatar";
 import { Badge } from "../components/ui/badge";
@@ -13,7 +14,7 @@ const StaffList = ({ shop }) => {
 
     const fetchStaff = async () => {
       try {
-        const res = await fetch(`https://localhost:5000/api/staff/public/${barberId}`);
+        const res = await fetch(`${API_URL}/api/staff/public/${barberId}`);
         const data = await res.json();
         if (res.ok) {
           setStaff(data);

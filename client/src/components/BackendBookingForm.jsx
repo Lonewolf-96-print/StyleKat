@@ -5,7 +5,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "../components/ui/card"
 import { Avatar, AvatarImage, AvatarFallback } from "../components-barber/ui/avatar";
 import { Badge } from "../components/ui/badge";
 import { Clock, Calendar, Scissors } from "lucide-react";
-
+import { API_URL, SOCKET_URL } from "../lib/config"
 import { io } from "socket.io-client";
 import { Button } from "./ui/button.jsx";
 import { useApp } from "../contexts/AppContext.jsx";
@@ -50,14 +50,14 @@ export default function BackendBookingForm({ shop, barberId }) {
   const [status, setStatus] = useState("");
   const [showStaffList, setShowStaffList] = useState(false);
 
-  const API_URL = "https://localhost:5000/api/bookings";
+
   const today = new Date().toISOString().split("T")[0];
   const fetchLiveState = async (resolvedBarberId) => {
     try {
       if (!resolvedBarberId) return;
       console.log("Barber Id inside fetch live status ", resolvedBarberId)
       const res = await fetch(
-        `https://localhost:5000/api/live/${resolvedBarberId}`
+        `${API_URL}/api/live/${resolvedBarberId}`
       );
       const data = await res.json();
 
@@ -90,7 +90,7 @@ export default function BackendBookingForm({ shop, barberId }) {
       return;
     }
 
-    const newSocket = io("https://localhost:5000", {
+    const newSocket = io(SOCKET_URL, {
       auth: token ? { token } : {},
       autoConnect: !!token,
       transports: ["websocket"],
@@ -296,7 +296,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     // A. Fetch Services
     const fetchServices = async () => {
       try {
-        const res = await fetch(`https://localhost:5000/api/services/public/${resolvedBarberId}`, { cache: "no-store" });
+        const res = await fetch(`${API_URL}/api/services/public/${resolvedBarberId}`, { cache: "no-store" });
         const data = await res.json();
         if (res.ok) {
           setServices(data);
@@ -311,7 +311,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     // B. Fetch Staff
     const fetchStaff = async () => {
       try {
-        const res = await fetch(`https://localhost:5000/api/staff/public/${resolvedBarberId}`);
+        const res = await fetch(`${API_URL}/api/staff/public/${resolvedBarberId}`);
         const data = await res.json();
         if (res.ok) {
           setStaff(data);

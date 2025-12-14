@@ -1,7 +1,6 @@
 
-
-
-import { useState, useEffect } from "react"
+import { useApp } from "../contexts/AppContext";
+import { API_URL } from "../lib/config";
 import { useNavigate } from "react-router-dom"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
@@ -34,7 +33,7 @@ export function ServiceForm({ serviceId, existingService }) {
     category: "",
     isActive: true,
   })
-  const API_URL = "https://localhost:5000/api/services";
+
 
 
   // FIX: Fetch data if serviceId exists but existingService is not provided (Page Refresh scenario)

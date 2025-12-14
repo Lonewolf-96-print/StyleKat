@@ -1,8 +1,10 @@
+
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
 import { useBookings } from "../contexts/BookingsContext";
 import { io } from "socket.io-client";
+import { API_URL, SOCKET_URL } from "../lib/config";
 
 import SeatCard from "../components-barber/seat-card";
 import { Button } from "../components-barber/ui/button";
@@ -33,10 +35,10 @@ export default function MyShopPage() {
       const token = localStorage.getItem("token");
 
       // STAFF
-      const resStaff = await fetch("http://localhost:5000/api/staff/", {
+      const resStaff = await fetch(`${API_URL} /api/staff / `, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token} `,
         },
       });
       const staffData = await resStaff.json();
@@ -44,10 +46,10 @@ export default function MyShopPage() {
       console.log("Loaded staff:", staffData);
 
       // BOOKINGS
-      const resBookings = await fetch("http://localhost:5000/api/bookings", {
+      const resBookings = await fetch(`${API_URL} /api/bookings`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token} `,
         },
       });
       const bookingData = await resBookings.json();
@@ -73,7 +75,7 @@ export default function MyShopPage() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const s = io("http://localhost:5000", {
+    const s = io(SOCKET_URL, {
       auth: { token },
       transports: ["websocket", "polling"],
     });
@@ -191,11 +193,11 @@ export default function MyShopPage() {
 
     socket.emit("service:started", { bookingId: booking._id });
 
-    await fetch(`http://localhost:5000/api/bookings/status/${booking._id}`, {
+    await fetch(`${API_URL} /api/bookings / status / ${booking._id} `, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token} `,
       },
       body: JSON.stringify({
         status: "in-service",
@@ -212,11 +214,11 @@ export default function MyShopPage() {
 
     socket.emit("service:finished", { bookingId: booking._id });
 
-    await fetch(`http://localhost:5000/api/bookings/status/${booking._id}`, {
+    await fetch(`${API_URL} /api/bookings / status / ${booking._id} `, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token} `,
       },
       body: JSON.stringify({ status: "completed" }),
     });
@@ -286,7 +288,7 @@ export default function MyShopPage() {
                       <Clock className="w-4 h-4" />
 
                       {seat.current.startTime
-                        ? `Expected Start Time: ${formatTime(seat.current.startTime)}`
+                        ? `Expected Start Time: ${formatTime(seat.current.startTime)} `
                         : "Not started"}
                     </div>
 

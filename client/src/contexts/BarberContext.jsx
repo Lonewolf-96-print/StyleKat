@@ -1,9 +1,11 @@
 // src/contexts/UserContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { API_URL } from "../lib/config";
 
-const UserContext = createContext();
+const BarberContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const BarberProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,11 +33,11 @@ export const UserProvider = ({ children }) => {
 
     (async () => {
       try {
-        const res = await fetch("https://localhost:5000/api/auth/me", {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token} `,
           },
         });
 
@@ -67,12 +69,12 @@ export const UserProvider = ({ children }) => {
   // ✅ Login function
   const login = async (email, password) => {
     const token = localStorage.getItem("token");
-    const res = await fetch("https://localhost:5000/api/users/login", {
+    const res = await fetch(`${API_URL}/api/users/login`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token} `
       },
       body: JSON.stringify({ email, password }),
     });
@@ -89,12 +91,12 @@ export const UserProvider = ({ children }) => {
 
   // ✅ Register function
   const register = async (name, email, password) => {
-    const res = await fetch("https://localhost:5000/api/users/register", {
+    const res = await fetch(`${API_URL}/api/users/register`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `Bearer ${localStorage.getItem("token")} `
       },
       body: JSON.stringify({ name, email, password }),
     });

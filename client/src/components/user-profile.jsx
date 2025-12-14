@@ -17,6 +17,7 @@ import { useBookings } from "../contexts/BookingsContext";
 import { useApp } from "../contexts/AppContext";
 import { useCustomer } from "../contexts/CustomerContext";
 import { DashboardLayout } from "./dashboard-layout";
+import { API_URL } from "../lib/config";
 
 export function UserProfile() {
   const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ export function UserProfile() {
       try {
         const token = localStorage.getItem("customerToken");
 
-        const res = await fetch("https://localhost:5000/api/users/me", {
+        const res = await fetch(`${API_URL}/api/users/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -107,7 +108,7 @@ export function UserProfile() {
 
     const token = localStorage.getItem("customerToken");
 
-    const res = await fetch("https://localhost:5000/api/users/change-password", {
+    const res = await fetch(`${API_URL}/api/users/change-password`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +137,7 @@ export function UserProfile() {
     try {
       const token = localStorage.getItem("customerToken");
 
-      const res = await fetch("https://localhost:5000/api/users/me", {
+      const res = await fetch(`${API_URL}/api/users/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

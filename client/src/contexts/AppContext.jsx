@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import { connectSocket, getSocket, disconnectSocket } from "../lib/socket"
+import { connectSocket, getSocket, disconnectSocket } from "../lib/socket";
+import { API_URL, SOCKET_URL } from "../lib/config";
 const AppContext = createContext();
 
 export const useApp = () => {
@@ -59,7 +60,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !window.socket) {
-      window.socket = io("https://localhost:5000", {
+      window.socket = io(SOCKET_URL, {
         auth: { token },
       });
 
@@ -121,7 +122,7 @@ export const AppProvider = ({ children }) => {
           console.warn("⚠️ No token found, cannot fetch bookings");
           return;
         }
-        const res = await fetch("https://localhost:5000/api/bookings", {
+        const res = await fetch(`${API_URL}/api/bookings`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

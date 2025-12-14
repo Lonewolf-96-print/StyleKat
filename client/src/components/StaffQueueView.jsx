@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { API_URL, SOCKET_URL } from "../lib/config";
 import { Clock, User, Scissors } from "lucide-react";
 
 // Always parse startTime as REAL DATE
@@ -83,7 +84,7 @@ export default function StaffQueueView({ barberId }) {
     setLoading(true);
 
     const load = async () => {
-      const res = await fetch(`https://localhost:5000/api/live/${barberId}`);
+      const res = await fetch(`${API_URL}/api/live/${barberId}`);
       const data = await res.json();
 
       const arr = data[barberId] || [];
@@ -108,7 +109,7 @@ export default function StaffQueueView({ barberId }) {
   useEffect(() => {
     if (!barberId) return;
 
-    const socket = io("http://localhost:5000", { transports: ["websocket"] });
+    const socket = io(SOCKET_URL, { transports: ["websocket"] });
     socketRef.current = socket;
 
     socket.on("connect", () => {
