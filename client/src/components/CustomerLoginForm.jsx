@@ -54,7 +54,7 @@ export const CustomerLoginForm = () => {
     try {
       const decoded = jwtDecode(res.credential);
 
-      const api = await fetch(`${API_URL}/api/users/google-login`, {
+      const api = await fetch(`${API_URL}/api/users/google/user`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: res.credential }), // Note: backend expects 'token' usually
@@ -177,7 +177,7 @@ export const CustomerLoginForm = () => {
             <GoogleLogin
               theme="outline"
               size="large"
-              width="100%"
+              width="300"
               shape="rectangular"
               onSuccess={handleGoogleLogin}
             />

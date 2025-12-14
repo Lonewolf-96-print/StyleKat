@@ -83,7 +83,7 @@ export const LoginForm = () => {
   const handleGoogleLogin = async (response) => {
     try {
       const res = await fetch(
-        "https://localhost:5000/api/auth/google-login/barber",
+        `${API_URL}/api/auth/google-login/barber`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

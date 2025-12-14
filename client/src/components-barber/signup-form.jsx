@@ -38,7 +38,7 @@ export const SignupForm = () => {
   async function BarberSignup(userData) {
     try {
       const response = await fetch(
-        `${API_URL} /api/auth / register`,
+        `${API_URL}/api/auth/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
