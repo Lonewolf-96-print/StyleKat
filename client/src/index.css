@@ -1,0 +1,179 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Salon Booking Platform Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.25s ease-out;
+}
+@layer base {
+  :root {
+    /* Background System */
+    --background: 0 0% 100%;
+    --background-secondary: 45 15% 98%;
+    --foreground: 220 15% 25%;
+
+    /* Card System */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 25%;
+    --card-hover: 45 20% 97%;
+
+    /* Salon Brand Colors */
+    --primary: 45 90% 55%;  /* Warm Gold */
+    --primary-dark: 45 85% 45%;
+    --primary-light: 45 95% 85%;
+    --primary-foreground: 220 15% 15%;
+
+    /* Secondary Palette */
+    --secondary: 220 15% 95%;
+    --secondary-dark: 220 20% 20%;
+    --secondary-foreground: 220 15% 25%;
+
+    /* Accent Colors */
+    --accent: 45 60% 88%;
+    --accent-foreground: 220 15% 25%;
+    --accent-gold: 45 90% 55%;
+
+    /* Status Colors */
+    --success: 145 60% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 90% 60%;
+    --warning-foreground: 220 15% 15%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Neutral System */
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 45%;
+    --border: 220 15% 90%;
+    --input: 220 15% 92%;
+    --ring: 45 90% 55%;
+
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(45 90% 55%) 0%, hsl(35 85% 60%) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(0 0% 100%) 0%, hsl(45 15% 98%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(45 60% 88%) 0%, hsl(45 90% 55%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 2px 20px -5px hsl(220 15% 25% / 0.08);
+    --shadow-medium: 0 8px 30px -8px hsl(220 15% 25% / 0.12);
+    --shadow-strong: 0 20px 40px -15px hsl(220 15% 25% / 0.15);
+    --shadow-gold: 0 8px 30px -8px hsl(45 90% 55% / 0.25);
+
+    /* Animations */
+    --animation-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-bounce: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+  }
+
+  .dark {
+    /* Background System */
+    --background: 220 15% 8%;
+    --background-secondary: 220 20% 12%;
+    --foreground: 45 15% 95%;
+
+    /* Card System */
+    --card: 220 15% 10%;
+    --card-foreground: 45 15% 95%;
+    --card-hover: 220 20% 14%;
+
+    /* Salon Brand Colors */
+    --primary: 45 90% 65%;
+    --primary-dark: 45 85% 55%;
+    --primary-light: 45 95% 85%;
+    --primary-foreground: 220 15% 15%;
+
+    /* Secondary Palette */
+    --secondary: 220 20% 15%;
+    --secondary-dark: 220 25% 85%;
+    --secondary-foreground: 45 15% 95%;
+
+    /* Accent Colors */
+    --accent: 220 20% 18%;
+    --accent-foreground: 45 15% 95%;
+    --accent-gold: 45 90% 65%;
+
+    /* Status Colors */
+    --success: 145 60% 50%;
+    --success-foreground: 0 0% 100%;
+    --warning: 35 90% 60%;
+    --warning-foreground: 220 15% 15%;
+    --destructive: 0 75% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Neutral System */
+    --muted: 220 20% 15%;
+    --muted-foreground: 220 10% 65%;
+    --border: 220 20% 18%;
+    --input: 220 20% 15%;
+    --ring: 45 90% 65%;
+
+    /* Sidebar System */
+    --sidebar-background: 220 15% 8%;
+    --sidebar-foreground: 45 15% 95%;
+    --sidebar-primary: 45 90% 65%;
+    --sidebar-primary-foreground: 220 15% 15%;
+    --sidebar-accent: 220 20% 12%;
+    --sidebar-accent-foreground: 45 15% 95%;
+    --sidebar-border: 220 20% 18%;
+    --sidebar-ring: 45 90% 65%;
+  }
+}
+
+ @layer base {
+  
+    /* @apply border-border; */
+  }
+
+  /* body {
+    @apply bg-background text-foreground font-sans;
+  }  */
+
+  /* h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }  */
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    /* -webkit-line-clamp: 2; */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .transition-smooth {
+    transition: var(--animation-smooth);
+  }
+
+  .transition-bounce {
+    transition: var(--animation-bounce);
+  }
