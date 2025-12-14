@@ -141,7 +141,7 @@ export const NotificationProvider = ({ children }) => {
     // determine role (prefer customer context, else localStorage role)
     const roleFromCustomer = customer?.role;
     const roleFromStorage = localStorage.getItem("role");
-    const role = roleFromCustomer || roleFromStorage || (userToken ? "user" : "barber");
+    const role = roleFromCustomer || roleFromStorage || (customerToken ? "user" : "barber");
 
     // compute join ids
 
