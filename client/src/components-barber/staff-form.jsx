@@ -103,8 +103,8 @@ export function StaffForm({ staffId, initialData, onSuccess, isModal = false }) 
     try {
       const token = localStorage.getItem("token");
       const url = staffId || initialData?._id
-        ? `http://localhost:5000/api/staff/${staffId || initialData._id}`
-        : "http://localhost:5000/api/staff";
+        ? `https://localhost:5000/api/staff/${staffId || initialData._id}`
+        : "https://localhost:5000/api/staff";
 
       const method = staffId || initialData?._id ? "PUT" : "POST";
 

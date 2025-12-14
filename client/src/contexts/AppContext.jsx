@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState,useEffect} from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { io } from "socket.io-client";
-import {connectSocket, getSocket, disconnectSocket } from "../lib/socket"
+import { connectSocket, getSocket, disconnectSocket } from "../lib/socket"
 const AppContext = createContext();
 
 export const useApp = () => {
@@ -16,25 +16,25 @@ export const useApp = () => {
 
 export const AppProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({
-    "name" :"",
-    "email" :"",
-    "password":"",
-    "role" :"",
+    "name": "",
+    "email": "",
+    "password": "",
+    "role": "",
   });
   useEffect(() => {
-  const originalRemoveItem = localStorage.removeItem;
-  const originalClear = localStorage.clear;
+    const originalRemoveItem = localStorage.removeItem;
+    const originalClear = localStorage.clear;
 
-  localStorage.removeItem = (...args) => {
-    console.trace("🧨 localStorage.removeItem called with:", args);
-    originalRemoveItem.apply(localStorage, args);
-  };
+    localStorage.removeItem = (...args) => {
+      console.trace("🧨 localStorage.removeItem called with:", args);
+      originalRemoveItem.apply(localStorage, args);
+    };
 
-  localStorage.clear = (...args) => {
-    console.trace("🧨 localStorage.clear called");
-    originalClear.apply(localStorage, args);
-  };
-}, []);
+    localStorage.clear = (...args) => {
+      console.trace("🧨 localStorage.clear called");
+      originalClear.apply(localStorage, args);
+    };
+  }, []);
 
   const [token, setToken] = useState(() => localStorage.getItem("token"));
 
@@ -43,23 +43,23 @@ export const AppProvider = ({ children }) => {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [salons, setSalons] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [bookingDetails,setBookingDetails] =useState([])
+  const [bookingDetails, setBookingDetails] = useState([])
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('all-locations');
   const [isFormOpen, setIsFormOpen] = React.useState(false);
   const [city, setCity] = useState("")
-   const [shop, setShop] = useState(null)
+  const [shop, setShop] = useState(null)
   const navigate = useNavigate();
-   const [stats, setStats] = useState({
+  const [stats, setStats] = useState({
     todaysBookings: 0,
     totalRevenue: 0,
     activeStaff: 0,
     pendingConfirmations: 0,
   })
- useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !window.socket) {
-      window.socket = io("http://localhost:5000", {
+      window.socket = io("https://localhost:5000", {
         auth: { token },
       });
 
@@ -67,86 +67,86 @@ export const AppProvider = ({ children }) => {
         console.log("🟢 Socket connected on user side:", window.socket.id);
       });
     }
-  }, []); 
- useEffect(() => {
-  const savedToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
-  const savedUser =  localStorage.getItem("customerUser")||localStorage.getItem("user")
+  }, []);
+  useEffect(() => {
+    const savedToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
+    const savedUser = localStorage.getItem("customerUser") || localStorage.getItem("user")
 
-  console.log("Saved token and user from localStorage:", { savedToken, savedUser });
+    console.log("Saved token and user from localStorage:", { savedToken, savedUser });
     // console.log("🔍 Loading from localStorage:", { savedToken, savedUser });
-  if (savedToken && savedUser) {
-    setToken(savedToken);
-    // setCurrentUser(JSON.parse(savedUser));
-  }else {
-    console.warn("⚠️ No saved user/token found");
-    setToken(null);
-    setCurrentUser(null);
-  }
-
-  setIsAuthReady(true);
-
-  const socket = connectSocket();
-
-  socket.on("newBookingRequest", (booking) => {
-    setStats(prev => ({
-      ...prev,
-      todaysBookings: prev.todaysBookings + 1,
-      pendingConfirmations: prev.pendingConfirmations + 1,
-      totalRevenue: prev.totalRevenue + (booking.price || 0),
-    }));
-    setBookingDetails(prev => [...prev, booking]);
-  });
-
-  socket.on("bookingStatusUpdate", (data) => {
-    setStats(prev => ({
-      ...prev,
-      pendingConfirmations: Math.max(
-        0,
-        prev.pendingConfirmations - 1
-      ),
-    }));
-  });
-
-  return () => {
-    socket.off("newBookingRequest");
-    socket.off("bookingStatusUpdate");
-  };
-}, []);
-
- useEffect(() => {
-  async function fetchBookings() {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        console.warn("⚠️ No token found, cannot fetch bookings");
-        return;
-      }
-      const res = await fetch("http://localhost:5000/api/bookings",{
-       headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log("📡 Raw response:", res);
-
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Server error ${res.status}: ${errorText}`);
-      }
-
-      const data = await res.json();
-
-      setBookings(data);
-    } catch (err) {
-      console.error("❌ Error fetching bookings:", err);
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      // setCurrentUser(JSON.parse(savedUser));
+    } else {
+      console.warn("⚠️ No saved user/token found");
+      setToken(null);
+      setCurrentUser(null);
     }
-  }
 
-  fetchBookings();
-}, []);
+    setIsAuthReady(true);
 
- const [todayBookings,setTodayBookings] = useState(0)
-  const value= {
+    const socket = connectSocket();
+
+    socket.on("newBookingRequest", (booking) => {
+      setStats(prev => ({
+        ...prev,
+        todaysBookings: prev.todaysBookings + 1,
+        pendingConfirmations: prev.pendingConfirmations + 1,
+        totalRevenue: prev.totalRevenue + (booking.price || 0),
+      }));
+      setBookingDetails(prev => [...prev, booking]);
+    });
+
+    socket.on("bookingStatusUpdate", (data) => {
+      setStats(prev => ({
+        ...prev,
+        pendingConfirmations: Math.max(
+          0,
+          prev.pendingConfirmations - 1
+        ),
+      }));
+    });
+
+    return () => {
+      socket.off("newBookingRequest");
+      socket.off("bookingStatusUpdate");
+    };
+  }, []);
+
+  useEffect(() => {
+    async function fetchBookings() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          console.warn("⚠️ No token found, cannot fetch bookings");
+          return;
+        }
+        const res = await fetch("https://localhost:5000/api/bookings", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log("📡 Raw response:", res);
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`Server error ${res.status}: ${errorText}`);
+        }
+
+        const data = await res.json();
+
+        setBookings(data);
+      } catch (err) {
+        console.error("❌ Error fetching bookings:", err);
+      }
+    }
+
+    fetchBookings();
+  }, []);
+
+  const [todayBookings, setTodayBookings] = useState(0)
+  const value = {
     currentUser,
     setCurrentUser,
     salons,
@@ -167,13 +167,13 @@ export const AppProvider = ({ children }) => {
     city, setCity,
     shop, setShop,
     stats, setStats,
-    bookingDetails,setBookingDetails
+    bookingDetails, setBookingDetails
   };
 
   return <AppContext.Provider value={value}>
-    
-      {children}
-    
+
+    {children}
+
   </AppContext.Provider>
 };
 

@@ -50,7 +50,7 @@ export default function AuthModal({ open, onClose }) {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      const res = await fetch("http://localhost:5000/api/users/google/user", {
+      const res = await fetch("https://localhost:5000/api/users/google/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

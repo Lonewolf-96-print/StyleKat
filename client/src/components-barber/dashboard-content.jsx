@@ -42,7 +42,7 @@ export default function DashboardContent() {
     console.log("Token used in the dashboard socket connection:", token);
 
     // ✅ Initialize socket only once
-    socketRef.current = io("http://localhost:5000", {
+    socketRef.current = io("https://localhost:5000", {
       transports: ["websocket"],
       auth: { token },
     });

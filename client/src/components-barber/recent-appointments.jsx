@@ -31,7 +31,7 @@ export function RecentAppointments() {
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/bookings/status/${bookingId}`,
+        `https://localhost:5000/api/bookings/status/${bookingId}`,
         {
           method: "PUT",
           headers: {
@@ -61,7 +61,7 @@ export function RecentAppointments() {
     async function fetchBookings() {
 
       try {
-        const res = await fetch("http://localhost:5000/api/bookings/today", {
+        const res = await fetch("https://localhost:5000/api/bookings/today", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,  // ← this must exist

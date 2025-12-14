@@ -27,14 +27,14 @@ export function ServicesList() {
   const [editingService, setEditingService] = useState(null);
 
   // const [filteredServices,setFilteredServices]=useState("")
-  const API_URL = "http://localhost:5000/api/services";
+  const API_URL = "https://localhost:5000/api/services";
   useEffect(() => {
     const fetchServices = async () => {
       const token = localStorage.getItem("token");
 
       try {
 
-        const res = await fetch(`http://localhost:5000/api/services/`, {
+        const res = await fetch(`https://localhost:5000/api/services/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

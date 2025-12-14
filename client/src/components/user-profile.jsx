@@ -41,7 +41,7 @@ export function UserProfile() {
       try {
         const token = localStorage.getItem("customerToken");
 
-        const res = await fetch("http://localhost:5000/api/users/me", {
+        const res = await fetch("https://localhost:5000/api/users/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -107,7 +107,7 @@ export function UserProfile() {
 
     const token = localStorage.getItem("customerToken");
 
-    const res = await fetch("http://localhost:5000/api/users/change-password", {
+    const res = await fetch("https://localhost:5000/api/users/change-password", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -136,7 +136,7 @@ export function UserProfile() {
     try {
       const token = localStorage.getItem("customerToken");
 
-      const res = await fetch("http://localhost:5000/api/users/me", {
+      const res = await fetch("https://localhost:5000/api/users/me", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -9,7 +9,7 @@ import { Badge } from '../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Search, MapPin, Star, Clock, Users, Scissors, Calendar, Award } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import { mockSalons, locations, serviceCategories } from '../data/mockData';
+import { mockSalons, locations, serviceCategories } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
 import barbershop from '/barbershop.jpg';
 
@@ -24,7 +24,7 @@ import salon from "/salon.png";
 
 import { DashboardHeader } from '../components-barber/header';
 import DashboardFooter from "../components-barber/footer"
-import { TrendingSalons } from '../components/TrendingSalons';
+
 import { useUser } from '../contexts/BarberContext';
 export const Home = () => {
   const { t } = useLanguage();
@@ -41,13 +41,13 @@ export const Home = () => {
   useEffect(() => {
     setSalons(mockSalons);
   }, [setSalons]);
- useEffect(() => {
-  if (currentUser?.role === "barber") {
-    navigate("/dashboard");
-  }
-}, [currentUser, navigate]);
+  useEffect(() => {
+    if (currentUser?.role === "barber") {
+      navigate("/dashboard");
+    }
+  }, [currentUser, navigate]);
   const handleButtonClick = () => {
-   navigate("/search-salon");
+    navigate("/search-salon");
   };
 
   const filteredSalons = salons.filter(salon => {
@@ -59,7 +59,7 @@ export const Home = () => {
     const matchesCategory = selectedCategory === t("common.allCategories") || salon.services?.some(service => service.category === selectedCategory);
     return matchesSearch && matchesLocation && matchesCategory;
   });
- // 🚨 ROLE GUARD
+  // 🚨 ROLE GUARD
 
 
   const handleBookNow = (salonId) => {
@@ -71,9 +71,9 @@ export const Home = () => {
       navigate('/salon/dashboard');
     }
   };
-if (currentUser?.role === "barber") {
-  return <div className="min-h-screen" />; // small neutral loader
-}
+  if (currentUser?.role === "barber") {
+    return <div className="min-h-screen" />; // small neutral loader
+  }
 
 
   return (
@@ -208,8 +208,8 @@ if (currentUser?.role === "barber") {
                     font-family: 'Poppins', sans-serif;
                 }
             `}</style>
-            
-            {/* <div className="w-full bg-slate-900 px-2 text-center text-white py-20 flex flex-col items-center justify-center">
+
+      {/* <div className="w-full bg-slate-900 px-2 text-center text-white py-20 flex flex-col items-center justify-center">
                 <p className="text-indigo-500 font-medium">Get updated</p>
                 <h1 className="max-w-lg font-semibold text-4xl/[44px] mt-2">Subscribe to our newsletter & get the latest news</h1>
                 <div className="flex items-center justify-center mt-10 border border-slate-600 focus-within:outline focus-within:outline-indigo-600 text-sm rounded-full h-14 max-w-md w-full">
@@ -220,7 +220,7 @@ if (currentUser?.role === "barber") {
                 </div>
             </div> */}
       {/* <TrendingSalons/> */}
-      <DashboardFooter/>
+      <DashboardFooter />
       {/* … Other sections can be similarly translated using t("key") … */}
     </div>
   );

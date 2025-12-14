@@ -13,7 +13,7 @@ const StaffList = ({ shop }) => {
 
     const fetchStaff = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/staff/public/${barberId}`);
+        const res = await fetch(`https://localhost:5000/api/staff/public/${barberId}`);
         const data = await res.json();
         if (res.ok) {
           setStaff(data);
@@ -48,12 +48,12 @@ const StaffList = ({ shop }) => {
                     <Badge variant={member.isActive ? "default" : "secondary"}>
                       {member.isActive ? "Active" : "Inactive"}
                     </Badge>
-                    {member.ratings ?(
+                    {member.ratings ? (
                       <>
-                      <p className="ml-4 flex items-center">Ratings</p>
-                      <span className="ml-2 text-sm text-muted-foreground">
-                        ★ {member.ratings}
-                      </span>
+                        <p className="ml-4 flex items-center">Ratings</p>
+                        <span className="ml-2 text-sm text-muted-foreground">
+                          ★ {member.ratings}
+                        </span>
                       </>
                     ) : null}
                   </div>
@@ -86,7 +86,7 @@ const StaffList = ({ shop }) => {
                 </div>
               </div>
 
-             
+
             </CardContent>
           </Card>
         ))

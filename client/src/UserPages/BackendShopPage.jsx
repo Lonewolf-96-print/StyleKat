@@ -15,7 +15,7 @@ import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet"
 import L from "leaflet";
 import Navbar from "../components/Navbar.jsx";
 
-const userIcon =L.divIcon({
+const userIcon = L.divIcon({
   html: `
     <div style="display:flex;flex-direction:column;align-items:center;">
       <img src="https://maps.gstatic.com/mapfiles/ms2/micons/blue-dot.png" style="width:28px;height:28px;" />
@@ -54,10 +54,10 @@ const BackendShopPage = () => {
         chunk === ","
           ? chunk
           : chunk
-              .trim()
-              .split(/\s+/)
-              .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-              .join(" ")
+            .trim()
+            .split(/\s+/)
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(" ")
       )
       .join(" ");
   }
@@ -85,7 +85,7 @@ const BackendShopPage = () => {
 
   // SOCKET
   const token = localStorage.getItem("customerToken");
-  const socket = io("http://localhost:5000", {
+  const socket = io("https://localhost:5000", {
     auth: { token },
     transports: ["websocket"],
   });
@@ -94,10 +94,10 @@ const BackendShopPage = () => {
   useEffect(() => {
     const fetchShop = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/barbers/${barberId}`);
+        const res = await fetch(`https://localhost:5000/api/barbers/${barberId}`);
         if (!res.ok) throw new Error("Failed to fetch shop");
         const data = await res.json();
-        console.log("Data fetched ",data)
+        console.log("Data fetched ", data)
         setShop(data);
         console.log("MAP IS RENDERING:", data?.coordinates);
       } catch (err) {
@@ -134,7 +134,7 @@ const BackendShopPage = () => {
   const ShopContent = (
     <div className="min-h-screen w-full bg-[url('/barbershop1.jpeg')] bg-cover bg-center bg-no-repeat p-6 flex justify-center">
       <div className="max-w-3xl w-full">
-      
+
 
         <Card className="bg-white/30 backdrop-blur-5xl shadow-2xl">
           <CardContent className="p-6">
@@ -160,76 +160,77 @@ const BackendShopPage = () => {
 
               <div className="mt-4">
                 <button
-                 onClick={() => {setShowMap(!showMap);
-                  if (!showMap) handleViewLocation();
-                 }}
+                  onClick={() => {
+                    setShowMap(!showMap);
+                    if (!showMap) handleViewLocation();
+                  }}
                   className="bg-black text-white font-semibold px-4 py-2 rounded-lg shadow"
                 >
                   {showMap ? "Hide Location" : "View Location"}
                 </button>
 
                 {/* Guarded Map */}
-               {showMap && userLocation && shop.coordinates && (
-  <div className="transition-all duration-500 ease-in-out overflow-hidden max-h-[500px] opacity-100 mt-4">
-    <div className="w-full h-[400px] rounded-xl overflow-hidden">
-      <MapContainer
-        center={[
-          (userLocation.lat + shop.coordinates.lat) / 2,
-          (userLocation.lng + shop.coordinates.lng) / 2,
-        ]}
-        zoom={14}
-        style={{ height: "100%", width: "100%" }}
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {showMap && userLocation && shop.coordinates && (
+                  <div className="transition-all duration-500 ease-in-out overflow-hidden max-h-[500px] opacity-100 mt-4">
+                    <div className="w-full h-[400px] rounded-xl overflow-hidden">
+                      <MapContainer
+                        center={[
+                          (userLocation.lat + shop.coordinates.lat) / 2,
+                          (userLocation.lng + shop.coordinates.lng) / 2,
+                        ]}
+                        zoom={14}
+                        style={{ height: "100%", width: "100%" }}
+                      >
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
-        {/* USER PIN (BLUE) */}
-        <Marker
-          position={[userLocation.lat, userLocation.lng]}
-          icon={userIcon}
-        >
-          <Popup>
-            <span className="font-semibold">You</span>
-          </Popup>
-        </Marker>
+                        {/* USER PIN (BLUE) */}
+                        <Marker
+                          position={[userLocation.lat, userLocation.lng]}
+                          icon={userIcon}
+                        >
+                          <Popup>
+                            <span className="font-semibold">You</span>
+                          </Popup>
+                        </Marker>
 
-        {/* LABEL BELOW PIN */}
-        <div className="absolute text-blue-700 text-sm font-semibold"
-          style={{
-            transform: "translate(-50%, -20px)",
-          }}>
-          You
-        </div>
+                        {/* LABEL BELOW PIN */}
+                        <div className="absolute text-blue-700 text-sm font-semibold"
+                          style={{
+                            transform: "translate(-50%, -20px)",
+                          }}>
+                          You
+                        </div>
 
-        {/* SHOP PIN (RED) */}
-        <Marker
-          position={[shop.coordinates.lat, shop.coordinates.lng]}
-          icon={shopIcon}
-        >
-          <Popup>
-            <span className="font-semibold">Salon</span>
-          </Popup>
-        </Marker>
+                        {/* SHOP PIN (RED) */}
+                        <Marker
+                          position={[shop.coordinates.lat, shop.coordinates.lng]}
+                          icon={shopIcon}
+                        >
+                          <Popup>
+                            <span className="font-semibold">Salon</span>
+                          </Popup>
+                        </Marker>
 
-        {/* LABEL BELOW PIN */}
-        <div className="absolute text-red-700 text-sm font-semibold"
-          style={{
-            transform: "translate(-50%, -20px)",
-          }}>
-          Salon
-        </div>
+                        {/* LABEL BELOW PIN */}
+                        <div className="absolute text-red-700 text-sm font-semibold"
+                          style={{
+                            transform: "translate(-50%, -20px)",
+                          }}>
+                          Salon
+                        </div>
 
-        {/* ROUTE LINE */}
-        <Polyline
-          positions={[
-            [userLocation.lat, userLocation.lng],
-            [shop.coordinates.lat, shop.coordinates.lng],
-          ]}
-          pathOptions={{ color: "green", weight: 4 }}
-        />
-      </MapContainer>
-    </div>
-  </div>
-)}
+                        {/* ROUTE LINE */}
+                        <Polyline
+                          positions={[
+                            [userLocation.lat, userLocation.lng],
+                            [shop.coordinates.lat, shop.coordinates.lng],
+                          ]}
+                          pathOptions={{ color: "green", weight: 4 }}
+                        />
+                      </MapContainer>
+                    </div>
+                  </div>
+                )}
 
               </div>
             </div>

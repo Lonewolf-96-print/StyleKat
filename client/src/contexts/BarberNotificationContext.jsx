@@ -76,7 +76,7 @@ export const BarberNotificationProvider = ({ children }) => {
       return;
     }
 
-    const socket = io("http://localhost:5000", {
+    const socket = io("https://localhost:5000", {
       transports: ["websocket"],
       auth: { token },
       reconnectionAttempts: 5,

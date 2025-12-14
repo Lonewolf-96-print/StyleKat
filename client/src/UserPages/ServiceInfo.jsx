@@ -31,7 +31,7 @@ export const ServiceInfo = () => {
 
     try {
       setIsLoading(true);
-      const res = await fetch(`http://localhost:5000/api/shops/${city}`);
+      const res = await fetch(`https://localhost:5000/api/shops/${city}`);
       const data = await res.json();
 
       setResults(data);

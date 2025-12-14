@@ -14,7 +14,7 @@ import cover from "/service-bg.jpg";
 import { io } from "socket.io-client";
 
 // Create socket once
-const socket = io("http://localhost:5000", { autoConnect: false });
+const socket = io("https://localhost:5000", { autoConnect: false });
 
 export function LoginForm() {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
@@ -39,7 +39,7 @@ export function LoginForm() {
     setError(null);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login/barber", {
+      const res = await fetch("https://localhost:5000/api/auth/login/barber", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
@@ -82,7 +82,7 @@ export function LoginForm() {
   const handleGoogleLogin = async (response) => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/auth/google-login/barber",
+        "https://localhost:5000/api/auth/google-login/barber",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

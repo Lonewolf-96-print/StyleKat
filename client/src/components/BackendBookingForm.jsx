@@ -50,14 +50,14 @@ export default function BackendBookingForm({ shop, barberId }) {
   const [status, setStatus] = useState("");
   const [showStaffList, setShowStaffList] = useState(false);
 
-  const API_URL = "http://localhost:5000/api/bookings";
+  const API_URL = "https://localhost:5000/api/bookings";
   const today = new Date().toISOString().split("T")[0];
   const fetchLiveState = async (resolvedBarberId) => {
     try {
       if (!resolvedBarberId) return;
       console.log("Barber Id inside fetch live status ", resolvedBarberId)
       const res = await fetch(
-        `http://localhost:5000/api/live/${resolvedBarberId}`
+        `https://localhost:5000/api/live/${resolvedBarberId}`
       );
       const data = await res.json();
 
@@ -90,7 +90,7 @@ export default function BackendBookingForm({ shop, barberId }) {
       return;
     }
 
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io("https://localhost:5000", {
       auth: token ? { token } : {},
       autoConnect: !!token,
       transports: ["websocket"],
@@ -296,7 +296,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     // A. Fetch Services
     const fetchServices = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/services/public/${resolvedBarberId}`, { cache: "no-store" });
+        const res = await fetch(`https://localhost:5000/api/services/public/${resolvedBarberId}`, { cache: "no-store" });
         const data = await res.json();
         if (res.ok) {
           setServices(data);
@@ -311,7 +311,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     // B. Fetch Staff
     const fetchStaff = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/staff/public/${resolvedBarberId}`);
+        const res = await fetch(`https://localhost:5000/api/staff/public/${resolvedBarberId}`);
         const data = await res.json();
         if (res.ok) {
           setStaff(data);

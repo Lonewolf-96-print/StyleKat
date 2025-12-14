@@ -53,7 +53,7 @@ export function CustomerLoginForm() {
     try {
       const decoded = jwtDecode(res.credential);
 
-      const api = await fetch("http://localhost:5000/api/users/google/user", {
+      const api = await fetch("https://localhost:5000/api/users/google/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: res.credential }),

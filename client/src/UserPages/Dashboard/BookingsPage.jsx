@@ -89,7 +89,7 @@ export default function BookingsDashboardPage() {
           return;
         }
 
-        const res = await fetch("http://localhost:5000/api/bookings/my", {
+        const res = await fetch("https://localhost:5000/api/bookings/my", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -118,7 +118,7 @@ export default function BookingsDashboardPage() {
     const userId = localStorage.getItem("userId");
     if (!token) return;
 
-    const userSocket = io("http://localhost:5000", {
+    const userSocket = io("https://localhost:5000", {
       auth: { token },
       transports: ["polling", "websocket"],
     });
@@ -156,7 +156,7 @@ export default function BookingsDashboardPage() {
 
     try {
       const token = localStorage.getItem("customerToken");
-      const res = await fetch(`http://localhost:5000/api/bookings/my/${bookingId}`, {
+      const res = await fetch(`https://localhost:5000/api/bookings/my/${bookingId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -185,7 +185,7 @@ export default function BookingsDashboardPage() {
       const token = localStorage.getItem("customerToken");
 
       const res = await fetch(
-        `http://localhost:5000/api/bookings/my/${bookingId}/permanent`,
+        `https://localhost:5000/api/bookings/my/${bookingId}/permanent`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },

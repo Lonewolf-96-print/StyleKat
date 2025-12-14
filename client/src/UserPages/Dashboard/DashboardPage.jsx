@@ -32,7 +32,7 @@ export default function DashboardPage() {
     if (!customerToken) return;
 
     // init socket with auth token
-    const s = io("http://localhost:5000", { auth: { token: customerToken } });
+    const s = io("https://localhost:5000", { auth: { token: customerToken } });
     setSocket(s);
 
     s.on("connect", () => {

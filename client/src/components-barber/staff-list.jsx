@@ -29,7 +29,7 @@ export function StaffList() {
 
         if (!token) throw new Error("No token found");
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/staff`, {
+        const res = await fetch(`https://localhost:5000/api/staff`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`, // <-- critical
@@ -54,7 +54,7 @@ export function StaffList() {
     if (!token) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/staff/${id}`, {
+      const res = await fetch(`https://localhost:5000/api/staff/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`
@@ -96,7 +96,7 @@ export function StaffList() {
 
     try {
       const target = updated.find((m) => m._id === id);
-      const res = await fetch(`http://localhost:5000/api/staff/${id}`, {
+      const res = await fetch(`https://localhost:5000/api/staff/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

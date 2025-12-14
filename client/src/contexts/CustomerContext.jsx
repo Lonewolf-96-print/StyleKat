@@ -8,7 +8,7 @@ export const CustomerProvider = ({ children }) => {
   const [customer, setCustomer] = useState(null);
   const [customerToken, setCustomerToken] = useState(null);
   const [loading, setLoading] = useState(true);
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   /* ----------------------------------------------
       RESTORE USER FROM LOCAL STORAGE ON REFRESH
   ---------------------------------------------- */
@@ -34,7 +34,7 @@ export const CustomerProvider = ({ children }) => {
       LOGIN (EMAIL + PASSWORD)
   ---------------------------------------------- */
   const login = async (email, password) => {
-    const res = await fetch("http://localhost:5000/api/users/login", {
+    const res = await fetch("https://localhost:5000/api/users/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
@@ -59,7 +59,7 @@ export const CustomerProvider = ({ children }) => {
       REGISTER USER
   ---------------------------------------------- */
   const register = async (name, email, password, phone) => {
-    const res = await fetch("http://localhost:5000/api/users/register", {
+    const res = await fetch("https://localhost:5000/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, password, phone }),
@@ -82,7 +82,7 @@ export const CustomerProvider = ({ children }) => {
       LOGIN WITH GOOGLE (COMMON FOR ANY PAGE)
   ---------------------------------------------- */
   const googleLogin = async (credential) => {
-    const res = await fetch("http://localhost:5000/api/users/google/user", {
+    const res = await fetch("https://localhost:5000/api/users/google/user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token: credential }),
@@ -124,7 +124,7 @@ export const CustomerProvider = ({ children }) => {
         googleLogin,
         loading,
         logout,
-         setLoading,
+        setLoading,
       }}
     >
       {children}

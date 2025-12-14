@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
-const socket = io("http://localhost:5000", { autoConnect: false });
+const socket = io("https://localhost:5000", { autoConnect: false });
 
 export function SignupForm() {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();
@@ -42,7 +42,7 @@ export function SignupForm() {
   async function BarberSignup(userData) {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/auth/signup/barber",
+        "https://localhost:5000/api/auth/signup/barber",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

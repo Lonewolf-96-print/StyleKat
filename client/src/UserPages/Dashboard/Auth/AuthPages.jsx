@@ -56,7 +56,7 @@ export default function AuthPage() {
     try {
       const decoded = jwtDecode(credentialResponse.credential);
 
-      const res = await fetch("http://localhost:5000/api/auth/google-login", {
+      const res = await fetch("https://localhost:5000/api/auth/google-login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),

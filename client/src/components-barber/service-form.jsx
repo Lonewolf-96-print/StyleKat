@@ -34,7 +34,7 @@ export function ServiceForm({ serviceId, existingService }) {
     category: "",
     isActive: true,
   })
-  const API_URL = "http://localhost:5000/api/services";
+  const API_URL = "https://localhost:5000/api/services";
 
 
   // FIX: Fetch data if serviceId exists but existingService is not provided (Page Refresh scenario)

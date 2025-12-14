@@ -83,7 +83,7 @@ export default function StaffQueueView({ barberId }) {
     setLoading(true);
 
     const load = async () => {
-      const res = await fetch(`http://localhost:5000/api/live/${barberId}`);
+      const res = await fetch(`https://localhost:5000/api/live/${barberId}`);
       const data = await res.json();
 
       const arr = data[barberId] || [];
