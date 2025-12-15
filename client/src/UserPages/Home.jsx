@@ -1,26 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { useParams, useNavigate } from "react-router-dom";
-import { Input } from '../components/ui/input';
 import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Divider';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
-import { Search, MapPin, Star, Clock, Users, Scissors, Calendar, Award } from 'lucide-react';
+import { Scissors } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
-import { mockSalons, locations, serviceCategories } from '../data/MockData';
+import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
 import barbershop from '/barbershop.jpg';
 
 import { useAuthModal } from '../contexts/AuthModelContext';
 
-import barbershop1 from '/barbershop1.jpeg';
-import barbershop2 from '/barbershop2.jpeg';
-import barbershop3 from '/barbershop3.jpeg';
-import barbershop4 from '/barbershop4.jpg';
-import cover from "/salon-cover.jpg";
-import salon from "/salon.png";
+
 
 import { DashboardHeader } from '../components-barber/header';
 import DashboardFooter from "../components-barber/footer"
@@ -32,8 +22,7 @@ export const Home = () => {
   const currentUser = user;
   const { setIsAuthOpen } = useAuthModal();
   console.log("Home - Current User from BarberContext:", currentUser);
-  const { setCurrentUser, salons, setSalons, searchQuery, setSearchQuery, selectedLocation, setSelectedLocation, isFormOpen, setIsFormOpen } = useApp();
-  const [selectedCategory, setSelectedCategory] = useState(t("common.allCategories"));
+  const { setCurrentUser, salons, setSalons } = useApp();
   const navigate = useNavigate();
   const { userId } = useParams();
   console.log("Home - Current User:", currentUser);
@@ -50,15 +39,7 @@ export const Home = () => {
     navigate("/search-salon");
   };
 
-  const filteredSalons = salons.filter(salon => {
-    const name = (salon.name || "").toLowerCase();
-    const description = (salon.description || "").toLowerCase();
-    const query = (searchQuery || "").toLowerCase();
-    const matchesSearch = name.includes(query) || description.includes(query);
-    const matchesLocation = selectedLocation === "all-locations" || !selectedLocation || salon.location === selectedLocation;
-    const matchesCategory = selectedCategory === t("common.allCategories") || salon.services?.some(service => service.category === selectedCategory);
-    return matchesSearch && matchesLocation && matchesCategory;
-  });
+
   // 🚨 ROLE GUARD
 
 
@@ -131,40 +112,9 @@ export const Home = () => {
           {/* Search Bar */}
           <div className="max-w-4xl mx-auto text-black backdrop-blur-sm rounded-2xl p-6 shadow-lg">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                <Input
-                  placeholder={t("home.searchPlaceholder")}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 text-black placeholder:text-black/70"
-                />
-              </div>
-              <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                <SelectTrigger>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <SelectValue placeholder={t("home.location")} />
-                  </div>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all-locations">{t("home.allLocations")}</SelectItem>
-                  {locations.map(location => (
-                    <SelectItem key={location} value={location}>{location}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
 
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder={t("home.category")} />
-                </SelectTrigger>
-                <SelectContent className="max-h-60 overflow-y-auto text-black">
-                  {serviceCategories.map(category => (
-                    <SelectItem key={category} value={category}>{category}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+
+
 
               <Button
                 onClick={handleButtonClick}

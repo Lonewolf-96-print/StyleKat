@@ -224,6 +224,7 @@ router.post("/request", protectUser, async (req, res) => {
     });
 
     const saved = await bookingDoc.save();
+    console.log("Booking request recieved from the frontend", bookingDoc)
     console.log("✅ Booking saved to DB:", saved._id);
 
     // Update in-memory blockedTimesStore (store HH:mm 24h strings)
