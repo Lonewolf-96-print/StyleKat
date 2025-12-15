@@ -25,12 +25,23 @@ import Staff from "./model/Staff.model.js";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
-
+const allowedOrigins = [
+  "https://brilliant-paprenjak-994f24.netlify.app"
+];
 const app = express();
+app.options("*", cors());
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true); // allow server-to-server
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true
   })
 );
 app.use(express.json());
