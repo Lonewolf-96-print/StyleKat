@@ -29,7 +29,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://localhost:5173", "https://brilliant-paprenjak-994f24.netlify.app"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -47,11 +47,12 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5173", "https://localhost:5173", "https://brilliant-paprenjak-994f24.netlify.app"],
+    origin: process.env.CLIENT_URL,
     methods: ["GET", "POST"],
   },
   transports: ["websocket", "polling"],
 });
+
 export const blockedTimesStore = {};
 // attach io to req so routes can use req.io
 app.use((req, res, next) => {
@@ -83,14 +84,14 @@ io.use(async (socket, next) => {
       socket.shopId = barber._id.toString(); // keep both names for clarity
       // don't auto-join rooms here if you want explicit join; but join is fine
       socket.join(`shop-${socket.shopId}`);
-      console.log(`💈 Barber authenticated & joined shop-${socket.shopId}`);
+      // console.log(`💈 Barber authenticated & joined shop-${socket.shopId}`);
     }
 
     if (user) {
       socket.role = "user";
       socket.userId = user._id.toString();
       socket.join(`user-${socket.userId}`);
-      console.log(`🙋 User authenticated & joined user-${socket.userId}`);
+      // console.log(`🙋 User authenticated & joined user-${socket.userId}`);
     }
 
     next();
@@ -136,7 +137,7 @@ async function broadcastShopQueue(shopId, targetDate = null) {
 
     const start = new Date(`${dateStr} ${timeStr}`);
     if (isNaN(start)) {
-      console.log("❌ BAD TIME PARSE:", dateStr, timeStr);
+      // console.log("❌ BAD TIME PARSE:", dateStr, timeStr);
       return {
         startTime: new Date().toISOString(),
         endTime: new Date(Date.now() + durationNum * 60000).toISOString(),
@@ -194,7 +195,7 @@ async function broadcastShopQueue(shopId, targetDate = null) {
    Socket events
 --------------------------------------------------------- */
 io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
+  // console.log("Socket connected:", socket.id);
 
   /* ---------------------------------------------
      JOIN ROOMS
@@ -202,19 +203,19 @@ io.on("connection", (socket) => {
   socket.on("joinShopRoom", ({ barberId }) => {
     if (!barberId) return;
     socket.join(`shop-${barberId}`);
-    console.log("Joined shop room:", barberId);
+    // console.log("Joined shop room:", barberId);
   });
 
   socket.on("joinStaffRoom", (staffId) => {
     if (!staffId) return;
     socket.join(`staff-${staffId}`);
-    console.log("Joined staff room:", staffId);
+    // console.log("Joined staff room:", staffId);
   });
 
   socket.on("joinUserRoom", (userId) => {
     if (!userId) return;
     socket.join(`user-${userId}`);
-    console.log("Joined user room:", userId);
+    // console.log("Joined user room:", userId);
   });
 
   /* ---------------------------------------------
@@ -232,7 +233,7 @@ io.on("connection", (socket) => {
       const staffRoom = `staff-${created.staffId}`;
       const userRoom = `user-${created.userId}`;
 
-      console.log("Created booking via SOCKET:", created._id);
+      // console.log("Created booking via SOCKET:", created._id);
 
       // 1️⃣ Staff time block (your existing logic)
       io.to(staffRoom).emit("staff:timeBlocked", {
@@ -261,7 +262,7 @@ io.on("connection", (socket) => {
       await broadcastShopQueue(created.barberId, created.date);
 
     } catch (err) {
-      console.error("newBookingRequest error:", err);
+      // console.error("newBookingRequest error:", err);
       socket.emit("booking:error", { message: "Failed to create booking." });
     }
   });
@@ -417,5 +418,6 @@ app.get("/health", (req, res) => {
   server.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log("Socket.IO ready ✅");
+
   });
 })();

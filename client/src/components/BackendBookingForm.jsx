@@ -421,7 +421,7 @@ export default function BackendBookingForm({ shop, barberId }) {
 
     try {
       console.log("Booking payload:", body);
-      const res = await fetch(`${API_URL}/request`, {
+      const res = await fetch(`${API_URL}/api/bookings/request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

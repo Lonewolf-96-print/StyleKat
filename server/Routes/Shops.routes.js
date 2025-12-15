@@ -18,7 +18,7 @@ const Router = express.Router();
 --------------------------------------------------------- */
 Router.get("/:city", async (req, res) => {
   const city = req.city || "";
-console.log("City",city)
+
   try {
     const shops = await Barber.find({
       address: { $regex: city, $options: "i" }

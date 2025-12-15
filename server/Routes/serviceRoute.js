@@ -1,14 +1,14 @@
 import express from "express";
-import { updateService,toggleServiceStatus,deleteService,getAllServices,createService } from "../controllers/serviceController.js";
+import { updateService, toggleServiceStatus, deleteService, getAllServices, createService } from "../controllers/serviceController.js";
 import { protect } from "../middleware/auth.middleware.js";
 const router = express.Router();
 import Service from "../model/Service.js";
 import Barber from "../model/Barber.model.js";
 // PUT → Edit service details
 router.get("/", protect, async (req, res) => {
-  
+
   try {
-     if (!req.barber) {
+    if (!req.barber) {
       return res.status(401).json({ message: "Barber not authorized" });
     }
     console.log("✅ Barber verified:", req.barber._id);
@@ -23,10 +23,10 @@ router.get("/", protect, async (req, res) => {
 // Get public services for a barber (no auth required)
 router.get("/public/:barberId", async (req, res) => {
   console.log("🔥 Reached public services endpoint");
-  console.log("📥 Public services request for user:", req.params.barberId);
+  // console.log("📥 Public services request for user:", req.params.barberId);
   const { barberId } = req.params;
-  
-    if (!barberId || barberId === "undefined") {
+
+  if (!barberId || barberId === "undefined") {
     return res.status(400).json({ message: "Invalid or missing barberId" });
   }
   try {
@@ -49,7 +49,7 @@ router.get("/public/:barberId", async (req, res) => {
 });
 
 router.put("/:barberId", protect, updateService);
-router.post("/", protect,createService);
+router.post("/", protect, createService);
 
 // PATCH → Toggle active/inactive status
 router.patch("/:serviceId/toggle", toggleServiceStatus);
