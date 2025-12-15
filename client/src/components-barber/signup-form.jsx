@@ -259,9 +259,9 @@ export const SignupForm = () => {
               shape="rectangular"
               onSuccess={(cred) => {
                 let decoded = jwtDecode(cred.credential);
-                console.log(decoded);
+
               }}
-              onError={() => console.log("Google Login Failed")}
+
             />
 
             {/* Login Redirect */}

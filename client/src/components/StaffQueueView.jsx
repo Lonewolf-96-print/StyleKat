@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { API_URL, SOCKET_URL } from "../lib/config";
 import { Clock, User, Scissors } from "lucide-react";
-
 // Always parse startTime as REAL DATE
 const ts = (t) => (t ? new Date(t).getTime() : Date.now());
 

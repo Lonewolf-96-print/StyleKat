@@ -57,7 +57,7 @@ export function UserProfile() {
 
         setUser(merged);
         setFormData(merged);
-        console.log("User profile loaded:", merged);
+
       } catch (err) {
         toast.error("Could not load profile");
       } finally {
@@ -121,7 +121,7 @@ export function UserProfile() {
     });
 
     const data = await res.json();
-    console.log("Data recieved from the backend", data);
+
 
     if (!res.ok) {
       toast.error(data.message || "Password update failed");

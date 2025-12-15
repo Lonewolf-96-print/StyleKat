@@ -65,7 +65,7 @@ export const AppProvider = ({ children }) => {
       });
 
       window.socket.on("connect", () => {
-        console.log("🟢 Socket connected on user side:", window.socket.id);
+
       });
     }
   }, []);
@@ -73,8 +73,8 @@ export const AppProvider = ({ children }) => {
     const savedToken = localStorage.getItem("customerToken") || localStorage.getItem("token");
     const savedUser = localStorage.getItem("customerUser") || localStorage.getItem("user")
 
-    console.log("Saved token and user from localStorage:", { savedToken, savedUser });
-    // console.log("🔍 Loading from localStorage:", { savedToken, savedUser });
+
+
     if (savedToken && savedUser) {
       setToken(savedToken);
       // setCurrentUser(JSON.parse(savedUser));
@@ -128,7 +128,7 @@ export const AppProvider = ({ children }) => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("📡 Raw response:", res);
+
 
         if (!res.ok) {
           const errorText = await res.text();
