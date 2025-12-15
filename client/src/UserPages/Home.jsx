@@ -111,18 +111,18 @@ export const Home = () => {
 
           {/* Search Bar */}
           <div className="max-w-4xl mx-auto text-black backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
 
 
 
-              <Button
-                onClick={handleButtonClick}
-                className="bg-primary hover:bg-primary-dark text-primary-foreground"
-              >
-                {t("home.findSalons")}
-              </Button>
-            </div>
+
+            <Button
+              onClick={handleButtonClick}
+              className="bg-primary hover:bg-primary-dark text-primary-foreground"
+            >
+              {t("home.findSalons")}
+            </Button>
+
           </div>
         </div>
       </section>
