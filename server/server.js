@@ -29,7 +29,6 @@ const allowedOrigins = [
   "https://brilliant-paprenjak-994f24.netlify.app"
 ];
 const app = express();
-app.options("*", cors());
 
 app.use(
   cors({
@@ -389,6 +388,7 @@ cron.schedule("* * * * *", async () => {
     console.error("Cron reminder error:", err);
   }
 });
+
 
 /* ---------------------------------------------------------
    Routes
