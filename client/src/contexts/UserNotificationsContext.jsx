@@ -133,8 +133,8 @@ export const NotificationProvider = ({ children }) => {
 
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
-      auth: { token: customerToken },
-      reconnectionAttempts: 5,
+      withCredentials: true,
+      autoConnect: false,
     });
     socketRef.current = socket;
 

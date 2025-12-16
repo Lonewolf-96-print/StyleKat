@@ -80,7 +80,8 @@ export const BarberNotificationProvider = ({ children }) => {
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
-      reconnectionAttempts: 5,
+      withCredentials: true,
+      autoConnect: false,
     });
     socketRef.current = socket;
 

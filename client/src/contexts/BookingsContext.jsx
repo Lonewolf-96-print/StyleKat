@@ -162,7 +162,12 @@ export function BookingProvider({ children }) {
   // Socket Setup: Barber
   // =========================
   const initBarberSocket = (token) => {
-    const socket = io(SOCKET_URL, { auth: { token } });
+    const socket = io(SOCKET_URL, {
+      transports: ["websocket"],
+      auth: { token },
+      withCredentials: true,
+      autoConnect: false,
+    });
     socketRef.current = socket;
 
     socket.on("connect", () => {

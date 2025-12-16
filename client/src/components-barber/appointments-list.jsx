@@ -53,7 +53,8 @@ export function AppointmentsList() {
 
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
-      auth: { token },
+      withCredentials: true,
+      autoConnect: false,
     });
 
     setSocketInstance(socket);

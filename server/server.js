@@ -32,17 +32,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow server-to-server
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true
+    origin: "https://brilliant-paprenjak-994f24.netlify.app",
+    credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -57,11 +51,13 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: "https://brilliant-paprenjak-994f24.netlify.app",
     methods: ["GET", "POST"],
+    credentials: true,
   },
-  transports: ["websocket", "polling"],
+  transports: ["websocket"], // ✅ ONLY websocket
 });
+
 
 export const blockedTimesStore = {};
 // attach io to req so routes can use req.io

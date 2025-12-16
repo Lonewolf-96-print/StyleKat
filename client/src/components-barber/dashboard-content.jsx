@@ -46,6 +46,8 @@ export default function DashboardContent() {
     socketRef.current = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
+      withCredentials: true,
+      autoConnect: false,
     });
 
     const socket = socketRef.current;

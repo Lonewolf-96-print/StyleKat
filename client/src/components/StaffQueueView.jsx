@@ -108,7 +108,11 @@ export default function StaffQueueView({ barberId }) {
   useEffect(() => {
     if (!barberId) return;
 
-    const socket = io(SOCKET_URL, { transports: ["websocket"] });
+    const socket = io(SOCKET_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
+      autoConnect: false,
+    });
     socketRef.current = socket;
 
     socket.on("connect", () => {

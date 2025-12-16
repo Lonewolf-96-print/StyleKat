@@ -15,7 +15,11 @@ import cover from "/service-bg.jpg";
 import { io } from "socket.io-client";
 
 // Create socket once
-const socket = io(SOCKET_URL, { autoConnect: false });
+const socket = io(SOCKET_URL, {
+  transports: ["websocket"],
+  withCredentials: true,
+  autoConnect: false,
+});
 
 export const LoginForm = () => {
   const { setCurrentUser, setIsAuthReady, setToken } = useApp();

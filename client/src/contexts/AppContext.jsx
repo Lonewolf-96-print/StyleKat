@@ -62,6 +62,8 @@ export const AppProvider = ({ children }) => {
     if (token && !window.socket) {
       window.socket = io(SOCKET_URL, {
         auth: { token },
+        withCredentials: true,
+        autoConnect: false,
       });
 
       window.socket.on("connect", () => {
