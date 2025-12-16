@@ -34,7 +34,7 @@ export default function MyShopPage() {
       const token = localStorage.getItem("token");
 
       // STAFF
-      const resStaff = await fetch(`${API_URL} /api/staff / `, {
+      const resStaff = await fetch(`${API_URL}/api/staff/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token} `,
@@ -45,7 +45,7 @@ export default function MyShopPage() {
       console.log("Loaded staff:", staffData);
 
       // BOOKINGS
-      const resBookings = await fetch(`${API_URL} /api/bookings`, {
+      const resBookings = await fetch(`${API_URL}/api/bookings`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token} `,
@@ -76,7 +76,8 @@ export default function MyShopPage() {
 
     const s = io(SOCKET_URL, {
       auth: { token },
-      transports: ["websocket", "polling"],
+      transports: ["websocket"],
+      withCredentials: true,
     });
 
     s.on("connect", () => {
@@ -192,7 +193,7 @@ export default function MyShopPage() {
 
     socket.emit("service:started", { bookingId: booking._id });
 
-    await fetch(`${API_URL} /api/bookings / status / ${booking._id} `, {
+    await fetch(`${API_URL}/api/bookings/status/${booking._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -213,7 +214,7 @@ export default function MyShopPage() {
 
     socket.emit("service:finished", { bookingId: booking._id });
 
-    await fetch(`${API_URL} /api/bookings / status / ${booking._id} `, {
+    await fetch(`${API_URL}/api/bookings/status/${booking._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
