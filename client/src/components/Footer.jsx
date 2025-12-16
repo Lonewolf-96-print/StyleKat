@@ -21,18 +21,14 @@ export default function UserDashboardFooter() {
       <div className="px-6 py-4">
         {/* Main grid */}
         <div className="lg:grid grid-cols-4 gap-6">
-          
+
           {/* Brand Info */}
           <div className="space-y-3">
             <h3 className="font-semibold text-white text-3xl">StyleKat</h3>
             <p className="text-sm text-primary-foreground/80">
               {"Book, manage and enjoy salon experiences effortlessly."}
             </p>
-            <div className="flex space-x-3">
-              <Facebook className="h-4 w-4 hover:text-accent cursor-pointer transition-colors" />
-              <Twitter className="h-4 w-4 hover:text-accent cursor-pointer transition-colors" />
-              <Instagram className="h-4 w-4 hover:text-accent cursor-pointer transition-colors" />
-            </div>
+
           </div>
 
           {/* Quick Links */}
@@ -43,13 +39,13 @@ export default function UserDashboardFooter() {
                 Dashboard
               </Link>
               <Link to="/my-bookings" className="block hover:text-accent transition-colors">
-               My Bookings
+                My Bookings
               </Link>
               <Link to="/notifications" className="block hover:text-accent transition-colors">
                 Notifications
               </Link>
               <Link to="/profile" className="block hover:text-accent transition-colors">
-                 Profile Settings
+                Profile Settings
               </Link>
             </div>
           </div>
