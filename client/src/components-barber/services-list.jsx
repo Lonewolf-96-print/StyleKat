@@ -20,7 +20,10 @@ const categoryColors = {
   Facial: "bg-purple-100 text-purple-800",
   Massage: "bg-orange-100 text-orange-800",
 }
-
+function capitalizeSentence(sentence) {
+  if (!sentence) return "";
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+}
 export function ServicesList() {
   const barberId = localStorage.getItem("barberId");
   const [selectedService, setSelectedService] = useState(null);
@@ -171,7 +174,7 @@ export function ServicesList() {
           />
         </div>
         <div className="flex gap-2 text-sm text-muted-foreground">
-          <span>{filteredServices.length} {filteredServices.length === 1 ? 'service' : 'services'} found</span>
+          <span>{filteredServices.length} {filteredServices.length === 1 ? 'Service' : 'Services'} found</span>
         </div>
       </div>
 
@@ -234,7 +237,7 @@ export function ServicesList() {
               </div>
 
               <p className="text-sm text-gray-500 line-clamp-2 h-10 mb-2">
-                {service.description || "No description provided."}
+                {capitalizeSentence(service.description) || "No description provided."}
               </p>
 
               <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-2">

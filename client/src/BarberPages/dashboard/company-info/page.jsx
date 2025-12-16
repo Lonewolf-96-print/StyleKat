@@ -13,6 +13,7 @@ import { DashboardSidebar } from "../../../components-barber/sidebar"
 import { ServicesList } from "../../../components-barber/services-list"
 import { StaffList } from "../../../components-barber/staff-list"
 import cover from "/cover.jpg"
+import { API_URL } from "../../../lib/config"
 export default function CompanyInfoPage() {
   const { t } = useLanguage()
   const barberId = localStorage.getItem("shopId")
@@ -26,7 +27,7 @@ export default function CompanyInfoPage() {
     if (!barberId) return
     const fetchBarberData = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/barbers/${barberId}`)
+        const res = await fetch(`${API_URL}/api/barbers/${barberId}`)
         const data = await res.json()
         setBarberData(data)
         console.log("Fetched barber data:", data)
