@@ -110,7 +110,7 @@ export const Home = () => {
           </p>
 
           {/* Search Bar */}
-          <div className="max-w-4xl mx-auto text-black backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+          <div className="max-w-4xl mx-auto text-black rounded-2xl p-6 shadow-lg">
 
 
 
