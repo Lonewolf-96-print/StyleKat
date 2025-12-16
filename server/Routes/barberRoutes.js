@@ -7,8 +7,8 @@ const router = express.Router();
 router.get("/:id", async (req, res) => {
   try {
     const barber = await Barber.findById(req.params.id).select("-password");
-      
-      console.log("Barber fetched:", barber);
+
+    // console.log("Barber fetched:", barber);
     if (!barber) {
       return res.status(404).json({ message: "Barber not found" });
     }

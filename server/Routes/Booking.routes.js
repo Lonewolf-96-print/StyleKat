@@ -224,7 +224,7 @@ router.post("/request", protectUser, async (req, res) => {
     });
 
     const saved = await bookingDoc.save();
-    console.log("✅ Booking saved to DB:", saved._id);
+    // console.log("✅ Booking saved to DB:", saved._id);
 
     // Update in-memory blockedTimesStore (store HH:mm 24h strings)
     blockedTimesStore[staffId][date].push({
@@ -273,7 +273,7 @@ router.post("/request", protectUser, async (req, res) => {
     if (saved.userId) req.io.to(userRoom).emit("user:bookingCreated", saved);
     req.io.to(shopRoom).emit("booking:new", saved);
 
-    console.log("✅ Booking created and emitted:", saved._id);
+    // console.log("✅ Booking created and emitted:", saved._id);
     return res.status(201).json({ message: "Booking created successfully", booking: saved });
   } catch (err) {
     console.error("❌ Error creating booking:", err);
@@ -405,7 +405,7 @@ router.post("/request", protectUser, async (req, res) => {
 
     const saved = await bookingDoc.save();
     // console.log("Booking request recieved from the frontend", bookingDoc)
-    console.log("✅ Booking saved to DB:", saved._id);
+    // console.log("✅ Booking saved to DB:", saved._id);
 
     // Update in-memory blockedTimesStore (store HH:mm 24h strings)
     blockedTimesStore[staffId][date].push({
@@ -454,7 +454,7 @@ router.post("/request", protectUser, async (req, res) => {
     if (saved.userId) req.io.to(userRoom).emit("user:bookingCreated", saved);
     req.io.to(shopRoom).emit("booking:new", saved);
 
-    console.log("✅ Booking created and emitted:", saved._id);
+    // console.log("✅ Booking created and emitted:", saved._id);
     return res.status(201).json({ message: "Booking created successfully", booking: saved });
   } catch (err) {
     console.error("❌ Error creating booking request:", err);

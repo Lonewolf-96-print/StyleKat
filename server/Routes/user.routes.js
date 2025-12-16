@@ -14,15 +14,15 @@ router.post("/register", async (req, res) => {
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    if(password.length < 6){
+    if (password.length < 6) {
       return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ name, email, phone, password,role:"user" });
-    const token = generateToken(user._id,"user",null,res);
+    const user = await User.create({ name, email, phone, password, role: "user" });
+    const token = generateToken(user._id, "user", null, res);
 
     res.status(201).json({
       success: true,
@@ -32,10 +32,10 @@ router.post("/register", async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        password:user.password,
-        
+        password: user.password,
+
       },
-      role:user.role
+      role: user.role
     });
   } catch (error) {
     console.error("Error registering user:", error);
@@ -45,14 +45,14 @@ router.post("/register", async (req, res) => {
 
 // POST /api/users/login
 router.post("/login", async (req, res) => {
- try {
+  try {
     const { email, password } = req.body;
-    console.log("📩 Login attempt:", email, password);
+    // console.log("📩 Login attempt:", email, password);
 
     const user = await User.findOne({ email }).select("+password") //;
 
     if (!user) {
-      console.log("❌ No user found with email:", email);
+      // console.log("❌ No user found with email:", email);
       return res.status(404).json({ message: "User not found" });
     }
 
@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = generateToken(user._id,"user",null, res);
+    const token = generateToken(user._id, "user", null, res);
 
     res.json({
       success: true,
@@ -100,9 +100,9 @@ router.put("/change-password", protectUser, async (req, res) => {
       user.password = newPassword;
       await user.save();
 
-      return res.json({ 
+      return res.json({
         message: "Password set successfully",
-        passwordExists: true 
+        passwordExists: true
       });
     }
 
@@ -120,9 +120,9 @@ router.put("/change-password", protectUser, async (req, res) => {
     user.password = newPassword;
     await user.save();
 
-    return res.json({ 
+    return res.json({
       message: "Password updated successfully",
-      passwordExists: true 
+      passwordExists: true
     });
 
   } catch (err) {
@@ -199,8 +199,8 @@ router.put("/me", protectUser, async (req, res) => {
       email: updatedUser.email,
       phone: updatedUser.phone,
       address: updatedUser.address,
-      bio:updatedUser.bio,
-      token: generateToken(updatedUser._id,"user",null,res), // optional, if you want to refresh JWT
+      bio: updatedUser.bio,
+      token: generateToken(updatedUser._id, "user", null, res), // optional, if you want to refresh JWT
     });
   } catch (err) {
     console.error(err);

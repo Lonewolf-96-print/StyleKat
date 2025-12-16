@@ -11,7 +11,7 @@ router.get("/", protect, async (req, res) => {
     if (!req.barber) {
       return res.status(401).json({ message: "Barber not authorized" });
     }
-    console.log("✅ Barber verified:", req.barber._id);
+    // console.log("✅ Barber verified:", req.barber._id);
     const barberId = req.barber._id; // ✅ comes from token
     const services = await Service.find({ barberId });
     res.json(services);
@@ -22,7 +22,7 @@ router.get("/", protect, async (req, res) => {
 });
 // Get public services for a barber (no auth required)
 router.get("/public/:barberId", async (req, res) => {
-  console.log("🔥 Reached public services endpoint");
+  // console.log("🔥 Reached public services endpoint");
   // console.log("📥 Public services request for user:", req.params.barberId);
   const { barberId } = req.params;
 

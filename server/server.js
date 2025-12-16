@@ -310,7 +310,7 @@ io.on("connection", (socket) => {
   });
   socket.on("requestShopQueue", async (shopId) => {
     if (!shopId) return;
-    console.log("⏳ Shop requested queue:", shopId);
+    // console.log("⏳ Shop requested queue:", shopId);
 
     const payload = await broadcastShopQueue(shopId);
     io.to(`shop-${shopId}`).emit("shopQueueUpdate", { [shopId]: payload });
@@ -347,7 +347,7 @@ io.on("connection", (socket) => {
      DISCONNECT
   --------------------------------------------- */
   socket.on("disconnect", () => {
-    console.log("Socket disconnected:", socket.id);
+    // console.log("Socket disconnected:", socket.id);
   });
 });
 
@@ -377,11 +377,11 @@ cron.schedule("* * * * *", async () => {
           message: `Reminder: Your appointment with ${b.staffName} is in ${minutes} minutes.`,
         };
         io.to(`user-${b.userId}`).emit("booking:reminder", payload);
-        console.log("Reminder sent to user:", b.userId, "for booking:", b._id);
+        // console.log("Reminder sent to user:", b.userId, "for booking:", b._id);
       }
     }
   } catch (err) {
-    console.error("Cron reminder error:", err);
+    // console.error("Cron reminder error:", err);
   }
 });
 
@@ -423,8 +423,8 @@ app.get("/health", (req, res) => {
   await connectData();
 
   server.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log("Socket.IO ready ✅");
+    // console.log(`🚀 Server running on port ${PORT}`);
+    // console.log("Socket.IO ready ✅");
 
   });
 })();

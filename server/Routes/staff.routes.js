@@ -4,10 +4,10 @@ import { protect } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 // ✅ GET all staff for a specific barber
-router.get("/",protect, async (req, res) => {
+router.get("/", protect, async (req, res) => {
   try {
-     const barberId = req.barber._id;
-    const staff = await Staff.find({barberId})
+    const barberId = req.barber._id;
+    const staff = await Staff.find({ barberId })
 
     res.json(staff);
   } catch (err) {
@@ -15,15 +15,15 @@ router.get("/",protect, async (req, res) => {
     res.status(500).json({ message: "Failed to fetch staff" });
   }
 });
-router.get("/debug", protect,async (req, res) => {
+router.get("/debug", protect, async (req, res) => {
   const staff = await Staff.find({ barberId: req.barber._id });
   res.json({ barberId: req.barber._id, count: staff.length, staff });
 });
 // ✅ Add new staff member
-router.post("/",protect, async (req, res) => {
+router.post("/", protect, async (req, res) => {
   try {
-    const barberId =req.barber._id;  // <-- critical
-    console.log("📥 New staff data:", req.body);
+    const barberId = req.barber._id;  // <-- critical
+    //console.log("📥 New staff data:", req.body);
     const {
       name,
       role,
@@ -36,8 +36,8 @@ router.post("/",protect, async (req, res) => {
       selectedDays,
       notes,
     } = req.body;
-       const workingHours = `${startTime} - ${endTime}`;
-     const newStaff = await Staff.create({
+    const workingHours = `${startTime} - ${endTime}`;
+    const newStaff = await Staff.create({
       barberId,
       name,
       role,
@@ -58,7 +58,7 @@ router.post("/",protect, async (req, res) => {
 });
 
 // ✅ Update staff
-router.put("/:id",protect, async (req, res) => {
+router.put("/:id", protect, async (req, res) => {
   try {
     const updated = await Staff.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -71,7 +71,7 @@ router.put("/:id",protect, async (req, res) => {
 });
 
 // ✅ Delete staff
-router.delete("/:id",protect, async (req, res) => {
+router.delete("/:id", protect, async (req, res) => {
   try {
     await Staff.findByIdAndDelete(req.params.id);
     res.json({ message: "Staff removed successfully" });
@@ -85,8 +85,8 @@ router.delete("/:id",protect, async (req, res) => {
 router.get("/public/:barberId", async (req, res) => {
 
   try {
-  
-    console.log("📥 Public staff request for user:", req.params.barberId);
+
+    //console.log("📥 Public staff request for user:", req.params.barberId);
     const { barberId } = req.params;
 
     const staffList = await Staff.find({ barberId, isActive: true })
@@ -103,10 +103,10 @@ router.get("/public/:barberId", async (req, res) => {
       ratings: staff.rating,
     }));
 
-    console.log(`✅ Sent ${publicStaff.length} sanitized staff records`);
-     console.log("📤 STAFF FOUND:", staffList);
+    //console.log(`✅ Sent ${publicStaff.length} sanitized staff records`);
+    //console.log("📤 STAFF FOUND:", staffList);
     res.json(publicStaff);
-    console.log("Public staff sent to the client.",publicStaff);
+    //console.log("Public staff sent to the client.",publicStaff);
   } catch (err) {
     console.error("❌ Error fetching public staff:", err);
     res.status(500).json({ message: "Failed to fetch staff" });
