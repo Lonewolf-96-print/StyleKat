@@ -311,7 +311,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     // B. Fetch Staff
     const fetchStaff = async () => {
       try {
-        const res = await fetch(`${API_URL}/api/staff/public/${resolvedBarberId}`);
+        const res = await fetch(`${API_URL}/api/bookings`);
         const data = await res.json();
         if (res.ok) {
           setStaff(data);
