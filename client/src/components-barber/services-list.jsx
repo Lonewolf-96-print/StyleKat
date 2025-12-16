@@ -36,7 +36,7 @@ export function ServicesList() {
 
       try {
 
-        const res = await fetch(`${API_URL} /api/services / `, {
+        const res = await fetch(`${API_URL}/api/services`, {
           headers: {
             Authorization: `Bearer ${token} `,
           },
