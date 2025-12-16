@@ -247,7 +247,8 @@ export function AppointmentsList() {
                     {/* Customer Info */}
                     <div className="flex items-start gap-4 mb-5">
                       <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
-                        <AvatarImage src={"/placeholder.svg"} />
+                        <AvatarImage src={appointment.customerAvatar} />
+                        <AvatarFallback>{appointment.customerName?.charAt(0) || 'U'}</AvatarFallback>
                         <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
                           {appointment.customerName?.charAt(0) || "C"}
                         </AvatarFallback>

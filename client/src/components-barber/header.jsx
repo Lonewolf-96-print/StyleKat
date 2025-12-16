@@ -110,9 +110,10 @@ export function DashboardHeader() {
             <Button variant="ghost" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage
-                  src={user?.profileImage || "/placeholder.svg"}
-                  alt="User"
+                  src={user?.profileImage}
+                  alt={user?.name || "User"}
                 />
+                <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
                 <AvatarFallback>
                   <AvatarFallbackText name={user?.ownerName} />
                 </AvatarFallback>

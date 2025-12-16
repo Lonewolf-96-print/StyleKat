@@ -139,7 +139,8 @@ export function StaffList() {
                 <div className="flex justify-between items-start mb-6">
                   <div className="flex items-center gap-4">
                     <Avatar className="h-16 w-16 border-2 border-white shadow-sm ring-2 ring-gray-50">
-                      <AvatarImage src={"/placeholder.svg"} alt={member.name} />
+                      <AvatarImage src={member.avatar} alt={member.name} />
+                      <AvatarFallback>{member.name?.charAt(0) || 'S'}</AvatarFallback>
                       <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">
                         {member.name[0]}
                       </AvatarFallback>

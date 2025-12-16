@@ -38,7 +38,8 @@ const StaffList = ({ shop }) => {
             <CardHeader className="pb-4">
               <div className="flex items-start space-x-4">
                 <Avatar className="h-16 w-16">
-                  <AvatarImage src={"/placeholder.svg"} alt={member.name} />
+                  <AvatarImage src={member.avatar} alt={member.name} />
+                  <AvatarFallback>{member.name?.charAt(0) || 'S'}</AvatarFallback>
                   <AvatarFallback>{member.name[0]}</AvatarFallback>
                 </Avatar>
 

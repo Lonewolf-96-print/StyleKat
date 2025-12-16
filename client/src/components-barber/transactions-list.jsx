@@ -15,7 +15,7 @@ const mockTransactions = [
     id: "TXN001",
     customer: {
       name: "Rahul Sharma",
-      avatar: "/placeholder.svg?height=40&width=40",
+      avatar: null,
     },
     service: "Classic Haircut + Beard Trim",
     amount: 450,
@@ -109,7 +109,7 @@ export function TransactionsList() {
       <CardContent>
         <div className="space-y-4">
           {transactions.map((transaction) => {
-            const PaymentIcon = paymentMethodIcons[transaction.paymentMethod ]
+            const PaymentIcon = paymentMethodIcons[transaction.paymentMethod]
 
             return (
               <div key={transaction.id} className="flex items-center justify-between p-4 border rounded-lg">
@@ -131,7 +131,7 @@ export function TransactionsList() {
                     <div className="flex items-center justify-between mb-1">
                       <h4 className="font-medium text-foreground">{transaction.customer.name}</h4>
                       <div className="flex items-center space-x-2">
-                        <Badge className={statusColors[transaction.status ]}>
+                        <Badge className={statusColors[transaction.status]}>
                           {transaction.status}
                         </Badge>
                       </div>

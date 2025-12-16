@@ -26,7 +26,7 @@ export const mockStaff = [
     name: 'Emma Rodriguez',
     specialties: ['Hair Cutting', 'Hair Coloring', 'Styling'],
     rating: 4.9,
-    avatar: '/placeholder.svg'
+    avatar: null
   },
   {
     id: 'staff-2',
@@ -34,7 +34,7 @@ export const mockStaff = [
     name: 'Michael Chen',
     specialties: ['Beard Trimming', 'Classic Cuts', 'Hot Towel Shave'],
     rating: 4.8,
-    avatar: '/placeholder.svg'
+    avatar: null
   },
   {
     id: 'staff-3',
@@ -42,7 +42,7 @@ export const mockStaff = [
     name: 'Isabella Martinez',
     specialties: ['Facials', 'Eyebrow Shaping', 'Makeup'],
     rating: 4.9,
-    avatar: '/placeholder.svg'
+    avatar: null
   }
 ];
 
@@ -75,7 +75,7 @@ export const mockServices = [
     description: 'Classic beard trimming with hot towel treatment',
     category: 'Grooming'
   },
-  
+
   // Urban Barbershop services
   {
     id: 'service-4',
@@ -95,7 +95,7 @@ export const mockServices = [
     description: 'Relaxing hot towel shave experience',
     category: 'Grooming'
   },
-  
+
   // Bella Beauty services
   {
     id: 'service-6',
@@ -119,13 +119,13 @@ export const mockServices = [
 
 
 export const mockSalons = [
-   {
+  {
     id: 1,
     ownerId: 1,
     name: "FOCUS SALON",
     location: "Plot No.75, Kp-III, near Saraswati Niwas",
     services: mockServices.filter(s => s.salonId === 'salon-1'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-1'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-1'),
     address: "Plot No.75, Kp-III, near Saraswati Niwas",
     services: ["Hair salon"],
     ratings: null,
@@ -138,8 +138,8 @@ export const mockSalons = [
     name: "Shades A Unisex Salon",
     location: "Guru Taq bhadur market",
     address: "Guru Taq bhadur market",
-   services: mockServices.filter(s => s.salonId === 'salon-1'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-1'),
+    services: mockServices.filter(s => s.salonId === 'salon-1'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-1'),
     services: ["Beauty Parlour"],
     ratings: { average: 4.7, count: 422 },
     description: "The salon's atmosphere was relaxing, and I left with a fabulous haircut.",
@@ -151,7 +151,7 @@ export const mockSalons = [
     name: "New Looks Salon (Best salon in greater Noida)",
     location: "Shop No - 132, Gurbaksh Plaza",
     services: mockServices.filter(s => s.salonId === 'salon-1'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-1'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-1'),
     address: "Shop No - 132, Gurbaksh Plaza",
     services: ["Beauty Parlour"],
     ratings: { average: 4.5, count: 257 },
@@ -164,7 +164,7 @@ export const mockSalons = [
     name: "KB Beauty Salon",
     location: "Shop no. 231, 1st floor, Gurbaksh Plaza, Market",
     services: mockServices.filter(s => s.salonId === 'salon-2'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-2'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-2'),
     address: "Shop no. 231, 1st floor, Gurbaksh Plaza, Market",
     services: ["Beauty Parlour"],
     ratings: { average: 4.7, count: 391 },
@@ -177,7 +177,7 @@ export const mockSalons = [
     name: "CLONE A UNISEX SALON",
     location: "Shop no 17/18 First Floor, GTB Market",
     services: mockServices.filter(s => s.salonId === 'salon-2'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-2'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-2'),
     address: "Shop no 17/18 First Floor, GTB Market",
     services: ["Beauty Parlour"],
     ratings: { average: 4.8, count: 44 },
@@ -190,7 +190,7 @@ export const mockSalons = [
     name: "Geetanjali Studio",
     location: "Ground Floor, India Expo Mart Cir",
     services: mockServices.filter(s => s.salonId === 'salon-2'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-2'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-2'),
     address: "Ground Floor, India Expo Mart Cir",
     services: ["Hairdresser"],
     ratings: { average: 4.9, count: 193 },
@@ -203,7 +203,7 @@ export const mockSalons = [
     name: "Adaa makeup salon and academy",
     location: "232, 1st floor, Gurbaksh Plaza",
     services: mockServices.filter(s => s.salonId === 'salon-3'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-3'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-3'),
     address: "232, 1st floor, Gurbaksh Plaza",
     services: ["Beauty Parlour"],
     ratings: { average: 4.9, count: 1018 },
@@ -216,7 +216,7 @@ export const mockSalons = [
     name: "Looks Salon, Greater Noida - Unisex Salon",
     location: "Shop no 14 - 15, Omaxe Connaught place mall",
     services: mockServices.filter(s => s.salonId === 'salon-3'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-3'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-3'),
     address: "Shop no 14 - 15, Omaxe Connaught place mall",
     services: ["Beauty Parlour"],
     ratings: { average: 4.5, count: 922 },
@@ -229,14 +229,14 @@ export const mockSalons = [
     name: "Elements beauty parlour",
     location: "Shop No.106, GM Mall",
     services: mockServices.filter(s => s.salonId === 'salon-3'),
-   staff: mockStaff.filter(s => s.salonId === 'salon-3'),
+    staff: mockStaff.filter(s => s.salonId === 'salon-3'),
     address: "Shop No.106, GM Mall",
     services: ["Beauty Parlour"],
     ratings: { average: 4.9, count: 754 },
     description: null,
     createdAt: null
   },
- 
+
 ];
 
 export const mockBookings = [
@@ -372,7 +372,7 @@ export const locations = [
   "G-19, Pocket G, Sector 20, Noida, Uttar Pradesh 201301",
   "UGF-34, Omaxe Connaught Place, MALL, Block H, Beta II, Greater Noida, Uttar Pradesh 201310",
   "Shop No - 104,Arcade, Eldeco Mystic Greens, Omicron I, Greater Noida, Uttar Pradesh 201310",
-   "Shop No - 132, Gurbaksh Plaza, Jagat Farm, Block E, Chandila, Gamma 1, Greater Noida, Uttar Pradesh 201308",
+  "Shop No - 132, Gurbaksh Plaza, Jagat Farm, Block E, Chandila, Gamma 1, Greater Noida, Uttar Pradesh 201308",
   "Guru Taq bhadur market, Jagat Farm, Block E, Chandila, Gamma 1, Greater Noida, Uttar Pradesh 201310",
   "Shop no. 231, 1st floor, Gurbaksh Plaza, Market, Jagat Farm, Block E, Chandila, Gamma 1, Greater Noida, Uttar Pradesh 201310",
   "Shop no 17/18 First Floor, GTB Market, Jagat Farm, Block E, Chandila, Gamma 1, Greater Noida, Uttar Pradesh 201310",
