@@ -16,8 +16,8 @@ import { useLanguage } from "../components-barber/language-provider";
 export default function MyShopPage() {
   const [expandedStaff, setExpandedStaff] = useState({});
 
-  const { shopQueue } = useBookings();
-  console.log("shopQueue", shopQueue);
+  const [shopQueue, setShopQueue] = useState({});
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const { t } = useLanguage();
   const shopId = localStorage.getItem("shopId");
@@ -90,6 +90,7 @@ export default function MyShopPage() {
     // LIVE QUEUE UPDATES
     s.on("shopQueueUpdate", (data) => {
       console.log("🔴 shopQueueUpdate:", data);
+      setShopQueue(data); // ✅ THIS WAS MISSING
     });
 
     s.on("queueUpdated", (data) => {
