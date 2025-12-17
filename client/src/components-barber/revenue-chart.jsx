@@ -54,8 +54,17 @@ export function RevenueChart() {
       name: t(d.label),
       revenue: 0
     }))
+    console.table(
+      allBookings.map(b => ({
+        date: b.date,
+        status: b.status,
+        price: b.price
+      }))
+    )
 
     if (!allBookings?.length) return base
+
+    const REVENUE_STATUSES = ["confirmed", "in-service", "completed"]
 
     const now = new Date()
     const startOfWeek = new Date(now)
@@ -67,7 +76,7 @@ export function RevenueChart() {
     endOfWeek.setHours(23, 59, 59, 999)
 
     allBookings.forEach(b => {
-      if (b.status !== "completed") return
+      if (!REVENUE_STATUSES.includes(b.status)) return
 
       const date = new Date(b.date)
       if (date < startOfWeek || date > endOfWeek) return
@@ -82,6 +91,7 @@ export function RevenueChart() {
 
     return base
   }, [allBookings, t])
+
 
   return (
     <Card>
