@@ -227,7 +227,7 @@ export function BookingProvider({ children }) {
         setTodayBookings((prev) => [booking, ...prev]);
     });
 
-    socket.on("bookingStatusUpdate", (updated) => {
+    socket.emit("bookingStatusUpdate", (updated) => {
       // backend sometimes sends booking object or { bookingId, status } - handle both
       const bookingObj = updated?.booking || updated;
       const id = bookingObj?._id || bookingObj?.bookingId;

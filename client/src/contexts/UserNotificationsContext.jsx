@@ -118,6 +118,7 @@ export const NotificationProvider = ({ children }) => {
         message: `Booking status updated to ${info.status}`,
         bookingId: info.bookingId,
       });
+      console.log("Updated booking request received for the user side", info)
     });
 
     socket.on("booking:updated", (info) => {
