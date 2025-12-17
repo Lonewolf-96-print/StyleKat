@@ -64,7 +64,7 @@ export function CustomerSignupForm() {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        const res = await fetch(`${API_URL}/api/users/google-login`, {
+        const res = await fetch(`${API_URL}/api/users/google/user`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ token: tokenResponse.access_token }),
