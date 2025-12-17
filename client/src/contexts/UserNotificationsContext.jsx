@@ -122,26 +122,26 @@ export const NotificationProvider = ({ children }) => {
 
   // build token & role logic; be resilient
   useEffect(() => {
-    const customerToken = localStorage.getItem("customerToken");
-    if (!customerToken) {
-      console.warn("No customer token found for notifications — skipping connection");
-      return;
-    }
+    const token = localStorage.getItem("customerToken");
+    if (!token) return;
 
     const userId = customer?._id || localStorage.getItem("userId");
-    console.log("NotificationProvider initializing socket for user:", userId);
 
-    const socket = io(SOCKET_URL, {
-      transports: ["websocket"],
-      withCredentials: true,
-      autoConnect: false,
-    });
-    socketRef.current = socket;
+    if (!userId) return;
 
+    if (!socketRef.current) {
+      socketRef.current = io(SOCKET_URL, {
+        transports: ["websocket"],
+        auth: { token },
+      });
+    }
+
+    const socket = socketRef.current;
+    socket.connect();
     // determine role (prefer customer context, else localStorage role)
     const roleFromCustomer = customer?.role;
     const roleFromStorage = localStorage.getItem("role");
-    const role = roleFromCustomer || roleFromStorage || (customerToken ? "user" : "barber");
+    const role = roleFromCustomer || roleFromStorage || (token ? "user" : "barber");
 
     // compute join ids
 

@@ -233,7 +233,7 @@ export default function SettingsPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Salon Identity</CardTitle>
+                <CardTitle>Salon Details</CardTitle>
                 <CardDescription>How your business appears to customers</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -244,7 +244,7 @@ export default function SettingsPage() {
                       id="salonName"
                       value={formData.salonName}
                       onChange={handleChange}
-                      className="text-lg font-medium"
+
                     />
                   </div>
                   <div className="space-y-2">

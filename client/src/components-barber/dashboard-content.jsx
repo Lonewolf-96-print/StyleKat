@@ -146,7 +146,7 @@ export default function DashboardContent() {
           </div>
 
           {/* Quick Actions & Revenue – BELOW appointments */}
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="mx-auto space-y-8">
             <QuickActions />
             <RevenueChart />
           </div>
