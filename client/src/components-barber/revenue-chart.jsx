@@ -45,7 +45,7 @@ function getWeekRange() {
 export function RevenueChart() {
   const { t } = useLanguage()
   const { allBookings } = useBookings()
-
+  console.log("✅✅✅allBookings", allBookings)
   const weekRange = getWeekRange()
 
   const weeklyRevenue = useMemo(() => {

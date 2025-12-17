@@ -29,10 +29,19 @@ const statusColors = {
   pending: "bg-yellow-100 text-yellow-800",
   completed: "bg-blue-100 text-blue-800",
   cancelled: "bg-red-100 text-red-800",
+  "in-service": "bg-purple-100 text-purple-800",
+};
+const statusStripColors = {
+  confirmed: "bg-green-500",
+  pending: "bg-yellow-500",
+  completed: "bg-blue-500",
+  cancelled: "bg-red-500",
+  "in-service": "bg-purple-500",
 };
 
 export function AppointmentsList() {
   const { t } = useTranslation();
+  const DEFAULT_STATUS_COLOR = "bg-gray-100 text-gray-800";
 
   const {
     allBookings,
@@ -223,7 +232,10 @@ export function AppointmentsList() {
               <Card key={appointment._id} className="group overflow-hidden border-0 shadow-sm ring-1 ring-gray-200 hover:shadow-lg transition-all duration-300">
 
                 {/* Status Color Strip */}
-                <div className={`h-1.5 w-full ${statusColors[appointment.status].replace("text", "bg").split(" ")[0].replace("100", "500")}`} />
+                <div
+                  className={`h-1.5 w-full ${statusStripColors[appointment.status] || "bg-gray-400"
+                    }`}
+                />
 
                 <CardContent className="p-0">
                   <div className="p-5">
