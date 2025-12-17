@@ -45,7 +45,7 @@ function getWeekRange() {
 export function RevenueChart() {
   const { t } = useLanguage()
   const { allBookings } = useBookings()
-  console.log("✅✅✅allBookings", allBookings)
+
   const weekRange = getWeekRange()
 
   const weeklyRevenue = useMemo(() => {
@@ -54,13 +54,6 @@ export function RevenueChart() {
       name: t(d.label),
       revenue: 0
     }))
-    console.table(
-      allBookings.map(b => ({
-        date: b.date,
-        status: b.status,
-        price: b.price
-      }))
-    )
 
     if (!allBookings?.length) return base
 
@@ -108,21 +101,34 @@ export function RevenueChart() {
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={weeklyRevenue}>
-            <CartesianGrid strokeDasharray="3 3" />
+            {/* Gradient definition */}
+            <defs>
+              <linearGradient id="revenueGreen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#22c55e" />
+                <stop offset="100%" stopColor="#15803d" />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid strokeDasharray="3 3" strokeOpacity={0.4} />
+
             <XAxis dataKey="name" />
             <YAxis
               tickFormatter={(v) => `₹${v}`}
               allowDecimals={false}
             />
+
             <Tooltip
+              cursor={{ fill: "rgba(34,197,94,0.1)" }}
               formatter={(v) => [`₹${v}`, t("charts.revenue")]}
             />
+
             <Bar
               dataKey="revenue"
-              radius={[6, 6, 0, 0]}
-              fill="hsl(var(--primary))"
+              radius={[8, 8, 0, 0]}
+              fill="url(#revenueGreen)"
             />
           </BarChart>
+
         </ResponsiveContainer>
       </CardContent>
     </Card>
