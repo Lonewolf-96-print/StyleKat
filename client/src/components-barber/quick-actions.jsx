@@ -38,6 +38,7 @@ export function QuickActions() {
               <div className={`p-3 rounded-lg ${action.color.split(' ')[0]} bg-opacity-10 ${action.color.replace('bg-', 'text-').split(' ')[0]}`}>
                 <action.icon className="h-5 w-5" />
               </div>
+
               <div>
                 <div className="font-semibold text-gray-900 group-hover:text-primary transition-colors">{action.title}</div>
                 <div className="text-xs text-muted-foreground">{action.description}</div>
