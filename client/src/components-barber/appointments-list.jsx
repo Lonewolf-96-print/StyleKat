@@ -41,7 +41,10 @@ export function AppointmentsList() {
     selectedFilter,
     setSelectedFilter,
   } = useBookings();
-
+  const socket = io(SOCKET_URL, {
+    transports: ["websocket"],
+    withCredentials: true,
+  });
   const [socketInstance, setSocketInstance] = useState(null);
 
   const token = localStorage.getItem("token");
@@ -51,10 +54,7 @@ export function AppointmentsList() {
   useEffect(() => {
     if (!token) return;
 
-    const socket = io(SOCKET_URL, {
-      transports: ["websocket"],
-      withCredentials: true,
-    });
+
 
     setSocketInstance(socket);
 
@@ -68,7 +68,7 @@ export function AppointmentsList() {
         return [...map.values()];
       });
     };
-    socketInstance.on("connect", () => {
+    socket.on("connect", () => {
       console.log("Connected to socket");
     });
     //  socketInstance.on("bookingStatusUpdate", handleStatusUpdate);
@@ -80,14 +80,14 @@ export function AppointmentsList() {
       });
     }
 
-    socketInstance.on("bookingStatusUpdate", handleStatusUpdate);
+    socket.on("bookingStatusUpdate", handleStatusUpdate);
     console.log("Received Booking Status Update")
-    socketInstance.on("newBookingRequest", handleNewBooking);
+    socket.on("newBookingRequest", handleNewBooking);
     console.log("Received New Booking Request")
 
     return () => {
-      socketInstance.off("bookingStatusUpdate", handleStatusUpdate);
-      socketInstance.off("newBookingRequest", handleNewBooking);
+      socket.off("bookingStatusUpdate", handleStatusUpdate);
+      socket.off("newBookingRequest", handleNewBooking);
       socket.disconnect();
     };
   }, [token]);
@@ -114,7 +114,7 @@ export function AppointmentsList() {
 
       const updated = await res.json();
 
-      socketInstance?.emit("bookingStatusChanged", updated);
+      socket.emit("bookingStatusChanged", updated);
 
       setAllBookings((prev) =>
         prev.map((b) => (b._id === updated._id ? updated : b))
