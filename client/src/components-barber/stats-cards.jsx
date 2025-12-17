@@ -1,124 +1,120 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import { Calendar, IndianRupee, BarChart3 } from "lucide-react"
-import { useLanguage } from "../components-barber/language-provider"
+"use client"
+
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription
+} from "../components/ui/card"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts"
+import { useLanguage } from "./language-provider"
 import { useBookings } from "../contexts/BookingsContext"
-import { CalendarDays } from "lucide-react"
-import { color } from "framer-motion"
+import { useMemo } from "react"
 
-export function StatsCards() {
+const WEEK_DAYS = [
+  { key: 1, label: "day.Mon" },
+  { key: 2, label: "day.Tue" },
+  { key: 3, label: "day.Wed" },
+  { key: 4, label: "day.Thu" },
+  { key: 5, label: "day.Fri" },
+  { key: 6, label: "day.Sat" },
+  { key: 0, label: "day.Sun" },
+]
+
+function getWeekRange() {
+  const now = new Date()
+  const monday = new Date(now)
+  monday.setDate(now.getDate() - now.getDay() + 1)
+
+  const sunday = new Date(monday)
+  sunday.setDate(monday.getDate() + 6)
+
+  const opts = { day: "numeric", month: "short" }
+  return `${monday.toLocaleDateString("en-US", opts)} - ${sunday.toLocaleDateString("en-US", opts)}`
+}
+
+export function RevenueChart() {
   const { t } = useLanguage()
-  const { todayBookings, allBookings } = useBookings()
+  const { allBookings } = useBookings()
 
-  // -----------------------------
-  // 1. TOTAL BOOKINGS + REVENUE
-  // -----------------------------
-  const totalBookings = allBookings.length
-  const totalRevenue = allBookings.reduce((sum, b) => sum + (b.price || 0), 0)
+  const weekRange = getWeekRange()
 
-  // -----------------------------
-  // 2. MONTHLY BOOKINGS + REVENUE
-  // -----------------------------
-  const thisMonth = new Date().getMonth()
-  const thisYear = new Date().getFullYear()
-  const validExpectedStatuses = ["confirmed", "in-service", "completed"]
+  const weeklyRevenue = useMemo(() => {
+    const base = WEEK_DAYS.map(d => ({
+      key: d.key,
+      name: t(d.label),
+      revenue: 0
+    }))
 
-  const monthlyBookingsList = allBookings.filter(b => {
-    const d = new Date(b.date)
-    return d.getMonth() === thisMonth && d.getFullYear() === thisYear
-  })
+    if (!allBookings?.length) return base
 
-  const monthlyBookings = monthlyBookingsList.length
-  const monthlyRevenue = monthlyBookingsList.reduce((sum, b) => sum + (b.price || 0), 0)
-  const expectedBookingsList = allBookings.filter(b =>
-    validExpectedStatuses.includes(b.status)
-  )
+    const now = new Date()
+    const startOfWeek = new Date(now)
+    startOfWeek.setDate(now.getDate() - now.getDay() + 1)
+    startOfWeek.setHours(0, 0, 0, 0)
 
-  const expectedBookings = expectedBookingsList.length
-  const expectedRevenue = expectedBookingsList.reduce(
-    (sum, b) => sum + (b.price || 0),
-    0
-  )
+    const endOfWeek = new Date(startOfWeek)
+    endOfWeek.setDate(startOfWeek.getDate() + 6)
+    endOfWeek.setHours(23, 59, 59, 999)
 
-  // -----------------------------
-  // 3. TODAY BOOKINGS + REVENUE
-  // -----------------------------
-  const todayRevenue = todayBookings.reduce((sum, b) => sum + (b.price || 0), 0)
+    allBookings.forEach(b => {
+      if (b.status !== "completed") return
 
-  // -----------------------------
-  // 4. EXPECTED REVENUE
-  // (confirmed + in-service + completed)
-  // -----------------------------
+      const date = new Date(b.date)
+      if (date < startOfWeek || date > endOfWeek) return
 
+      const day = date.getDay()
+      const target = base.find(d => d.key === day)
 
-  // -----------------------------
-  // FINAL CARDS
-  // -----------------------------
-  const cards = [
-    {
-      title: "Total Bookings",
-      icon: IndianRupee,
-      color: "text-blue-600",
+      if (target) {
+        target.revenue += Number(b.price || 0)
+      }
+    })
 
-      bookingValue: totalBookings,
-      revenueValue: `₹${totalRevenue}`,
-    },
-    {
-      title: "Monthly Bookings",
-      icon: CalendarDays,
-      bookingValue: monthlyBookings,
-      revenueValue: `₹${monthlyRevenue}`,
-      color: "text-green-600",
-
-    },
-
-    {
-      title: "Expected Revenue",
-      icon: BarChart3,
-      bookingValue: expectedBookings,   // ✔ Correct
-      revenueValue: `₹${expectedRevenue}`,
-      color: "text-purple-600",
-    },
-    {
-      title: "Today's Bookings",
-      icon: Calendar,
-      bookingValue: todayBookings.length,
-      revenueValue: `₹${todayRevenue}`,
-      color: "text-orange-600",
-    },
-
-  ]
+    return base
+  }, [allBookings, t])
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {cards.map((card, idx) => (
-        <Card key={idx} className="relative overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-200">
-          {/* Color Accent Bar */}
-          <div className={`absolute top-0 right-0 p-3 opacity-10 ${card.color.replace('text-', 'bg-')}`}>
-            <card.icon className="h-24 w-24" />
-          </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("charts.weeklyRevenue")}</CardTitle>
+        <CardDescription>
+          {t("charts.weeklyRevenueDescription")}
+        </CardDescription>
+        <p className="text-sm text-muted-foreground">
+          {t("charts.weekRange")}: {weekRange}
+        </p>
+      </CardHeader>
 
-          <CardHeader className="flex flex-row items-center justify-between pb-2 relative z-10">
-            <CardTitle className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-              {card.title}
-            </CardTitle>
-            <div className={`p-2 rounded-lg ${card.color.replace('text-', 'bg-').replace('600', '100')}`}>
-              <card.icon className={`h-4 w-4 ${card.color}`} />
-            </div>
-          </CardHeader>
-
-          <CardContent className="relative z-10">
-            <div className="text-2xl font-bold text-gray-900">
-              {card.revenueValue}
-            </div>
-            <div className="flex items-center text-xs font-medium text-muted-foreground mt-1">
-              <span className={`${card.bookingValue > 0 ? "text-emerald-600" : "text-gray-500"} mr-1`}>
-                {card.bookingValue}
-              </span>
-              Bookings
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+      <CardContent>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={weeklyRevenue}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis
+              tickFormatter={(v) => `₹${v}`}
+              allowDecimals={false}
+            />
+            <Tooltip
+              formatter={(v) => [`₹${v}`, t("charts.revenue")]}
+            />
+            <Bar
+              dataKey="revenue"
+              radius={[6, 6, 0, 0]}
+              fill="hsl(var(--primary))"
+            />
+          </BarChart>
+        </ResponsiveContainer>
+      </CardContent>
+    </Card>
   )
 }

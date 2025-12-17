@@ -9,7 +9,7 @@ const actions = [
     description: "Edit your shop details",
     icon: SquarePen,
     href: "/dashboard/settings",
-    color: "bg-blue-500 hover:bg-blue-600",
+    color: "bg-orange-500 hover:bg-orange-600",
   },
   {
     title: "Add Service",
