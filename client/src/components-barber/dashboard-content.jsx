@@ -140,21 +140,17 @@ export default function DashboardContent() {
           {/* Stats Row */}
           <StatsCards />
 
-          {/* Main Grid: Appointments & Actions */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-
-            {/* Left Col: Appointments (Takes 2/3 width on large screens) */}
-            <div className="xl:col-span-2 space-y-8">
-              <RecentAppointments />
-            </div>
-
-            {/* Right Col: Quick Actions & Future Widgets */}
-            <div className="space-y-8">
-              <QuickActions />
-              <RevenueChart /> {/* Moving chart here for better dashboard balance, or keep below */}
-            </div>
-
+          {/* Appointments – Full width on all screens */}
+          <div className="space-y-8">
+            <RecentAppointments />
           </div>
+
+          {/* Quick Actions & Revenue – BELOW appointments */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <QuickActions />
+            <RevenueChart />
+          </div>
+
 
           <DashboardFooter />
         </div>

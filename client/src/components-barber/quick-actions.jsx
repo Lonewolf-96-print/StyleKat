@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Button } from "../components/ui/button"
-import { Calendar, Users, Scissors } from "lucide-react"
+import { Calendar, Users, Scissors, SquarePen } from "lucide-react"
 import { Link } from "react-router-dom"
 
 const actions = [
   {
     title: "Update Shop Info",
     description: "Edit your shop details",
-    icon: Calendar,
+    icon: SquarePen,
     href: "/dashboard/settings",
     color: "bg-blue-500 hover:bg-blue-600",
   },
