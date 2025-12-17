@@ -113,7 +113,7 @@ export function DashboardHeader() {
                   src={user?.profileImage}
                   alt={user?.name || "User"}
                 />
-                <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
+                <AvatarFallback>{user?.ownerName?.charAt(0) || 'U'}</AvatarFallback>
 
               </Avatar>
             </Button>

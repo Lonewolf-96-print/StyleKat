@@ -54,7 +54,6 @@ export function AppointmentsList() {
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
       withCredentials: true,
-      autoConnect: false,
     });
 
     setSocketInstance(socket);
@@ -69,7 +68,10 @@ export function AppointmentsList() {
         return [...map.values()];
       });
     };
-
+    socketInstance.on("connect", () => {
+      console.log("Connected to socket");
+    });
+    //  socketInstance.on("bookingStatusUpdate", handleStatusUpdate);
     const handleNewBooking = (newBooking) => {
       setAllBookings(prev => {
         const map = new Map(prev.map(b => [b._id, b]));
@@ -78,12 +80,14 @@ export function AppointmentsList() {
       });
     }
 
-    socket.on("bookingStatusUpdate", handleStatusUpdate);
-    socket.on("newBookingRequest", handleNewBooking);
+    socketInstance.on("bookingStatusUpdate", handleStatusUpdate);
+    console.log("Received Booking Status Update")
+    socketInstance.on("newBookingRequest", handleNewBooking);
+    console.log("Received New Booking Request")
 
     return () => {
-      socket.off("bookingStatusUpdate", handleStatusUpdate);
-      socket.off("newBookingRequest", handleNewBooking);
+      socketInstance.off("bookingStatusUpdate", handleStatusUpdate);
+      socketInstance.off("newBookingRequest", handleNewBooking);
       socket.disconnect();
     };
   }, [token]);
