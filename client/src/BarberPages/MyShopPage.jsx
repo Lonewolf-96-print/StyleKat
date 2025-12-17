@@ -17,6 +17,7 @@ export default function MyShopPage() {
   const [expandedStaff, setExpandedStaff] = useState({});
 
   const { shopQueue } = useBookings();
+  console.log("shopQueue", shopQueue);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const { t } = useLanguage();
   const shopId = localStorage.getItem("shopId");
@@ -76,7 +77,8 @@ export default function MyShopPage() {
 
     const s = io(SOCKET_URL, {
       auth: { token },
-      transports: ["websocket"],
+      transports: ["polling", "websocket"],
+
       withCredentials: true,
     });
 
@@ -263,7 +265,8 @@ export default function MyShopPage() {
         <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
 
           {sortedQueue.map((seat) => (
-            <SeatCard key={seat.id} seat={{ name: seat.staffName }}>
+            <SeatCard key={seat.staffId} seat={{ name: seat.staffName }}>
+
               <div className="relative space-y-3">
 
                 {/* 🔥 SERVICE STARTED BADGE */}

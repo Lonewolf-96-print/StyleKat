@@ -166,7 +166,7 @@ export function BookingProvider({ children }) {
       transports: ["websocket"],
       auth: { token },
       withCredentials: true,
-      autoConnect: false,
+
     });
     socketRef.current = socket;
 
