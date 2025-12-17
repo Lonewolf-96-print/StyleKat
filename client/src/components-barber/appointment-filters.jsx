@@ -8,7 +8,7 @@ import { Search } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { useBookings } from "../contexts/BookingsContext"
 export function AppointmentFilters() {
-  const {selectedFilter, setSelectedFilter} = useBookings();
+  const { selectedFilter, setSelectedFilter } = useBookings();
   const { t } = useTranslation()
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -17,13 +17,13 @@ export function AppointmentFilters() {
     { value: "all", label: t("appointments.filters.all") },
     { value: "today", label: t("appointments.filters.today") },
     { value: "comfirmed", label: t("appointments.confirmed") },
-   
+
     { value: "cancelled", label: t("appointments.filters.cancelled") },
     { value: "pending", label: t("appointments.filters.pending") },
   ]
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+    <div className="flex flex-col sm:flex-row gap-4 items-center">
       {/* Quick Filter Buttons */}
       <div className="flex flex-wrap gap-2">
         {filters.slice(0, 4).map((filter) => (
@@ -60,7 +60,7 @@ export function AppointmentFilters() {
               <SelectItem key={filter.value} value={filter.value}>
                 {filter.label}
               </SelectItem>
-              
+
             ))}
           </SelectContent>
         </Select>

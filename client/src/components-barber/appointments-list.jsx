@@ -178,10 +178,7 @@ export function AppointmentsList() {
 
       {/* HEADER & FILTERS */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Appointments</h1>
-          <p className="text-muted-foreground mt-1">Manage and track your schedule</p>
-        </div>
+
 
         <div className="flex p-1 bg-gray-100/80 rounded-xl border">
           {["all", "today", "pending", "confirmed", "completed"].map((filter) => (
@@ -248,7 +245,7 @@ export function AppointmentsList() {
                     <div className="flex items-start gap-4 mb-5">
                       <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
                         <AvatarImage src={appointment.customerAvatar} />
-                        <AvatarFallback>{appointment.customerName?.charAt(0) || 'U'}</AvatarFallback>
+
                         <AvatarFallback className="bg-primary/10 text-primary text-lg font-bold">
                           {appointment.customerName?.charAt(0) || "C"}
                         </AvatarFallback>

@@ -114,9 +114,7 @@ export function DashboardHeader() {
                   alt={user?.name || "User"}
                 />
                 <AvatarFallback>{user?.name?.charAt(0) || 'U'}</AvatarFallback>
-                <AvatarFallback>
-                  <AvatarFallbackText name={user?.ownerName} />
-                </AvatarFallback>
+
               </Avatar>
             </Button>
           </DropdownMenuTrigger>

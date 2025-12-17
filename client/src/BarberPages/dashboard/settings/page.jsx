@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../../../components/ui/button";
 import {
   Card,
@@ -24,6 +24,10 @@ import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useApp } from "../../../contexts/AppContext";
+import { API_URL } from "../../../lib/config";
+// main.jsx OR app.jsx
+import "leaflet/dist/leaflet.css";
+
 // Fix default icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -55,6 +59,7 @@ export default function SettingsPage() {
     }  // ⬅ NEW FIELD
   });
 
+  const mapRef = useRef(null);
 
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [shopCoords, setShopCoords] = useState(null);
@@ -76,7 +81,7 @@ export default function SettingsPage() {
 
 
       try {
-        const res = await fetch(`http://localhost:5000/api/auth/me`, {
+        const res = await fetch(`${API_URL}/api/auth/me`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -147,7 +152,7 @@ export default function SettingsPage() {
     setMessage("");
 
     try {
-      const res = await fetch(`http://localhost:5000/api/auth/me`, {
+      const res = await fetch(`${API_URL}/api/auth/me`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -187,6 +192,14 @@ export default function SettingsPage() {
       setSaving(false);
     }
   };
+  useEffect(() => {
+    if (mapRef.current) {
+      setTimeout(() => {
+        mapRef.current.invalidateSize();
+      }, 100);
+    }
+  }, [formData.coords]);
+
 
   if (loading)
     return (
@@ -325,9 +338,11 @@ export default function SettingsPage() {
                   </div>
 
                   {/* Mini Map Preview */}
-                  <div className="h-48 bg-gray-100 rounded-lg overflow-hidden border border-gray-200 relative">
+                  <div className="h-48 min-h-[12rem] w-full rounded-lg overflow-hidden border border-gray-200 relative">
+
                     {formData.coords && formData.coords.lat ? (
                       <MapContainer
+                        ref={mapRef}
                         center={[formData.coords.lat, formData.coords.lng]}
                         zoom={14}
                         scrollWheelZoom={false}
@@ -369,20 +384,7 @@ export default function SettingsPage() {
           </Button>
         </div>
 
-        {
-          message && (
-            <p
-              className={`text-sm ${message.includes("✅")
-                ? "text-green-600"
-                : message.includes("⚠️")
-                  ? "text-yellow-600"
-                  : "text-red-600"
-                }`}
-            >
-              {message}
-            </p>
-          )
-        }
+
 
         <DashboardFooter />
       </div >

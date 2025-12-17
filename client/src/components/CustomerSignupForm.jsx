@@ -43,8 +43,11 @@ export function CustomerSignupForm() {
         }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
 
-      if (!data.success) throw new Error(data.message);
+
 
       setCustomer(data.user);
       setCustomerToken(data.token);
@@ -71,7 +74,9 @@ export function CustomerSignupForm() {
         });
         const data = await res.json();
 
-        if (!data.success) throw new Error(data.message);
+        if (!res.ok) {
+          throw new Error(data.message || "Google signup failed");
+        }
 
         setCustomer(data.user);
         setCustomerToken(data.token);
@@ -180,6 +185,13 @@ export function CustomerSignupForm() {
                 </div>
               ) : "Create Account"}
             </Button>
+            {error && (
+              <div className="flex items-start gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                <MessageSquare className="h-4 w-4 mt-0.5" />
+                <span>{error}</span>
+              </div>
+            )}
+
 
             {/* Divider */}
             <div className="relative">

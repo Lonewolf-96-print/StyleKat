@@ -157,7 +157,7 @@ export default function BookingsDashboardPage() {
 
     try {
       const token = localStorage.getItem("customerToken");
-      const res = await fetch(`https://localhost:5000/api/bookings/my/${bookingId}`, {
+      const res = await fetch(`${API_URL}/api/bookings/my/${bookingId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -186,7 +186,7 @@ export default function BookingsDashboardPage() {
       const token = localStorage.getItem("customerToken");
 
       const res = await fetch(
-        `https://localhost:5000/api/bookings/my/${bookingId}/permanent`,
+        `${API_URL}/api/bookings/my/${bookingId}/permanent`,
         {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
