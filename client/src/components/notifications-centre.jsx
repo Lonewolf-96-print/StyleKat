@@ -60,6 +60,15 @@ export function NotificationsCenter() {
         return { label: capitalize(status), className: "bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-200" };
     }
   };
+  const formatStatusText = (status) => {
+    switch (status) {
+      case "confirmed": return "Booking Confirmed";
+      case "cancelled": return "Booking Cancelled";
+      case "completed": return "Service Completed";
+      case "in-service": return "Service Started";
+      default: return "Booking Updated";
+    }
+  };
 
   const getTypeIcon = (type) => {
     switch (type) {
@@ -150,8 +159,9 @@ export function NotificationsCenter() {
                   <div className="flex-1 min-w-0 pt-1">
                     <div className="flex flex-col md:flex-row md:items-start justify-between gap-2 mb-1">
                       <h3 className={`text-base font-semibold ${n.read ? "text-gray-700" : "text-gray-900"}`}>
-                        {n.type === "bookingStatusUpdate" ? "Booking Update" : n.type === "user:bookingCreated" ? "Request Sent" : capitalize(n.type)}
+                        {formatStatusText(n.status)}
                       </h3>
+
                       <span className="text-xs font-medium text-muted-foreground whitespace-nowrap">
                         {new Date(n.timestamp).toLocaleString(undefined, {
                           month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
@@ -160,10 +170,18 @@ export function NotificationsCenter() {
                     </div>
 
                     <div className="space-y-1">
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        {n.status === "confirmed" && "Your booking has been confirmed!"}
-                        {/* Fallback or specific messages could go here if the backend sent a 'message' field */}
+                      <p className="text-sm text-gray-700 leading-relaxed">
+                        {n.shopName && (
+                          <>
+                            <span className="font-semibold text-gray-900">{n.shopName}</span>
+                            {n.customerName && " • "}
+                          </>
+                        )}
+                        {n.customerName && (
+                          <span className="font-medium text-gray-800">{n.customerName}</span>
+                        )}
                       </p>
+
 
                       <div className="flex flex-wrap items-center gap-2 mt-3">
                         {(() => {

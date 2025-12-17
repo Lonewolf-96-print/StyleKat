@@ -114,12 +114,22 @@ export const NotificationProvider = ({ children }) => {
 
     socket.on("bookingStatusUpdate", (info) => {
       addNotification({
+        id: info._id ?? info.bookingId ?? crypto.randomUUID(),
         type: "bookingStatusUpdate",
-        message: `Booking status updated to ${info.status}`,
-        bookingId: info.bookingId,
+
+        // 👇 structured fields
+        bookingId: info._id ?? info.bookingId,
+        status: info.status,
+        shopName: info.shopName ?? info.shop?.name,
+        customerName: info.customerName,
+
+        message: `Booking ${info.status}`,
+        read: false,
+        timestamp: new Date().toISOString(),
       });
       console.log("Updated booking request received for the user side", info)
     });
+
 
     socket.on("booking:updated", (info) => {
       addNotification({
