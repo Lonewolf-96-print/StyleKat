@@ -300,9 +300,25 @@ router.get("/my", protectUser, async (req, res) => {
    DELETE /my/:id (cancel)
 ---------------------------- */
 router.delete("/my/:id", protectUser, async (req, res) => {
-  const { staffId, date, startTime, endTime } = req.body;
   try {
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    if (String(booking.userId) !== String(req.user._id)) {
+      return res.status(403).json({ message: "You cannot cancel others' bookings" });
+    }
+
+    // ✅ Extract from DB (NOT req.body)
+    const { staffId, date, startTime, endTime } = booking;
+
+    /* -----------------------------
+       UNBLOCK TIME SLOT (SAFE)
+    ------------------------------ */
     if (
+      staffId &&
+      date &&
       blockedTimesStore[staffId] &&
       blockedTimesStore[staffId][date]
     ) {
@@ -315,31 +331,43 @@ router.delete("/my/:id", protectUser, async (req, res) => {
             )
         );
     }
-    const id = req.params.id;
-    const booking = await Booking.findById(id);
-    if (!booking) return res.status(404).json({ message: "Booking not found" });
-    if (String(booking.userId) !== String(req.user._id)) return res.status(403).json({ message: "You cannot cancel others' bookings" });
 
+    /* -----------------------------
+       UPDATE STATUS
+    ------------------------------ */
     booking.status = "cancelled";
     await booking.save();
 
+    /* -----------------------------
+       SOCKET EMITS
+    ------------------------------ */
     const shopRoom = `shop-${booking.shopId}`;
     const userRoom = `user-${booking.userId}`;
+    const staffRoom = staffId ? `staff-${staffId}` : null;
 
     req.io.to(shopRoom).emit("bookingStatusUpdate", booking);
     req.io.to(userRoom).emit("bookingStatusUpdate", booking);
-    req.io.to(`staff-${staffId}`).emit("bookingTime:unblocked", {
-      staffId,
-      date,
-      startTime: dayjs(startTime).format("HH:mm"),
-      endTime: dayjs(endTime).format("HH:mm"),
+
+    if (staffRoom) {
+      req.io.to(staffRoom).emit("bookingTime:unblocked", {
+        staffId,
+        date,
+        startTime: dayjs(startTime).format("HH:mm"),
+        endTime: dayjs(endTime).format("HH:mm"),
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Booking cancelled",
+      booking,
     });
-    return res.json({ success: true, message: "Booking cancelled", booking });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Cancel booking error:", err);
     return res.status(500).json({ message: "Failed to cancel booking" });
   }
 });
+
 
 /* ---------------------------
    Other routes (delete/permanent/archive/status/today) — unchanged except emits kept consistent

@@ -51,10 +51,7 @@ function UserBadge({ label, name }) {
   );
 }
 
-function capitalizeAll(text) {
-  if (!text) return "";
-  return text.toUpperCase();
-}
+
 
 const getStatusBadge = (status) => {
   switch (status) {
@@ -356,12 +353,12 @@ export default function BookingsDashboardPage() {
                       {/* Staff & Customer */}
                       <div className="space-y-3">
                         <UserBadge
-                          label="Professional"
+                          label="Staff Name"
                           name={booking.staffName || "Any Staff"}
                         />
 
                         <UserBadge
-                          label="Customer"
+                          label="Customer Name"
                           name={
                             booking.customerName ||
                             booking.customer?.name ||
@@ -381,8 +378,10 @@ export default function BookingsDashboardPage() {
 
                     {/* CARD FOOTER (Actions) */}
                     <div className="p-4 border-t bg-gray-50/30 flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">ID: #{capitalizeAll(booking._id.slice(-5))}</span>
-
+                      {/* LEFT: Booking ID */}
+                      <span className="text-xs text-muted-foreground">
+                        ID: #{capitalizeAll(booking._id.slice(-5))}
+                      </span>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
