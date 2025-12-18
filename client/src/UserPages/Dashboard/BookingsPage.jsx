@@ -357,10 +357,7 @@ export default function BookingsDashboardPage() {
                       {/* Staff */}
                       {/* Staff & Customer */}
                       <div className="space-y-3">
-                        <UserBadge
-                          label="Staff Name"
-                          name={booking.staffName || "Any Staff"}
-                        />
+
 
                         <UserBadge
                           label="Customer Name"
@@ -370,6 +367,10 @@ export default function BookingsDashboardPage() {
                             booking.user?.name ||
                             "You"
                           }
+                        />
+                        <UserBadge
+                          label="Staff Name"
+                          name={booking.staffName || "Any Staff"}
                         />
                       </div>
 

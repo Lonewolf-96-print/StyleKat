@@ -305,6 +305,11 @@ router.delete("/my/:id", protectUser, async (req, res) => {
     if (!booking) {
       return res.status(404).json({ message: "Booking not found" });
     }
+    if (booking.status === "completed") {
+      return res.status(400).json({
+        message: "Completed bookings cannot be cancelled",
+      });
+    }
 
     if (String(booking.userId) !== String(req.user._id)) {
       return res.status(403).json({ message: "You cannot cancel others' bookings" });
@@ -337,6 +342,42 @@ router.delete("/my/:id", protectUser, async (req, res) => {
     ------------------------------ */
     booking.status = "cancelled";
     await booking.save();
+    /* -----------------------------
+   RECOMPUTE QUEUE AFTER CANCEL
+------------------------------ */
+    const todayStr = booking.date;
+
+    // Fetch active staff
+    const staffListLive = await Staff.find({
+      barberId: booking.barberId,
+      isActive: true,
+    }).lean();
+
+    // Fetch today's active bookings (EXCLUDING cancelled)
+    const todaysBookings = await Booking.find({
+      barberId: booking.barberId,
+      date: todayStr,
+      status: {
+        $in: ["pending", "confirmed", "accepted", "ongoing", "in-service"],
+      },
+    })
+      .lean()
+      .sort({ startTime: 1 });
+
+    // Build queue per staff
+    const queueData = staffListLive.map((staff) => {
+      const staffBookings = todaysBookings.filter(
+        (b) => String(b.staffId) === String(staff._id)
+      );
+
+      return {
+        barberId: booking.barberId,
+        staffId: staff._id,
+        staffName: staff.name,
+        current: staffBookings[0] || null,
+        queue: staffBookings.slice(1),
+      };
+    });
 
     /* -----------------------------
        SOCKET EMITS
@@ -345,9 +386,14 @@ router.delete("/my/:id", protectUser, async (req, res) => {
     const userRoom = `user-${booking.userId}`;
     const staffRoom = staffId ? `staff-${staffId}` : null;
 
-    req.io.to(shopRoom).emit("bookingStatusUpdate", booking);
-    req.io.to(userRoom).emit("bookingStatusUpdate", booking);
 
+    const payload = booking.toObject();
+    req.io.to(shopRoom).emit("bookingStatusUpdate", payload);
+
+    req.io.to(shopRoom).emit("queueUpdated", queueData);
+    if (userRoom) {
+      req.io.to(userRoom).emit("bookingStatusUpdate", booking);
+    }
     if (staffRoom) {
       req.io.to(staffRoom).emit("bookingTime:unblocked", {
         staffId,
@@ -382,8 +428,10 @@ router.delete("/my/:id/permanent", protectUser, async (req, res) => {
     await User.findByIdAndUpdate(req.user._id, { $addToSet: { userHiddenBookings: bookingId } });
     const shopRoom = `shop-${booking.shopId}`;
     const userRoom = `user-${booking.userId}`;
-    req.io.to(shopRoom).emit("bookingStatusUpdate", updatedBooking)
-    req.io.to(userRoom).emit("bookingStatusUpdate", updatedBooking)
+    const payload = booking.toObject();
+    req.io.to(shopRoom).emit("bookingStatusUpdate", payload);
+    req.io.to(userRoom).emit("bookingStatusUpdate", payload);
+
     return res.json({ success: true, message: "Booking deleted from user view only", _id: bookingId });
 
   } catch (err) {
@@ -412,6 +460,12 @@ router.delete("/:id", protect, async (req, res) => {
 router.put("/status/:id", protect, async (req, res) => {
   try {
     if (!req.barber) return res.status(403).json({ message: "Only barbers can update booking status" });
+    if (booking.status === "completed") {
+      return res.status(400).json({
+        message: "Completed bookings cannot be updated",
+      });
+    }
+
     const { id } = req.params;
     const { status, staffId } = req.body;
     const booking = await Booking.findById(id);

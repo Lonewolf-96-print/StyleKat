@@ -51,10 +51,7 @@ export function AppointmentsList() {
     selectedFilter,
     setSelectedFilter,
   } = useBookings();
-  const socket = io(SOCKET_URL, {
-    transports: ["websocket"],
-    withCredentials: true,
-  });
+
   const [socketInstance, setSocketInstance] = useState(null);
 
   useEffect(() => {
@@ -337,8 +334,16 @@ export function AppointmentsList() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          {appointment.status === "confirmed" && (
-                            <DropdownMenuItem onClick={() => handleStatusChange(appointment._id, "cancelled", appointment.staffId)}>
+                          {["pending", "confirmed"].includes(appointment.status) && (
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleStatusChange(
+                                  appointment._id,
+                                  "cancelled",
+                                  appointment.staffId
+                                )
+                              }
+                            >
                               Cancel Booking
                             </DropdownMenuItem>
                           )}
