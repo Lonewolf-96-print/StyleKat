@@ -71,6 +71,11 @@ const getStatusBadge = (status) => {
       return { label: status, className: "bg-gray-100 text-gray-800 border-gray-200" };
   }
 };
+function capitalizeAll(text) {
+  if (!text) return "";
+  return text.toUpperCase();
+}
+
 
 export default function BookingsDashboardPage() {
   const [bookings, setBookings] = useState([]);
