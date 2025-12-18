@@ -1,221 +1,135 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { SOCKET_URL } from "../lib/config";
 
 const BarberNotificationContext = createContext();
 export const useBarberNotifications = () => useContext(BarberNotificationContext);
 
-export const BarberNotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState(() => {
-    const saved = localStorage.getItem("notifications");
+const STORAGE_KEY = "barber_notifications";
 
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+export const BarberNotificationProvider = ({ children }) => {
   const socketRef = useRef(null);
 
-  // 🧠 --- Helper functions ---
+  const [notifications, setNotifications] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [unreadCount, setUnreadCount] = useState(
+    notifications.filter((n) => !n.read).length
+  );
+
+  const persist = (list) => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+    setUnreadCount(list.filter((n) => !n.read).length);
+  };
+
   const addNotification = (notif) => {
+    if (!notif?.id) return;
+
     setNotifications((prev) => {
-      const updated = [notif, ...prev];
-      localStorage.setItem("notifications", JSON.stringify(updated));
+      const updated = [notif, ...prev.filter((n) => n.id !== notif.id)];
+      persist(updated);
       return updated;
     });
-    setUnreadCount((prev) => prev + 1);
   };
-  const markAsUnread = (id) => {
-    setNotifications((prev) => {
-      const updated = prev.map((n) =>
-        n.id === id ? { ...n, read: false } : n
-      );
 
-      localStorage.setItem("notifications", JSON.stringify(updated));
-      return updated;
-    });
-
-    // Increase unread count by 1 safely
-    setUnreadCount((prev) => prev + 1);
-  };
-  const clearAll = () => {
-    setNotifications([]);
-    localStorage.setItem("notifications", JSON.stringify([]));
-    setUnreadCount(0);
-  };
   const markAsRead = (id) => {
     setNotifications((prev) => {
-      const updated = prev.map((n) => (n.id === id ? { ...n, read: true } : n));
-      localStorage.setItem("notifications", JSON.stringify(updated));
+      const updated = prev.map((n) =>
+        n.id === id ? { ...n, read: true } : n
+      );
+      persist(updated);
       return updated;
     });
-    setUnreadCount((prev) => Math.max(0, prev - 1));
   };
 
   const markAllAsRead = () => {
     setNotifications((prev) => {
       const updated = prev.map((n) => ({ ...n, read: true }));
-      localStorage.setItem("notifications", JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
-    setUnreadCount(0);
   };
 
   const deleteNotification = (id) => {
     setNotifications((prev) => {
       const updated = prev.filter((n) => n.id !== id);
-      localStorage.setItem("notifications", JSON.stringify(updated));
+      persist(updated);
       return updated;
     });
   };
 
-  // 🔌 --- Socket.io setup ---
+  const clearAll = () => {
+    setNotifications([]);
+    persist([]);
+  };
+
+  // 🔌 SOCKET
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      console.warn("⚠️ No token found — skipping socket connection");
+    const role = localStorage.getItem("role");
+    const shopId = localStorage.getItem("shopId");
+
+    if (!token || role !== "barber" || !shopId) {
+      console.warn("🚫 Barber socket skipped");
       return;
     }
 
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
       auth: { token },
-      withCredentials: true,
-      autoConnect: false,
     });
+
     socketRef.current = socket;
 
-    const role = localStorage.getItem("role");
-
-    const shopId = localStorage.getItem("shopId");
-    const userId = localStorage.getItem("userId");
-    const markAsRead = (id) => {
-      setNotifications((prev) =>
-        prev.map((n) => (n.id === id ? { ...n, read: true } : n))
-      );
-      setUnreadCount((count) => Math.max(count - 1, 0));
-    };
-
-    const markAllAsRead = () => {
-      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-      setUnreadCount(0);
-    };
-    const deleteNotification = (id) => {
-      setNotifications((prev) => prev.filter((n) => n.id !== id));
-    };
     socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
-
-      // Join correct room
-      if (role === "barber" && shopId) {
-        socket.emit("joinShopRoom", shopId);
-        console.log("🧔‍♂️ Barber joined shop room:", shopId);
-      } else if (role === "user" && userId) {
-        socket.emit("joinUserRoom", userId);
-        console.log("🙋‍♂️ User joined user room:", userId);
-      } else {
-        console.warn("⚠️ No valid role or ID for socket join");
-      }
-    });
-    //     useEffect(() => {
-    //   socket.on("serviceNotification", (newNotif) => {
-    //     setNotifications((prev) => [newNotif, ...prev]);
-    //     setUnreadCount((count) => count + 1);
-    //   });
-
-    //   return () => socket.off("serviceNotification");
-    // }, []);
-    socket.on("connect_error", (err) => {
-      console.error("❌ Socket connect error:", err.message);
+      console.log("✅ Barber socket connected:", socket.id);
+      socket.emit("joinShopRoom", shopId);
     });
 
-    socket.on("disconnect", () => {
-      console.log("🔌 Socket disconnected");
-    });
-
-    // 📩 ---- Handle Notifications ----
-
-    // Barber: new booking
     socket.on("newBookingRequest", (booking) => {
-
-      console.log("📩  New booking request received:", booking);
+      console.log("📩 New booking:", booking);
       addNotification({
         id: booking._id,
         type: "newBookingRequest",
-        message: `New booking from ${booking.customerName} to shop ${booking.shopName}`,
-        ...booking,
+        message: `New booking from ${booking.customerName}`,
         read: false,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     });
 
-    // Barber: booking updated (status changed, cancelled, etc.)
     socket.on("bookingUpdated", (info) => {
-      if (role != "barber") return
-      console.log("Barber")
-      console.log("📩 [Barber] Booking updated:", info);
+      console.log("📩 Booking updated:", info);
       addNotification({
-        id: info._id || Date.now(),
+        id: info._id,
         type: "bookingUpdated",
-        message: `Booking with ${info.customerName} was updated to ${info.status}`,
-        ...info,
+        message: `Booking status changed to ${info.status}`,
         read: false,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     });
 
-    // Barber: shop updates (details, staff, services)
-    socket.on("toggleShop", (update) => {
-      if (role !== "barber") return;
-      console.log("📩 [Barber] Shop info updated:", update);
+    socket.on("toggleShop", () => {
       addNotification({
         id: Date.now(),
         type: "shopUpdated",
-        message: `Shop details updated: ${update.fieldChanged || "General update"}`,
-        ...update,
+        message: "Shop details updated",
         read: false,
-        timestamp: new Date(),
+        timestamp: new Date().toISOString(),
       });
     });
-    socket.on("user:bookingCreated", (data) => {
-      console.log("📩 New Booking Notification:", data);
-      addNotification({
 
-        id: booking._id,
-        type: "user:bookingCreated",
-        message: `New booking from ${booking.customerName} to shop ${booking.shopName}`,
-        ...booking,
-        read: false,
-        timestamp: new Date(),
-      });
+    socket.on("connect_error", (err) => {
+      console.error("❌ Barber socket error:", err.message);
+    });
 
-    });
-    // User: booking status updates
-    socket.on("bookingStatusUpdate", (booking) => {
-      if (role !== "user") return;
-      console.log("📩 [User] Booking status update received:", booking);
-      addNotification({
-        id: booking._id,
-        type: "bookingStatusUpdate",
-        message: `Your booking with ${booking.shopName} is now ${booking.status}`,
-        ...booking,
-        read: false,
-        timestamp: new Date(),
-      });
-    });
-    socket.on("upcomingBookingReminder", (booking) => {
-      if (role !== "user") return; // ❗ Only customers
-
-      console.log("⏰ [User] Upcoming reminder:", booking);
-      addNotification({
-        id: Date.now(),
-        type: "reminder",
-        message: `You have a booking tomorrow at ${booking.time} with ${booking.shopName}`,
-        ...booking,
-        read: false,
-        timestamp: new Date(),
-      });
-    });
     return () => {
       socket.disconnect();
       socketRef.current = null;
@@ -224,11 +138,17 @@ export const BarberNotificationProvider = ({ children }) => {
 
   return (
     <BarberNotificationContext.Provider
-      value={{ notifications, clearAll, markAsRead, markAsUnread, unreadCount, notificationsOpen, addNotification, setNotificationsOpen, markAllAsRead, deleteNotification }}
-
+      value={{
+        notifications,
+        unreadCount,
+        addNotification,
+        markAsRead,
+        markAllAsRead,
+        deleteNotification,
+        clearAll,
+      }}
     >
       {children}
     </BarberNotificationContext.Provider>
-
   );
 };
