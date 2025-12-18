@@ -1,6 +1,4 @@
 {
-  
- 
   "home": {
     "heroAlt": "Luxury salon interior",
     "welcomeUser": "Welcome, {{name}}",
@@ -17,18 +15,17 @@
       "happyCustomers": "Happy Customers",
       "averageRating": "Average Rating",
       "easyBooking": "Easy Booking",
-      "todaysBookings":"Today's Bookings",
-      "totalBookings":"Total Bookings",
-      "totalRevenue":"Total Revenue",
-      "todayRevenue":"Today's Revenue",
-      "totalMonthlyRevenue" :"Total Expected Revenue",
-      "activeStaff":"Active Staff",
-      "pendingConfirmations":"Pending Confirmations",
-      "changeBookings":"Change Bookings",
-      "changeRevenue":"Change Revenue",
-      "changeStaff":"Change Staff",
-      "changeConfirmations":"Change Confirmations"
-
+      "todaysBookings": "Today's Bookings",
+      "totalBookings": "Total Bookings",
+      "totalRevenue": "Total Revenue",
+      "todayRevenue": "Today's Revenue",
+      "totalMonthlyRevenue": "Total Expected Revenue",
+      "activeStaff": "Active Staff",
+      "pendingConfirmations": "Pending Confirmations",
+      "changeBookings": "Change Bookings",
+      "changeRevenue": "Change Revenue",
+      "changeStaff": "Change Staff",
+      "changeConfirmations": "Change Confirmations"
     },
     "features": {
       "instantBooking": "Instant Booking",
@@ -38,16 +35,13 @@
       "flexibleScheduling": "Flexible Scheduling",
       "flexibleSchedulingDesc": "Easy rescheduling and cancellation"
     },
-
-"servicePage":{
-    "title":"Find Services",
-    "serviceInput":"Search Service",
-    "cityInput":"Enter city",
-    "button":"Search"
-}
+    "servicePage": {
+      "title": "Find Services",
+      "serviceInput": "Search Service",
+      "cityInput": "Enter city",
+      "button": "Search"
+    }
   },
- 
-
   "navigation": {
     "dashboard": "Dashboard",
     "services": "Services",
@@ -55,25 +49,25 @@
     "staff": "Staff",
     "payments": "Payments",
     "settings": "Settings",
-    "logout":"Logout",
-    "myShop":"My Shop",
-    "companyInfo":"Company Info",
-    "profile":"Profile"
+    "logout": "Logout",
+    "myShop": "My Shop",
+    "companyInfo": "Company Info",
+    "profile": "Profile"
   },
-  "day":{
-    "Mon":"Mon",
-    "Tue":"Tue",
-    "Wed" :"Wed",
-    "Thu":"Thu",
-    "Fri":"Fri",
-    "Sat":"Sat",
-    "Sun":"Sun"
+  "day": {
+    "Mon": "Mon",
+    "Tue": "Tue",
+    "Wed": "Wed",
+    "Thu": "Thu",
+    "Fri": "Fri",
+    "Sat": "Sat",
+    "Sun": "Sun"
   },
   "charts": {
     "weeklyRevenue": "Weekly Revenue",
     "weeklyRevenueDescription": "Your salon's revenue for this week",
     "revenue": "Revenue",
-    "weekRange":"Week Range"
+    "weekRange": "Week Range"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -88,14 +82,13 @@
     "newAppointment": "New Appointment",
     "addService": "Add Service",
     "addStaff": "Add Staff",
-    "appointmentsTitle" :"Today's Bookings",
-    "appoinmentsSubtitle" :"No Bookings for today",
-    "viewAll":"View All"
+    "appointmentsTitle": "Today's Bookings",
+    "appoinmentsSubtitle": "No Bookings for today",
+    "viewAll": "View All"
   },
-
   "auth": {
     "salonManager": "Salon Manager",
-    "salonOwner":"Salon Owner",
+    "salonOwner": "Salon Owner",
     "signInSubtitle": "Sign in to manage your salon business",
     "createAccount": "Create Account",
     "signUpSubtitle": "Start managing your salon business today",
@@ -116,24 +109,18 @@
     "createPassword": "Create a password",
     "enterSalonName": "Enter your salon name",
     "enterPhoneNumber": "Enter your phone number",
-     "user": "User",
+    "user": "User",
     "login": "Login",
-    
     "accountCreated": "Account successfully created",
     "loggedIn": "Successfully logged in",
     "name": "Name",
-   
-    
     "roleQuestion": "Are u barber?",
-    
     "createAccountQuestion": "Want to create account?",
     "clickHere": "Click Here",
     "namePlaceholder": "Enter your name",
     "emailPlaceholder": "Enter your email",
     "passwordPlaceholder": "Enter your password",
     "rolePlaceholder": "Enter your role"
-    
-    
   },
   "myShop": {
     "title": "My Shop",
@@ -198,7 +185,6 @@
     "decline": "Decline",
     "searchCustomers": "Search customers...",
     "noAppointmentsFound": "No appointments found.",
-     
     "filters": {
       "all": "All Appointments",
       "today": "Today",
@@ -223,12 +209,10 @@
     "role": "Role",
     "phoneNumber": "Phone Number",
     "emailAddress": "Email Address",
-   
     "workingSchedule": "Working Schedule",
     "startTime": "Start Time",
     "endTime": "End Time",
     "workingDays": "Working Days",
-   
     "noStaffFound": "No staff members found.",
     "status": {
       "active": "Active",
@@ -245,14 +229,12 @@
     "joined": "Joined",
     "noStaff": "No staff members found."
   },
-  "servicePage":{
-    "title":"Find Services",
-    "serviceInput":"Find your services",
-    "cityInput":"Enter your city" ,
-    "button":"Find"
-    
-}
-  ,
+  "servicePage": {
+    "title": "Find Services",
+    "serviceInput": "Find your services",
+    "cityInput": "Enter your city",
+    "button": "Find"
+  },
   "payments": {
     "title": "Payments & Earnings",
     "subtitle": "Track your salon's revenue, transactions, and financial performance",
@@ -274,21 +256,21 @@
     "viewAll": "View All",
     "noTransactionsFound": "No transactions found."
   },
-  "settings":{
-     "salonProfile":"Salon Profile",
-     "title":"Title",
-     "subtitle":"Manage your salon profile, preferences, and system settings",
-     "businessInformation":"Business Informations",
-     "salonName":"Salon Name",
-     "ownerName":"Owner Name",
-     "address":"Address",
-     "city":"City",
-     "state":"State",
-     "pincode":"Pin Code",
-     "phoneNumber":"Phone Number",
-     "email":"Email",
-     "website" :" Your Website",
-     "saveSettings":"Save Settings"
+  "settings": {
+    "salonProfile": "Salon Profile",
+    "title": "Title",
+    "subtitle": "Manage your salon profile, preferences, and system settings",
+    "businessInformation": "Business Informations",
+    "salonName": "Salon Name",
+    "ownerName": "Owner Name",
+    "address": "Address",
+    "city": "City",
+    "state": "State",
+    "pincode": "Pin Code",
+    "phoneNumber": "Phone Number",
+    "email": "Email",
+    "website": " Your Website",
+    "saveSettings": "Save Settings"
   },
   "appointmentsPage": {
     "status": {
@@ -296,7 +278,7 @@
       "pending": "Pending",
       "completed": "Completed",
       "cancelled": "Cancelled",
-      "in-service" :"Started"
+      "in-service": "Started"
     },
     "minutes": "Minutes",
     "staff": "Staff",
@@ -310,8 +292,6 @@
     "delete": "Delete",
     "noAppointments": "No Apppointments Found"
   },
- 
-  
   "common": {
     "save": "Save",
     "cancel": "Cancel",
@@ -331,25 +311,22 @@
     "remove": "Remove",
     "viewDetails": "View Details",
     "downloadReceipt": "Download Receipt",
-    
     "brandName": "StyleKat",
     "salon": "Salon",
     "scissors": "Scissors",
     "dashboard": "Dashboard",
     "allCategories": "All Categories",
     "logout": "Logout"
-    
   },
-  "footer" :{
+  "footer": {
     "quickLinks": "Quick Links",
-    "companyInfo" :"Company Info",
-    "legal" :"Legal",
-    "privacy":"Privacy",
-    "terms":"Terms",
-    "support":"Support",
-    "allRights" :"Rights",
-    "description":"Descriptions",
-    "contact":"Contact"
+    "companyInfo": "Company Info",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "support": "Support",
+    "allRights": "Rights",
+    "description": "Descriptions",
+    "contact": "Contact"
   }
 }
-
