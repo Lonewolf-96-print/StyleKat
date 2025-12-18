@@ -24,7 +24,11 @@ export function DashboardHeader() {
   const { user, setUser } = useUser();
   const { t } = useLanguage();
   const { notificationsOpen, setNotificationsOpen } = useNotifications();
-  const { unreadCount, notificationsOpen: barberOpen, setNotificationsOpen: setBarberOpen } = useBarberNotifications();
+  const {
+    unreadCount,
+    notificationsOpen: barberOpen,
+    setNotificationsOpen: setBarberOpen
+  } = useBarberNotifications();
 
   // --------------------------
   // Avatar Fallback

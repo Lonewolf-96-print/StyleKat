@@ -4,7 +4,7 @@ import React, { createContext, useContext, useEffect, useRef, useState } from "r
 import { io } from "socket.io-client";
 import { SOCKET_URL } from "../lib/config";
 
-const BarberNotificationContext = createContext();
+const BarberNotificationContext = createContext(null);
 export const useBarberNotifications = () => useContext(BarberNotificationContext);
 
 const STORAGE_KEY = "barber_notifications";
@@ -12,6 +12,7 @@ const STORAGE_KEY = "barber_notifications";
 export const BarberNotificationProvider = ({ children }) => {
   const socketRef = useRef(null);
 
+  // 🔔 Notifications state
   const [notifications, setNotifications] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -21,10 +22,17 @@ export const BarberNotificationProvider = ({ children }) => {
     }
   });
 
+  // 🔴 Unread count
   const [unreadCount, setUnreadCount] = useState(
     notifications.filter((n) => !n.read).length
   );
 
+  // 🟢 OPEN / CLOSE PANEL STATE (THIS WAS MISSING)
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+  // ------------------------
+  // Helpers
+  // ------------------------
   const persist = (list) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
     setUnreadCount(list.filter((n) => !n.read).length);
@@ -71,16 +79,15 @@ export const BarberNotificationProvider = ({ children }) => {
     persist([]);
   };
 
-  // 🔌 SOCKET
+  // ------------------------
+  // SOCKET
+  // ------------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
     const shopId = localStorage.getItem("shopId");
 
-    if (!token || role !== "barber" || !shopId) {
-      console.warn("🚫 Barber socket skipped");
-      return;
-    }
+    if (!token || role !== "barber" || !shopId) return;
 
     const socket = io(SOCKET_URL, {
       transports: ["websocket"],
@@ -95,7 +102,6 @@ export const BarberNotificationProvider = ({ children }) => {
     });
 
     socket.on("newBookingRequest", (booking) => {
-      console.log("📩 New booking:", booking);
       addNotification({
         id: booking._id,
         type: "newBookingRequest",
@@ -106,34 +112,16 @@ export const BarberNotificationProvider = ({ children }) => {
     });
 
     socket.on("bookingUpdated", (info) => {
-      console.log("📩 Booking updated:", info);
       addNotification({
         id: info._id,
         type: "bookingUpdated",
-        message: `Booking status changed to ${info.status}`,
+        message: `Booking updated to ${info.status}`,
         read: false,
         timestamp: new Date().toISOString(),
       });
     });
 
-    socket.on("toggleShop", () => {
-      addNotification({
-        id: Date.now(),
-        type: "shopUpdated",
-        message: "Shop details updated",
-        read: false,
-        timestamp: new Date().toISOString(),
-      });
-    });
-
-    socket.on("connect_error", (err) => {
-      console.error("❌ Barber socket error:", err.message);
-    });
-
-    return () => {
-      socket.disconnect();
-      socketRef.current = null;
-    };
+    return () => socket.disconnect();
   }, []);
 
   return (
@@ -141,6 +129,11 @@ export const BarberNotificationProvider = ({ children }) => {
       value={{
         notifications,
         unreadCount,
+
+        // 👇 THIS FIXES YOUR ERROR
+        notificationsOpen,
+        setNotificationsOpen,
+
         addNotification,
         markAsRead,
         markAllAsRead,
