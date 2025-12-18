@@ -141,9 +141,7 @@ export function StaffList() {
                     <Avatar className="h-16 w-16 border-2 border-white shadow-sm ring-2 ring-gray-50">
                       <AvatarImage src={member.avatar} alt={member.name} />
                       <AvatarFallback>{member.name?.charAt(0) || 'S'}</AvatarFallback>
-                      <AvatarFallback className="text-xl font-bold bg-primary/10 text-primary">
-                        {member.name[0]}
-                      </AvatarFallback>
+
                     </Avatar>
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-primary transition-colors">
