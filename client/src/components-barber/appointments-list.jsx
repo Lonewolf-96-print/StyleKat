@@ -41,6 +41,7 @@ const statusStripColors = {
 
 export function AppointmentsList() {
   const { t } = useTranslation();
+  const token = localStorage.getItem("token");
   const DEFAULT_STATUS_COLOR = "bg-gray-100 text-gray-800";
 
   const {
@@ -56,19 +57,22 @@ export function AppointmentsList() {
   });
   const [socketInstance, setSocketInstance] = useState(null);
 
-  const token = localStorage.getItem("token");
-  if (!token) return <Navigate to="/login/barber" replace />;
-
-  // SOCKET SETUP (RUNS ONCE)
   useEffect(() => {
     if (!token) return;
 
-
+    const socket = io(SOCKET_URL, {
+      transports: ["websocket"],
+      withCredentials: true,
+    });
 
     setSocketInstance(socket);
 
-    const shopId = localStorage.getItem("shopId");
-    if (shopId) socket.emit("joinShopRoom", shopId);
+    socket.on("connect", () => {
+      console.log("✅ Barber socket connected:", socket.id);
+
+      const shopId = localStorage.getItem("shopId");
+      if (shopId) socket.emit("joinShopRoom", shopId);
+    });
 
     const handleStatusUpdate = (updated) => {
       setAllBookings(prev => {
@@ -77,29 +81,24 @@ export function AppointmentsList() {
         return [...map.values()];
       });
     };
-    socket.on("connect", () => {
-      console.log("Connected to socket");
-    });
-    //  socketInstance.on("bookingStatusUpdate", handleStatusUpdate);
+
     const handleNewBooking = (newBooking) => {
       setAllBookings(prev => {
         const map = new Map(prev.map(b => [b._id, b]));
         map.set(newBooking._id, newBooking);
         return [...map.values()];
       });
-    }
+    };
 
     socket.on("bookingStatusUpdate", handleStatusUpdate);
-    console.log("Received Booking Status Update")
     socket.on("newBookingRequest", handleNewBooking);
-    console.log("Received New Booking Request")
 
     return () => {
       socket.off("bookingStatusUpdate", handleStatusUpdate);
       socket.off("newBookingRequest", handleNewBooking);
       socket.disconnect();
     };
-  }, [token]);
+  }, [token, setAllBookings]);
 
   // UPDATE BOOKING STATUS
   const handleStatusChange = async (bookingId, newStatus, staffId) => {
@@ -123,7 +122,8 @@ export function AppointmentsList() {
 
       const updated = await res.json();
 
-      socket.emit("bookingStatusChanged", updated);
+
+      socketInstance?.emit("bookingStatusUpdate", updated);
 
       setAllBookings((prev) =>
         prev.map((b) => (b._id === updated._id ? updated : b))
@@ -132,6 +132,11 @@ export function AppointmentsList() {
       console.error("Error updating booking:", err);
     }
   };
+  function capitalizeAll(text) {
+    if (!text) return "";
+    return text.toUpperCase();
+  }
+
   // DELETE BOOKING
   const handleDeleteBooking = async (bookingId) => {
     if (!confirm("Delete this booking from your view?")) return;
@@ -251,7 +256,9 @@ export function AppointmentsList() {
                           </span>
                         )}
                       </div>
-
+                      <div className="p-4 border-t bg-gray-50/30 flex justify-between items-center">
+                        <span className="text-xs text-muted-foreground">ID: #{capitalizeAll(appointment._id.slice(-5))}</span>
+                      </div>
                       <Badge className={`${statusColors[appointment.status]} border-0 capitalize px-2.5 py-0.5`}>
                         {appointment.status}
                       </Badge>
@@ -332,11 +339,11 @@ export function AppointmentsList() {
                         <DropdownMenuContent align="end">
                           {appointment.status === "confirmed" && (
                             <DropdownMenuItem onClick={() => handleStatusChange(appointment._id, "cancelled", appointment.staffId)}>
-                              <X className="mr-2 h-4 w-4 text-red-500" /> Cancel Booking
+                              Cancel Booking
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem className="text-red-600 focus:text-red-600 focus:bg-red-50" onClick={() => handleDeleteBooking(appointment._id)}>
-                            Delete Record
+                            Delete Booking
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

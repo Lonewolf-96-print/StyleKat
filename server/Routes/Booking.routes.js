@@ -282,187 +282,6 @@ router.post("/request", protectUser, async (req, res) => {
 });
 
 /* ---------------------------
-   POST /api/bookings/request (legacy endpoint - kept for compatibility)
----------------------------- */
-router.post("/request", protectUser, async (req, res) => {
-  try {
-    const {
-      id,
-      shopId,
-      shopName,
-      barberId,
-      staffId: reqStaffId,
-      staffName,
-      customerName,
-      customerPhone,
-      service,
-      price,
-      date,
-      time,
-      userId, // optional
-      duration: requestedDuration,
-    } = req.body;
-
-    // required fields
-    if (!customerName || !customerPhone || !service || !date || !time) {
-      return res.status(400).json({ message: "Missing required booking fields" });
-    }
-
-    // Prevent duplicate creation by client id
-    const existing = await Booking.findOne({ id }).lean();
-    if (existing) {
-      return res.status(200).json({ message: "Booking already exists", booking: existing });
-    }
-
-    // duration (minutes)
-    const duration = Number(requestedDuration) || DEFAULT_DURATION_MIN;
-
-    // parse start/end
-    const startDt = parseDateTime(date, time);
-    if (!startDt || !startDt.isValid()) {
-      return res.status(400).json({ message: "Invalid date or time format" });
-    }
-    const endDt = startDt.add(duration, "minute");
-
-    // no past bookings
-    if (endDt.isBefore(dayjs())) {
-      return res.status(400).json({ message: "Cannot create booking in the past" });
-    }
-
-    // pick staff (explicit or auto)
-    let staffId = reqStaffId;
-    if (!staffId) {
-      const staffList = await Staff.find({ barberId }).lean();
-      if (!staffList.length) {
-        return res.status(400).json({ message: "No staff available to assign" });
-      }
-
-      // bookings for this barber on the same date (relevant statuses)
-      const todaysBookings = await Booking.find({
-        barberId,
-        date,
-        status: { $in: ["pending", "confirmed", "accepted", "ongoing", "in-service"] },
-      }).lean();
-
-      // compute light load map and pick least-loaded staff
-      const loadMap = staffList.map((s) => {
-        const count = todaysBookings.filter((b) => String(b.staffId) === String(s._id)).length;
-        return { staffId: s._id, count };
-      });
-
-      loadMap.sort((a, b) => a.count - b.count);
-      staffId = loadMap[0].staffId;
-    }
-
-    // Ensure blockedTimesStore slots exist
-    if (!blockedTimesStore[staffId]) blockedTimesStore[staffId] = {};
-    if (!blockedTimesStore[staffId][date]) blockedTimesStore[staffId][date] = [];
-
-    // Check in-memory blocked times first
-    if (isTimeBlocked(blockedTimesStore, staffId, date, time, duration)) {
-      return res.status(400).json({ message: "This time slot is already blocked or booked" });
-    }
-
-    // Final DB-level overlap check using startTime/endTime Date fields if present
-    const startISO = startDt.toDate();
-    const endISO = endDt.toDate();
-
-    const overlapping = await Booking.findOne({
-      staffId,
-      date,
-      status: { $nin: ["cancelled", "completed", "barber_deleted"] },
-      $or: [
-        // existing booking with Date start/end
-        { startTime: { $lt: endISO }, endTime: { $gt: startISO } },
-        // additional checks could go here if your DB stores only string times
-      ],
-    }).lean();
-
-    if (overlapping) {
-      return res.status(400).json({ message: "Overlapping booking exists (server-side check)" });
-    }
-
-    // Build and save booking (store startTime/endTime as Date objects)
-    const bookingDoc = new Booking({
-      id,
-      shopId,
-      shopName,
-      barberId,
-      staffId,
-      staffName,
-      customerName,
-      customerPhone,
-      service,
-      price,
-      duration,
-      date,
-      time,
-      startTime: startISO,
-      endTime: endISO,
-      userId: req.user?._id || userId,
-      status: "pending",
-    });
-
-    const saved = await bookingDoc.save();
-    // console.log("Booking request recieved from the frontend", bookingDoc)
-    // console.log("✅ Booking saved to DB:", saved._id);
-
-    // Update in-memory blockedTimesStore (store HH:mm 24h strings)
-    blockedTimesStore[staffId][date].push({
-      startTime: startDt.format("HH:mm"),
-      endTime: endDt.format("HH:mm"),
-    });
-
-    // Emit block to staff (strings only)
-    req.io.to(`staff-${staffId}`).emit("bookingTime:blocked", {
-      staffId,
-      date,
-      startTime: startDt.format("HH:mm"),
-      endTime: endDt.format("HH:mm"),
-    });
-
-    // Build queue payload (get active staff list)
-    const staffListLive = await Staff.find({ barberId, isActive: true }).lean();
-
-    const todaysBookingsForQueue = await Booking.find({
-      barberId,
-      date,
-      status: { $in: ["pending", "confirmed", "accepted", "ongoing", "in-service"] },
-    })
-      .lean()
-      .sort({ startTime: 1 });
-
-    const queueData = staffListLive.map((s) => {
-      const items = todaysBookingsForQueue.filter((b) => String(b.staffId) === String(s._id));
-      return {
-        barberId,
-        staffId: s._id,
-        staffName: s.name,
-        current: items[0] || null,
-        queue: items.slice(1),
-      };
-    });
-
-    // Sockets — emit consistently
-    const shopRoom = `shop-${shopId}`;
-    const userRoom = `user-${saved.userId}`;
-
-    // main emits used by frontend (kept same names as earlier)
-    req.io.to(shopRoom).emit("queueUpdated", queueData);
-    req.io.to(shopRoom).emit("newBookingRequest", saved);
-    req.io.to(`staff-${staffId}`).emit("staff:bookingAdded", saved);
-    if (saved.userId) req.io.to(userRoom).emit("user:bookingCreated", saved);
-    req.io.to(shopRoom).emit("booking:new", saved);
-
-    // console.log("✅ Booking created and emitted:", saved._id);
-    return res.status(201).json({ message: "Booking created successfully", booking: saved });
-  } catch (err) {
-    console.error("❌ Error creating booking request:", err);
-    return res.status(500).json({ message: "Failed to create booking", error: err.message });
-  }
-});
-
-/* ---------------------------
    GET /api/bookings/my  (user)
 ---------------------------- */
 router.get("/my", protectUser, async (req, res) => {
@@ -481,7 +300,21 @@ router.get("/my", protectUser, async (req, res) => {
    DELETE /my/:id (cancel)
 ---------------------------- */
 router.delete("/my/:id", protectUser, async (req, res) => {
+  const { staffId, date, startTime, endTime } = req.body;
   try {
+    if (
+      blockedTimesStore[staffId] &&
+      blockedTimesStore[staffId][date]
+    ) {
+      blockedTimesStore[staffId][date] =
+        blockedTimesStore[staffId][date].filter(
+          (b) =>
+            !(
+              b.startTime === dayjs(startTime).format("HH:mm") &&
+              b.endTime === dayjs(endTime).format("HH:mm")
+            )
+        );
+    }
     const id = req.params.id;
     const booking = await Booking.findById(id);
     if (!booking) return res.status(404).json({ message: "Booking not found" });
@@ -495,7 +328,12 @@ router.delete("/my/:id", protectUser, async (req, res) => {
 
     req.io.to(shopRoom).emit("bookingStatusUpdate", booking);
     req.io.to(userRoom).emit("bookingStatusUpdate", booking);
-
+    req.io.to(`staff-${staffId}`).emit("bookingTime:unblocked", {
+      staffId,
+      date,
+      startTime: dayjs(startTime).format("HH:mm"),
+      endTime: dayjs(endTime).format("HH:mm"),
+    });
     return res.json({ success: true, message: "Booking cancelled", booking });
   } catch (err) {
     console.error(err);
@@ -514,7 +352,12 @@ router.delete("/my/:id/permanent", protectUser, async (req, res) => {
     if (String(booking.userId) !== String(req.user._id)) return res.status(403).json({ message: "Not your booking" });
     if (booking.status !== "cancelled") return res.status(400).json({ message: "You can only delete bookings that are cancelled" });
     await User.findByIdAndUpdate(req.user._id, { $addToSet: { userHiddenBookings: bookingId } });
+    const shopRoom = `shop-${booking.shopId}`;
+    const userRoom = `user-${booking.userId}`;
+    req.io.to(shopRoom).emit("bookingStatusUpdate", updatedBooking)
+    req.io.to(userRoom).emit("bookingStatusUpdate", updatedBooking)
     return res.json({ success: true, message: "Booking deleted from user view only", _id: bookingId });
+
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: "Failed to delete booking" });

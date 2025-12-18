@@ -30,6 +30,31 @@ const getStatusColor = (status) => {
     default: return "#6b7280"; // gray-500
   }
 };
+function UserBadge({ label, name }) {
+  const initial = name?.charAt(0)?.toUpperCase() || "?";
+
+  return (
+    <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
+      <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">
+        {initial}
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-sm font-semibold truncate max-w-[140px]">
+          {name || "Unknown"}
+        </p>
+      </div>
+      <Badge variant="secondary" className="ml-auto text-[10px]">
+        {label}
+      </Badge>
+    </div>
+  );
+}
+
+function capitalizeAll(text) {
+  if (!text) return "";
+  return text.toUpperCase();
+}
 
 const getStatusBadge = (status) => {
   switch (status) {
@@ -198,6 +223,8 @@ export default function BookingsDashboardPage() {
       if (res.ok) {
         setBookings((prev) => prev.filter((b) => b._id !== bookingId));
         toast.success("Booking deleted");
+
+
       } else {
         toast.error(data.message || "Delete failed");
       }
@@ -326,15 +353,24 @@ export default function BookingsDashboardPage() {
                       </div>
 
                       {/* Staff */}
-                      <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
-                        <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-bold">
-                          {booking.staffName ? booking.staffName.charAt(0) : "?"}
-                        </div>
-                        <div>
-                          <p className="text-xs text-muted-foreground">Professional</p>
-                          <p className="text-sm font-semibold">{booking.staffName || "Any Staff"}</p>
-                        </div>
+                      {/* Staff & Customer */}
+                      <div className="space-y-3">
+                        <UserBadge
+                          label="Professional"
+                          name={booking.staffName || "Any Staff"}
+                        />
+
+                        <UserBadge
+                          label="Customer"
+                          name={
+                            booking.customerName ||
+                            booking.customer?.name ||
+                            booking.user?.name ||
+                            "You"
+                          }
+                        />
                       </div>
+
 
                       {/* Time */}
                       <div className="flex items-center gap-2 text-sm font-medium text-gray-700">
@@ -345,7 +381,7 @@ export default function BookingsDashboardPage() {
 
                     {/* CARD FOOTER (Actions) */}
                     <div className="p-4 border-t bg-gray-50/30 flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">ID: #{booking._id.slice(-6)}</span>
+                      <span className="text-xs text-muted-foreground">ID: #{capitalizeAll(booking._id.slice(-5))}</span>
 
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
