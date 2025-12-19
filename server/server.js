@@ -26,13 +26,13 @@ import Staff from "./model/Staff.model.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://teal-conkies-c2ecca.netlify.app"
+  "https://boisterous-pixie-152211.netlify.app"
 ];
 const app = express();
 
 app.use(
   cors({
-    origin: "https://teal-conkies-c2ecca.netlify.app",
+    origin: "https://boisterous-pixie-152211.netlify.app",
     credentials: true,
   })
 );
@@ -51,7 +51,7 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://teal-conkies-c2ecca.netlify.app",
+    origin: "https://boisterous-pixie-152211.netlify.app",
     methods: ["GET", "POST"],
     credentials: true,
   },
