@@ -491,15 +491,13 @@ export default function BackendBookingForm({ shop, barberId }) {
       <form
         onSubmit={handleSubmitBooking}
         className="
-    bg-white/10 
-    backdrop-blur-2xl 
-    p-4 md:p-8 
+    bg-white 
+    p-4 
     space-y-6 
     w-full 
-    max-w-[95%] md:max-w-lg 
-    rounded-3xl 
-    border border-white/20
-    shadow-2xl
+    rounded-xl 
+    border border-gray-100
+    shadow-sm
     relative 
     z-[1]
   "
@@ -507,7 +505,7 @@ export default function BackendBookingForm({ shop, barberId }) {
 
         {/* Name */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-white/90 ml-1">Your Name</label>
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Your Name</label>
           <input
             type="text"
             value={customerName}
@@ -520,7 +518,7 @@ export default function BackendBookingForm({ shop, barberId }) {
 
         {/* Phone */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-white/90 ml-1">Phone Number</label>
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Phone Number</label>
           <input
             type="tel"
             value={customerPhone}
@@ -533,12 +531,12 @@ export default function BackendBookingForm({ shop, barberId }) {
 
         {/* Service */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-white/90 ml-1">Select Service</label>
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Select Service</label>
           <div className="relative">
             <select
               value={selectedService}
               onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white appearance-none focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none cursor-pointer"
+              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none cursor-pointer"
               required
             >
               <option value="" className="bg-gray-800 text-gray-400">Choose a service...</option>
@@ -548,20 +546,20 @@ export default function BackendBookingForm({ shop, barberId }) {
                 </option>
               ))}
             </select>
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/50">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
               <Scissors size={18} />
             </div>
           </div>
         </div>
 
         <div className="relative space-y-2">
-          <label className="block text-sm font-semibold text-white/90 ml-1">Preferred Staff</label>
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Preferred Staff</label>
           <div
             onClick={() => setShowStaffList((prev) => !prev)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white cursor-pointer hover:bg-white/10 transition-colors flex justify-between items-center"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors flex justify-between items-center"
           >
             <span>{selectedStaff ? selectedStaff.name : "Select Staff Member"}</span>
-            <User size={18} className="text-white/50" />
+            <User size={18} className="text-gray-500" />
           </div>
 
           {showStaffList && (
@@ -570,8 +568,8 @@ export default function BackendBookingForm({ shop, barberId }) {
     absolute left-0 mt-2 
     w-[360px] max-h-[420px]
     overflow-auto
-    backdrop-blur-xl bg-white/20
-    border border-white/30
+    backdrop-blur-xl bg-white
+    border border-gray-200
     shadow-2xl rounded-2xl
     p-4
     custom-scroll
@@ -587,7 +585,7 @@ export default function BackendBookingForm({ shop, barberId }) {
                   }}
                   className={`
             mb-4 p-4 rounded-xl border
-            bg-white/40 backdrop-blur-lg
+            bg-white border-gray-100
             transition-all cursor-pointer
             hover:shadow-lg
             ${selectedStaff?._id === member._id
@@ -637,7 +635,7 @@ export default function BackendBookingForm({ shop, barberId }) {
         {/* Date */}
         {/* Date */}
         <div className="space-y-2">
-          <label className="block text-sm font-semibold text-white/90 ml-1">Select Date</label>
+          <label className="block text-sm font-semibold text-gray-700 ml-1">Select Date</label>
 
           <CalendarDate
             onChange={(date) => {
@@ -653,7 +651,7 @@ export default function BackendBookingForm({ shop, barberId }) {
 
         {/* Time */}
         <div className="space-y-2">
-          <label onClick={() => setShowClock(true)} className="block text-sm font-semibold text-white/90 ml-1 cursor-pointer hover:text-blue-400 transition-colors">Select Time</label>
+          <label onClick={() => setShowClock(true)} className="block text-sm font-semibold text-gray-700 ml-1 cursor-pointer hover:text-blue-500 transition-colors">Select Time</label>
           <CustomTimeClock
             blockedTimes={blockedTimes[selectedStaff?._id]?.[selectedDate] || []}
             selectedDate={selectedDate}
@@ -687,7 +685,7 @@ export default function BackendBookingForm({ shop, barberId }) {
         <Button
           type="submit"
           disabled={!selectedTime}
-          className="w-full disabled:bg-gray-400/50 disabled:text-gray-200 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-[0.98] text-lg"
+          className="w-full disabled:bg-gray-400/50 disabled:text-gray-200 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-700 text-white font-bold py-4 rounded-xl shadow-lg transform transition active:scale-[0.98] text-lg"
         >
           {isSubmitting ? "Sending Request..." : "Book Appointment"}
         </Button>

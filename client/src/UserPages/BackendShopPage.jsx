@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { Card, CardContent } from "../components/ui/card";
-import { DashboardHeader } from "../components-barber/header";
 import { DashboardLayout } from "../components/dashboard-layout";
 import BackendBookingForm from "../components/BackendBookingForm";
 import StaffQueueView from "../components/StaffQueueView.jsx";
-import { useUser } from "../contexts/BarberContext.jsx";
 import { useCustomer } from "../contexts/CustomerContext.jsx";
 import { useApp } from "../contexts/AppContext.jsx";
 import { io } from "socket.io-client";
 import { SOCKET_URL, API_URL } from "../lib/config.js";
-import { Button } from "../components/ui/button.jsx";
 import { MapContainer, Marker, Polyline, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
 import Navbar from "../components/Navbar.jsx";
+import ShopImageCarousel from "../components/ShopImageCarousel";
+import { Phone, Mail, MapPin, User, Star, Share2, Heart } from "lucide-react";
+import { Button } from "../components/ui/button";
 
+// --- ICONS ---
 const userIcon = L.divIcon({
   html: `
     <div style="display:flex;flex-direction:column;align-items:center;">
@@ -37,16 +37,21 @@ const shopIcon = L.divIcon({
   iconSize: [30, 42],
   iconAnchor: [15, 42],
 });
+
 const BackendShopPage = () => {
-  const { user } = useUser();
-  const [showMap, setShowMap] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
   const { customer } = useCustomer();
-  const { navigate } = useApp();
   const { barberId } = useParams();
   const [shop, setShop] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Map state
+  const [showMap, setShowMap] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+
+  // Refs for scrolling
+  const bookingSectionRef = useRef(null);
+
+  // Capitalize Helper
   function capitalizeText(str = "") {
     return str
       .split(/([,])/g)
@@ -67,7 +72,6 @@ const BackendShopPage = () => {
       alert("Geolocation is not supported");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setUserLocation({
@@ -81,6 +85,10 @@ const BackendShopPage = () => {
         alert("Failed to get location");
       }
     );
+  };
+
+  const scrollToBooking = () => {
+    bookingSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   // SOCKET
@@ -97,9 +105,7 @@ const BackendShopPage = () => {
         const res = await fetch(`${API_URL}/api/barbers/${barberId}`);
         if (!res.ok) throw new Error("Failed to fetch shop");
         const data = await res.json();
-        console.log("Data fetched ", data)
         setShop(data);
-        console.log("MAP IS RENDERING:", data?.coordinates);
       } catch (err) {
         console.error("Error fetching shop:", err);
       } finally {
@@ -109,149 +115,166 @@ const BackendShopPage = () => {
     fetchShop();
   }, [barberId]);
 
+  // Socket Listeners
   useEffect(() => {
     if (!socket || !barberId) return;
-
     socket.emit("joinShopRoom", barberId);
-
     socket.on("shopQueueUpdate", (updatedShop) => {
       setShop((prev) => ({ ...prev, ...updatedShop }));
     });
-
     socket.on("queueUpdated", (updatedQueue) => {
       setShop((prev) => ({ ...prev, queue: updatedQueue }));
     });
-
     return () => {
       socket.off("shopQueueUpdate");
       socket.off("queueUpdated");
     };
   }, [socket, barberId]);
 
-  if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (!shop) return <div className="text-center py-10">Shop not found</div>;
+  if (loading) return <div className="text-center py-20 text-lg font-medium text-gray-500">Loading shop details...</div>;
+  if (!shop) return <div className="text-center py-20 text-lg font-medium text-gray-500">Shop not found</div>;
 
   const ShopContent = (
-    <div className="min-h-screen w-full bg-[url('/barbershop1.jpeg')] bg-cover bg-center bg-no-repeat p-6 flex justify-center">
-      <div className="max-w-3xl w-full">
+    <div className="min-h-screen bg-gray-50 pb-24 md:pb-10">
 
+      {/* --- DESKTOP VS MOBILE LAYOUT --- */}
+      <div className="max-w-7xl mx-auto md:px-6 md:py-8">
 
-        <Card className="bg-white/30 backdrop-blur-5xl shadow-2xl">
-          <CardContent className="p-6">
-            <div className="w-full max-w-4xl mx-auto mb-6 p-6 rounded-2xl backdrop-blur-2xl bg-white/10 border border-white/20 shadow-2xl">
-              <h1 className="text-4xl font-extrabold tracking-tight text-white drop-shadow-lg">
-                {shop.salonName}
-              </h1>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-              <div className="mt-3 space-y-2 text-white/90 text-lg font-medium">
-                <p className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Owner Name:</span> {shop.ownerName}
-                </p>
-                <p className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Phone Number:</span> {shop.phoneNumber}
-                </p>
-                <p className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Email:</span> {shop.email}
-                </p>
-                <p className="flex items-center gap-2">
-                  <span className="font-semibold text-white">Address:</span> {capitalizeText(shop.address)}
-                </p>
+          {/* LEFT COLUMN (Details) - Spans 12 on mobile, 7 on Desktop */}
+          <div className="lg:col-span-7 space-y-6">
+
+            {/* CAROUSEL */}
+            <ShopImageCarousel images={shop.images || []} />
+
+            {/* HEADER INFO */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{shop.salonName}</h1>
+                  <p className="text-gray-500 text-sm md:text-base mt-1">{capitalizeText(shop.address)}</p>
+                </div>
+                {/* Rating/Share (Mock UI) */}
+                <div className="flex gap-2">
+                  <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 text-gray-600">
+                    <Share2 size={18} />
+                  </button>
+                  <button className="p-2 rounded-full border border-gray-200 hover:bg-gray-50 text-gray-600">
+                    <Heart size={18} />
+                  </button>
+                </div>
               </div>
 
-              <div className="mt-4">
+              {/* Rating Badge */}
+              <div className="flex items-center gap-2 mt-4">
+                <div className="bg-green-600 text-white px-2 py-1 rounded text-sm font-bold flex items-center gap-1">
+                  4.5 <Star size={12} fill="white" />
+                </div>
+                <span className="text-gray-500 text-sm">(150+ ratings) • Great Experience</span>
+              </div>
+
+              <div className="mt-6 flex flex-wrap gap-4 text-gray-700 text-sm">
+                <div className="flex items-center gap-2">
+                  <User size={16} className="text-blue-600" />
+                  <span className="font-medium">{shop.ownerName}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Phone size={16} className="text-green-600" />
+                  <span>{shop.phoneNumber}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Mail size={16} className="text-purple-600" />
+                  <span>{shop.email}</span>
+                </div>
+              </div>
+
+              {/* LOCATION PREVIEW */}
+              <div className="mt-6">
                 <button
                   onClick={() => {
                     setShowMap(!showMap);
                     if (!showMap) handleViewLocation();
                   }}
-                  className="bg-black text-white font-semibold px-4 py-2 rounded-lg shadow"
+                  className="flex items-center gap-2 text-blue-600 font-semibold hover:underline"
                 >
-                  {showMap ? "Hide Location" : "View Location"}
+                  <MapPin size={18} />
+                  {showMap ? "Hide Map" : "View on Map"}
                 </button>
 
-                {/* Guarded Map */}
                 {showMap && userLocation && shop.coordinates && (
-                  <div className="transition-all duration-500 ease-in-out overflow-hidden max-h-[500px] opacity-100 mt-4">
-                    <div className="w-full h-[400px] rounded-xl overflow-hidden">
-                      <MapContainer
-                        center={[
-                          (userLocation.lat + shop.coordinates.lat) / 2,
-                          (userLocation.lng + shop.coordinates.lng) / 2,
-                        ]}
-                        zoom={14}
-                        style={{ height: "100%", width: "100%" }}
-                      >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-                        {/* USER PIN (BLUE) */}
-                        <Marker
-                          position={[userLocation.lat, userLocation.lng]}
-                          icon={userIcon}
-                        >
-                          <Popup>
-                            <span className="font-semibold">You</span>
-                          </Popup>
-                        </Marker>
-
-                        {/* LABEL BELOW PIN */}
-                        <div className="absolute text-blue-700 text-sm font-semibold"
-                          style={{
-                            transform: "translate(-50%, -20px)",
-                          }}>
-                          You
-                        </div>
-
-                        {/* SHOP PIN (RED) */}
-                        <Marker
-                          position={[shop.coordinates.lat, shop.coordinates.lng]}
-                          icon={shopIcon}
-                        >
-                          <Popup>
-                            <span className="font-semibold">Salon</span>
-                          </Popup>
-                        </Marker>
-
-                        {/* LABEL BELOW PIN */}
-                        <div className="absolute text-red-700 text-sm font-semibold"
-                          style={{
-                            transform: "translate(-50%, -20px)",
-                          }}>
-                          Salon
-                        </div>
-
-                        {/* ROUTE LINE */}
-                        <Polyline
-                          positions={[
-                            [userLocation.lat, userLocation.lng],
-                            [shop.coordinates.lat, shop.coordinates.lng],
-                          ]}
-                          pathOptions={{ color: "green", weight: 4 }}
-                        />
-                      </MapContainer>
-                    </div>
+                  <div className="mt-4 w-full h-[300px] rounded-xl overflow-hidden shadow-inner border border-gray-200">
+                    <MapContainer
+                      center={[
+                        (userLocation.lat + shop.coordinates.lat) / 2,
+                        (userLocation.lng + shop.coordinates.lng) / 2,
+                      ]}
+                      zoom={14}
+                      style={{ height: "100%", width: "100%" }}
+                    >
+                      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                      <Marker position={[userLocation.lat, userLocation.lng]} icon={userIcon}><Popup>You</Popup></Marker>
+                      <Marker position={[shop.coordinates.lat, shop.coordinates.lng]} icon={shopIcon}><Popup>Salon</Popup></Marker>
+                      <Polyline positions={[[userLocation.lat, userLocation.lng], [shop.coordinates.lat, shop.coordinates.lng]]} pathOptions={{ color: "green" }} />
+                    </MapContainer>
                   </div>
                 )}
-
               </div>
             </div>
 
-            <BackendBookingForm barberId={shop._id} shop={shop} />
+            {/* QUEUE INFO */}
             <StaffQueueView barberId={barberId} />
-          </CardContent>
-        </Card>
+
+            {/* Booking Form (Visible here on Mobile, but acts as target for scroll) */}
+            {/* On Desktop, this is hidden and shown in the right column sidebar */}
+            <div ref={bookingSectionRef} className="lg:hidden">
+              <h2 className="text-xl font-bold text-gray-900 mb-4 px-4">Book Appointment</h2>
+              <BackendBookingForm barberId={shop._id} shop={shop} />
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN (Booking Form - Sticky on Desktop) */}
+          <div className="hidden lg:block lg:col-span-5">
+            <div className="sticky top-24">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="p-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white">
+                  <h3 className="text-lg font-bold">Book Slot</h3>
+                  <p className="text-blue-100 text-sm">Reserve your seat now</p>
+                </div>
+                <div className="p-2">
+                  <BackendBookingForm barberId={shop._id} shop={shop} isDesktopSidebar={true} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
+
+      {/* MOBILE STICKY BOOOK BUTTON */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-50 flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-xs text-gray-500 font-medium">Starting from</span>
+          <span className="text-xl font-bold text-gray-900">₹{shop.price || 199}</span>
+        </div>
+        <Button
+          onClick={scrollToBooking}
+          className="px-8 bg-red-500 hover:bg-red-600 text-white font-bold text-lg rounded-lg shadow-md"
+        >
+          Book Now
+        </Button>
+      </div>
+
     </div>
   );
 
   return (
     <>
-      {/* show Navbar for NON-logged users */}
       {!customer && <Navbar />}
-
-      {/* show DashboardLayout for logged-in barber/customer */}
       {customer ? <DashboardLayout>{ShopContent}</DashboardLayout> : ShopContent}
     </>
-  )
+  );
 };
 
 export default BackendShopPage;
+
