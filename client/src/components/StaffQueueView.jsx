@@ -162,117 +162,94 @@ export default function StaffQueueView({ barberId }) {
         const estimatedWait = currentRemain + futureSum;
 
         return (
-          <div key={staff.staffId} className="h-full flex flex-col bg-white rounded-t-[2.5rem] rounded-b-xl border-4 border-gray-200 shadow-xl overflow-hidden relative transition-transform hover:-translate-y-1 duration-300">
+          <div key={staff.staffId} className="h-full flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
 
-            {/* 🪞 MIRROR HEADER */}
-            <div className="bg-gradient-to-b from-gray-800 to-gray-900 text-white p-4 text-center border-b-4 border-gray-600 relative shadow-md z-10">
-              {/* Glossy Reflection */}
-              <div className="absolute top-0 right-0 w-full h-1/2 bg-white/5 skew-y-3 pointer-events-none"></div>
+            {/* Header */}
+            <div className="bg-gray-50/50 p-4 border-b border-gray-100 flex justify-between items-center">
+              <h3 className="font-bold text-lg text-gray-900">{staff.staffName}</h3>
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-gray-500 bg-white border border-gray-200 px-2 py-1 rounded">
+                Station {staff.staffId.slice(-4)}
+              </span>
+            </div>
 
-              <h3 className="font-bold text-lg tracking-wider text-shadow">{staff.staffName}</h3>
-              <div className="flex justify-center mt-1">
-                <span className="text-[10px] uppercase tracking-widest bg-black/30 px-2 py-0.5 rounded text-gray-300 border border-gray-600">
-                  Station {staff.staffId.slice(-4)}
-                </span>
+            <div className="p-4 flex-1 flex flex-col">
+
+              {/* CURRENT STATUS */}
+              <div className="mb-6">
+                <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Current Status</div>
+                {current ? (
+                  <div className="bg-blue-50 border border-blue-100 rounded-xl p-3">
+                    <div className="flex justify-between items-start mb-2">
+                      <span className="font-bold text-blue-900">{current.customerName}</span>
+                      <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{currentRemain} min left</span>
+                    </div>
+                    <div className="flex items-center text-sm text-blue-700/80 gap-2">
+                      <Scissors size={14} />
+                      <span className="truncate">{current.service}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-green-50 border border-green-100 rounded-xl p-4 flex items-center gap-3">
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse relative">
+                      <div className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75"></div>
+                    </div>
+                    <span className="text-green-700 font-medium">Chair is Free</span>
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* CURRENT BOOKING */}
-            <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-              {current ? (
-                <>
-                  <div className="flex items-center">
-                    <User className="w-4 h-4 mr-2" />
-                    <p className="font-medium">{current.customerName}</p>
+              {/* QUEUE LIST */}
+              <div className="flex-1 min-h-[100px]">
+                <div className="flex justify-between items-center mb-2">
+                  <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Upcoming Queue</div>
+                  <span className="text-xs text-gray-500 font-medium">{queue.length} Waiting</span>
+                </div>
+
+                {combined.length === 0 ? (
+                  <div className="h-full flex items-center justify-center text-gray-400 text-sm italic py-4 bg-gray-50/50 rounded-lg border border-dashed border-gray-200">
+                    No upcoming bookings
                   </div>
-
-                  <div className="flex items-center mt-1 text-sm text-gray-600">
-                    <Scissors className="w-4 h-4 mr-2" />
-                    {current.service}
-                  </div>
-
-                  <div className="flex items-center mt-1 text-sm text-gray-600">
-                    <Clock className="w-4 h-4 mr-2" />
-                    Remaining: <strong>{currentRemain} min</strong>
-                  </div>
-                </>
-              ) : (
-                <p className="text-gray-500">Chair is free</p>
-              )}
-            </div>
-
-            {/* QUEUE */}
-            <div className="mt-4">
-              <p className="font-semibold mb-2">Queue</p>
-
-              {combined.length === 0 ? (
-                <p className="text-gray-500 text-sm">No one is waiting</p>
-              ) : (
-                <>
-                  <ul className="space-y-3">
+                ) : (
+                  <div className="space-y-2">
                     {visibleList.map((b) => (
-                      <li
-                        key={b._id}
-                        className="p-2 border rounded-lg bg-gray-50 flex justify-between items-center"
-                      >
-                        <div>
-                          <div className="font-medium">{b.customerName}</div>
-                          <div className="text-xs text-gray-600">{b.service}</div>
+                      <div key={b._id} className="flex justify-between items-center p-2 rounded-lg bg-white border border-gray-100 hover:border-gray-200 transition-colors">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold text-gray-800">{b.customerName}</span>
+                          <span className="text-[10px] text-gray-500">{b.service}</span>
                         </div>
-
                         <div className="text-right">
-                          <div className="text-sm text-gray-700">
-                            {new Date(b.startTime).toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
+                          <div className="text-xs font-medium text-gray-700">
+                            {new Date(b.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
-                          <div className="text-xs text-gray-500">
-                            {remainingTimes[b._id] ?? "—"} min
+                          <div className="text-[10px] text-gray-400">
+                            wait: ~{remainingTimes[b._id] ?? "--"}m
                           </div>
                         </div>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
 
-                  <div className="mt-3 flex gap-2">
-                    {visible < combined.length && (
-                      <button
-                        onClick={() =>
-                          setVisibleCounts((prev) => ({
-                            ...prev,
-                            [staff.staffId]: visible + 2,
-                          }))
-                        }
-                        className="px-3 py-1 bg-blue-600 text-white text-sm rounded"
-                      >
-                        View More
-                      </button>
-                    )}
-
-                    {combined.length > 2 && visible < combined.length && (
-                      <button
-                        onClick={() =>
-                          setVisibleCounts((prev) => ({
-                            ...prev,
-                            [staff.staffId]: combined.length,
-                          }))
-                        }
-                        className="px-3 py-1 bg-green-600 text-white text-sm rounded"
-                      >
-                        View All
-                      </button>
-                    )}
+                    {/* View More Buttons */}
+                    <div className="pt-2 flex gap-2">
+                      {visible < combined.length && (
+                        <button
+                          onClick={() => setVisibleCounts(prev => ({ ...prev, [staff.staffId]: visible + 2 }))}
+                          className="text-xs text-blue-600 font-medium hover:underline"
+                        >
+                          View More ({combined.length - visible})
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* ESTIMATED WAIT */}
-            <p className="text-sm text-gray-600 mt-4">
-              Estimated waiting time for a new booking:{" "}
-              <span className="font-semibold">{estimatedWait} mins</span>
-            </p>
+              {/* FOOTER METRICS */}
+              <div className="mt-6 pt-4 border-t border-gray-100 flex justify-between items-center text-sm">
+                <span className="text-gray-500">Total Est. Wait</span>
+                <span className="font-bold text-gray-900 bg-gray-100 px-2 py-1 rounded-md">{estimatedWait} mins</span>
+              </div>
+
+            </div>
           </div>
         );
       })}

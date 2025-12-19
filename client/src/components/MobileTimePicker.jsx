@@ -39,15 +39,12 @@ const TimeColumn = ({ items, selectedValue, onSelect, label }) => {
     };
 
     return (
-        <div className="relative h-[150px] w-full group">
-            {/* Label (optional, currently hidden to be cleaner) */}
-            {/* <div className="absolute -top-6 w-full text-center text-xs text-gray-400 font-medium uppercase tracking-wider">{label}</div> */}
-
+        <div className="relative h-full w-full group">
             <div
                 ref={containerRef}
                 onScroll={handleScroll}
-                className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[50px] relative z-20"
-                style={{ scrollBehavior: "smooth" }} // Smooth scroll for programmatic updates
+                className="h-full overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[66px] relative z-20"
+                style={{ scrollBehavior: "smooth" }}
             >
                 {items.map((item) => (
                     <div
@@ -59,9 +56,7 @@ const TimeColumn = ({ items, selectedValue, onSelect, label }) => {
                                 : "text-gray-400 font-medium text-lg opacity-60 scale-90"
                         )}
                         onClick={() => {
-                            // Allow clicking to select
                             onSelect(item);
-                            // The useEffect will handle scrolling to it
                         }}
                     >
                         {item}
@@ -73,74 +68,49 @@ const TimeColumn = ({ items, selectedValue, onSelect, label }) => {
 };
 
 export default function MobileTimePicker({ value, onChange }) {
-    // Value is expected to be a dayjs object
-    // If null, we default to 12:00 PM for display purposes but don't commit it until changed? 
-    // actually component expects value to be set.
-
     if (!value) return null;
 
-    // GENERATE ARRAYS
-    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString()); // "1" to "12"
-    const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, "0")); // "00", "05", ... "55"
+    const hours = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
+    const minutes = Array.from({ length: 12 }, (_, i) => (i * 5).toString().padStart(2, "0"));
     const ampms = ["AM", "PM"];
 
-    // PARSE CURRENT VALUE
-    const currentHour = value.format("h"); // "1".."12"
-    const currentMinute = Math.floor(value.minute() / 5) * 5; // Round to nearest 5
+    const currentHour = value.format("h");
+    const currentMinute = Math.floor(value.minute() / 5) * 5;
     const currentMinuteStr = currentMinute.toString().padStart(2, "0");
-    const currentAmpm = value.format("A"); // "AM" or "PM"
+    const currentAmpm = value.format("A");
 
-    // HANDLERS
     const handleHourChange = (newHour) => {
-        // newHour is "1".."12". preserve AM/PM
-        // Convert 12-hour format back to 0-23 for dayjs
         let h = parseInt(newHour, 10);
         if (currentAmpm === "PM" && h !== 12) h += 12;
         if (currentAmpm === "AM" && h === 12) h = 0;
-
-        const newValue = value.hour(h);
-        onChange(newValue);
+        onChange(value.hour(h));
     };
 
     const handleMinuteChange = (newMin) => {
-        const newValue = value.minute(parseInt(newMin, 10));
-        onChange(newValue);
+        onChange(value.minute(parseInt(newMin, 10)));
     };
 
     const handleAmpmChange = (newAmpm) => {
         if (newAmpm === currentAmpm) return;
         let h = value.hour();
-
         if (newAmpm === "PM" && h < 12) h += 12;
         if (newAmpm === "AM" && h >= 12) h -= 12;
-
-        const newValue = value.hour(h);
-        onChange(newValue);
+        onChange(value.hour(h));
     };
 
     return (
         <div className="relative w-full max-w-[320px] mx-auto h-[180px] bg-white rounded-2xl shadow-inner border border-gray-200 overflow-hidden">
-
-            {/* SELECTION HIGHLIGHT BAR (Center) */}
             <div className="absolute top-1/2 left-0 right-0 -translate-y-1/2 h-[48px] bg-blue-50/50 border-t border-b border-blue-100 pointer-events-none z-10" />
-
-            {/* COLUMNS CONTAINER */}
             <div className="flex h-full relative">
                 <TimeColumn items={hours} selectedValue={currentHour} onSelect={handleHourChange} label="Hour" />
-
-                {/* COLON SEPARATOR */}
                 <div className="flex items-center justify-center pt-2 z-20">
                     <span className="text-xl font-bold text-gray-300 mb-1">:</span>
                 </div>
-
                 <TimeColumn items={minutes} selectedValue={currentMinuteStr} onSelect={handleMinuteChange} label="Min" />
                 <TimeColumn items={ampms} selectedValue={currentAmpm} onSelect={handleAmpmChange} label="Am/Pm" />
             </div>
-
-            {/* FADE GRADIENTS */}
             <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-white to-transparent pointer-events-none z-30"></div>
             <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-white to-transparent pointer-events-none z-30"></div>
-
         </div>
     );
 }
