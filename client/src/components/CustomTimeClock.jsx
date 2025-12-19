@@ -3,9 +3,12 @@
 import { useState, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { Button } from "../components/ui/button"; // using shadcn button if available, or fallback
-import { cn } from "../lib/utils"; // assuming shadcn utils exist, otherwise we'll inline logic
-import { Moon, Sun, Sunset } from "lucide-react";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { TimeClock } from "@mui/x-date-pickers/TimeClock";
+import { Button } from "@mui/material";
+import toast from "react-hot-toast";
+import MobileTimePicker from "./MobileTimePicker";
 
 dayjs.extend(customParseFormat);
 
@@ -14,26 +17,44 @@ export default function CustomTimeClock({
   blockedTimes = [],
   selectedDate,
   initialValue = null,
-  serviceDuration = 30,
+  serviceDuration = 30, // Default 30 min if not provided
 }) {
-  const [selectedTime, setSelectedTime] = useState(initialValue ? dayjs(initialValue) : null);
+  const [value, setValue] = useState(initialValue ? dayjs(initialValue) : null);
+  const [ampmMode, setAmpmMode] = useState("AM"); // For DESKTOP MUI Clock only
+  const [clockKey, setClockKey] = useState(Date.now());
 
-  // Default Shop Hours: 9:00 AM to 9:00 PM (Configurable if needed)
-  const SHOP_START_HOUR = 9;
-  const SHOP_END_HOUR = 21; // 9 PM
+  // Initialize value if not set, so Mobile Picker has something to show (default 12:00 PM)
+  useEffect(() => {
+    if (!value) {
+      // Default to 12:00 PM today (date doesn't matter for time picker usually, but we need dayjs obj)
+      const def = dayjs().set('hour', 12).set('minute', 0);
+      setValue(def);
+      // Don't trigger onChange yet unless you want to default select
+    }
+  }, []);
 
-  // Helper: Check if a specific time slot is blocked
-  const isBlocked = (slotTime) => {
-    if (!selectedDate || !slotTime) return false;
+  // Sync internal value with initialValue prop if it changes
+  useEffect(() => {
+    if (initialValue) {
+      setValue(dayjs(initialValue));
+    }
+  }, [initialValue]);
+
+
+  // ---------- BLOCKED LOGIC ----------
+  const parseBlocked = (timeValue) => {
+    if (!selectedDate || !timeValue) return false;
 
     const duration = Number(serviceDuration) || 30;
-    const newStart = slotTime;
-    const newEnd = slotTime.add(duration, "minute");
+    const newStart = timeValue;
+    const newEnd = timeValue.add(duration, "minute");
 
     return blockedTimes.some((block) => {
+      // Existing Block Range
       const blockStart = dayjs(`${selectedDate} ${block.startTime}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD hh:mm A"]);
       const blockEnd = dayjs(`${selectedDate} ${block.endTime}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD hh:mm A"]);
 
+      // OVERLAP LOGIC: (StartA < EndB) && (EndA > StartB)
       return (
         newStart.isBefore(blockEnd) &&
         newEnd.isAfter(blockStart)
@@ -41,104 +62,139 @@ export default function CustomTimeClock({
     });
   };
 
-  // Generate Slots
-  const timeSlots = useMemo(() => {
-    const slots = [];
-    let current = dayjs().set("hour", SHOP_START_HOUR).set("minute", 0).set("second", 0);
-    const end = dayjs().set("hour", SHOP_END_HOUR).set("minute", 0).set("second", 0);
+  // ---------- DESKTOP HELPERS (AM/PM toggle) ----------
+  const applyAmpmToDayjs = (d, targetMode) => {
+    if (!d) return d;
+    let hour = d.hour();
+    if (targetMode === "PM" && hour < 12) return d.hour(hour + 12);
+    if (targetMode === "AM" && hour >= 12) return d.hour(hour - 12);
+    return d;
+  };
+  const autoDetectAMPM = (hour, prev) => {
+    if (hour >= 12 && prev !== "PM") return "PM";
+    if (hour <= 7 && prev !== "AM") return "AM";
+    return prev;
+  };
 
-    while (current.isBefore(end)) {
-      slots.push(current);
-      current = current.add(30, "minute"); // 30 min intervals
+  // ---------- HANDLERS ----------
+  const handleTimeChange = (newValue) => {
+    if (!newValue) {
+      setValue(null);
+      onChange?.(null);
+      return;
     }
-    return slots;
-  }, []);
 
-  // Sections
-  const sections = [
-    { label: "Morning", icon: Sun, filter: (t) => t.hour() < 12 },
-    { label: "Afternoon", icon: Sun, filter: (t) => t.hour() >= 12 && t.hour() < 17 }, // 12pm - 5pm
-    { label: "Evening", icon: Moon, filter: (t) => t.hour() >= 17 },
-  ];
+    if (parseBlocked(newValue)) {
+      toast.error("⛔ This time is already booked!");
+      return; // Don't update state
+    }
 
-  const handleTimeSelect = (time) => {
-    if (isBlocked(time)) return;
-    setSelectedTime(time);
-    onChange?.(time);
+    setValue(newValue);
+    onChange?.(newValue);
+
+    // Auto-detect AM/PM for desktop UI consistency
+    const hour = newValue.hour();
+    const detected = autoDetectAMPM(hour, ampmMode);
+    if (detected !== ampmMode) setAmpmMode(detected);
+  };
+
+  // Desktop specific wrapper to handle AM/PM toggle logic
+  const handleDesktopTimeChange = (newValue) => {
+    if (!newValue) return;
+    // Apply Desktop AM/PM toggle state
+    const adjusted = applyAmpmToDayjs(newValue, ampmMode);
+    handleTimeChange(adjusted);
+  };
+
+  // Update desktop value when AM/PM button is clicked
+  useEffect(() => {
+    if (!value) return;
+    const adjusted = applyAmpmToDayjs(value, ampmMode);
+    if (adjusted.hour() !== value.hour()) {
+      handleTimeChange(adjusted);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ampmMode]);
+
+
+  const handleClear = () => {
+    setValue(null);
+    onChange?.(null);
+    setClockKey(Date.now());
   };
 
   return (
-    <div className="w-full bg-white/50 backdrop-blur-sm p-4 rounded-xl shadow border border-white/20">
-      <div className="flex flex-col space-y-4">
+    <div className="bg-white/50 backdrop-blur-sm p-4 rounded-xl shadow border border-white/20 w-full max-w-sm mx-auto">
 
-        {/* Selected Time Display */}
-        <div className="flex justify-between items-center bg-white/60 p-3 rounded-lg">
-          <span className="text-sm font-medium text-gray-600">Selected Time</span>
-          <span className="text-lg font-bold text-blue-700">
-            {selectedTime ? selectedTime.format("hh:mm A") : "-- : --"}
-          </span>
+      {/* 
+         MOBILE VIEW (Visible on < md) 
+         We use `display: none` technique via Tailwind classes to toggle visibility 
+         instead of conditional rendering to ensure hydration matches if needed, 
+         or just standard responsive classes.
+      */}
+      <div className="block md:hidden">
+        <div className="text-center mb-4">
+          <span className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Select Time</span>
         </div>
-
-        <div className="h-[300px] overflow-y-auto custom-scroll pr-2 space-y-6">
-          {sections.map(({ label, icon: Icon, filter }) => {
-            const sectionSlots = timeSlots.filter(filter);
-            if (sectionSlots.length === 0) return null;
-
-            return (
-              <div key={label}>
-                <div className="flex items-center gap-2 mb-2 text-gray-500 text-xs font-semibold uppercase tracking-wider">
-                  <Icon size={14} />
-                  {label}
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                  {sectionSlots.map((slot, idx) => {
-                    const blocked = isBlocked(slot);
-                    const isSelected = selectedTime && slot.format("HH:mm") === selectedTime.format("HH:mm");
-
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => handleTimeSelect(slot)}
-                        disabled={blocked}
-                        className={cn(
-                          "px-2 py-2 text-sm font-medium rounded-lg transition-all border",
-                          isSelected
-                            ? "bg-blue-600 text-white border-blue-600 shadow-md scale-105"
-                            : "bg-white text-gray-700 border-gray-200 hover:border-blue-400 hover:bg-blue-50",
-                          blocked && "opacity-40 cursor-not-allowed bg-gray-100 text-gray-400 border-transparent hover:bg-gray-100"
-                        )}
-                      >
-                        {slot.format("h:mm A")}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Legend */}
-        <div className="flex items-center gap-4 text-xs text-gray-500 justify-center pt-2 border-t border-gray-200/50">
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-white border border-gray-300"></div>
-            <span>Available</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-blue-600"></div>
-            <span>Selected</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-gray-200 opacity-50"></div>
-            <span>Booked</span>
-          </div>
-        </div>
-
+        <MobileTimePicker
+          value={value || dayjs().set('hour', 12).set('minute', 0)}
+          onChange={handleTimeChange}
+        />
       </div>
+
+      {/* 
+         DESKTOP VIEW (Visible on >= md) 
+         Restoring the MUI TimeClock logic
+      */}
+      <div className="hidden md:block">
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <div className="flex justify-center gap-3 mb-2">
+            <Button
+              variant={ampmMode === "AM" ? "contained" : "outlined"}
+              onClick={() => setAmpmMode("AM")}
+              size="small"
+            >
+              AM
+            </Button>
+
+            <Button
+              variant={ampmMode === "PM" ? "contained" : "outlined"}
+              onClick={() => setAmpmMode("PM")}
+              size="small"
+            >
+              PM
+            </Button>
+          </div>
+
+          <TimeClock
+            key={clockKey}
+            ampm={false} // manually handled
+            value={value}
+            onChange={handleDesktopTimeChange}
+            minutesStep={5}
+            shouldDisableTime={(timeValue) => {
+              if (!selectedDate || !timeValue) return false;
+              let merged = dayjs(`${selectedDate} ${timeValue.format("HH:mm")}`, "YYYY-MM-DD HH:mm");
+              merged = applyAmpmToDayjs(merged, ampmMode);
+              return parseBlocked(merged);
+            }}
+          />
+        </LocalizationProvider>
+      </div>
+
+      <div className="flex gap-2 mt-4">
+        <Button variant="outlined" color="error" fullWidth onClick={handleClear}>
+          Clear Time
+        </Button>
+      </div>
+
+      <p className="text-sm text-center text-gray-700 mt-2">
+        Selected:{" "}
+        <span className="font-semibold text-blue-700 text-lg">
+          {value ? value.format("hh:mm A") : "--:--"}
+        </span>
+      </p>
     </div>
   );
 }
-
-
 
