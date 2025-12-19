@@ -449,7 +449,7 @@ router.delete("/:id", protect, async (req, res) => {
     booking.status = "barber_deleted";
     await booking.save();
     req.io.to(`shop-${booking.shopId}`).emit("bookingStatusUpdate", booking);
-    req.io.to(`user-${booking.userId}`).emit("bookingStatusUpdate", booking);
+    // req.io.to(`user-${booking.userId}`).emit("bookingStatusUpdate", booking); // Don't notify user of deletion
     return res.json({ success: true, message: "Booking archived for barber", booking });
   } catch (err) {
     console.error(err);

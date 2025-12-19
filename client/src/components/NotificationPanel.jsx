@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import UserNotificationPage from "../components/UserNotificationPage";
-import {BarberNotificationPage} from "../components-barber/BarberNotificationPage";
-import {jwtDecode} from "jwt-decode"; // npm install jwt-decode
+import { BarberNotificationPage } from "../components-barber/BarberNotificationPage";
+import { jwtDecode } from "jwt-decode"; // npm install jwt-decode
 
 export function NotificationsPanel() {
   const [role, setRole] = useState(null);
@@ -50,7 +50,7 @@ export function NotificationsPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="w-full bg-white">
       {role === "user" ? (
         <UserNotificationPage />
       ) : (

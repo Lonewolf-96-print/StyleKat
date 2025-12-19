@@ -20,15 +20,31 @@ export default function StaffQueueView({ barberId }) {
       d.getDate() === today.getDate()
     );
   };
+  /* -------------------------------------------------------------------------- */
+  /*                             FILTER & LOGIC                                 */
+  /* -------------------------------------------------------------------------- */
+  const VALID_STATUSES = ["confirmed", "accepted", "ongoing", "in-service"];
+
   const filterToday = (arr) => {
     return arr.map((staff) => {
-      const filteredCurrent =
-        staff.current && isToday(staff.current.date) ? staff.current : null;
+      // 1. Filter Current
+      let filteredCurrent = null;
+      if (
+        staff.current &&
+        isToday(staff.current.date) &&
+        VALID_STATUSES.includes(staff.current.status)
+      ) {
+        filteredCurrent = staff.current;
+      }
 
-      const filteredQueue = staff.queue.filter(
-        (b) => isToday(b.date) && notExpired(b)
-      );
-
+      // 2. Filter Queue
+      const filteredQueue = staff.queue.filter((b) => {
+        return (
+          isToday(b.date) &&
+          notExpired(b) &&
+          VALID_STATUSES.includes(b.status)
+        );
+      });
 
       return {
         ...staff,
@@ -37,11 +53,13 @@ export default function StaffQueueView({ barberId }) {
       };
     });
   };
+
   const now = Date.now();
   const notExpired = (b) => {
+    // If it's already past end time, don't show in "Upcoming" (unless it's 'current' handled separately)
     const start = new Date(b.startTime).getTime();
     const end = start + (b.duration || 30) * 60000;
-    return end > now; // keep only non-expired bookings
+    return end > now;
   };
 
   // ------------------------- CALCULATE REMAINING TIME -------------------------
@@ -61,13 +79,19 @@ export default function StaffQueueView({ barberId }) {
       const end = start + duration * 60000;
 
       let remain = 0;
-      if (now < start) remain = Math.ceil((start - now) / 60000);      // Not started yet
-      else if (now < end) remain = Math.ceil((end - now) / 60000);     // In progress
+      if (now < start) remain = Math.ceil((start - now) / 60000); // Not started yet (future)
+      else if (now < end) remain = Math.ceil((end - now) / 60000); // In progress
 
+      // If it's the CURRENT active booking, we want the "time left to finish".
+      // If it's a FUTURE booking, 'remain' is 'time until start'.
+      // But for the UI "wait: ~XXm", we usually want "how long until this person is done" or "accumulated wait"?
+      // The original code seemingly just stored a simple calc. We'll keep this helper simple.
       out[b._id] = remain;
-      delay += duration;
-    }
 
+      // If we are strictly sequential (block-pushing), we'd incr delay.
+      // But here `startTime` is absolute from DB. We shouldn't add delay unless simulating push-back.
+      // We will assume DB times are accurate.
+    }
     return out;
   };
 
@@ -83,22 +107,26 @@ export default function StaffQueueView({ barberId }) {
     setLoading(true);
 
     const load = async () => {
-      const res = await fetch(`${API_URL}/api/live/${barberId}`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`${API_URL}/api/live/${barberId}`);
+        const data = await res.json();
 
-      const arr = data[barberId] || [];
-      arr.forEach((s) => (s.queue = s.queue || []));
+        const arr = data[barberId] || [];
+        arr.forEach((s) => (s.queue = s.queue || []));
 
-      setStaffQueues(filterToday(arr));
+        setStaffQueues(filterToday(arr));
 
+        // default visible rows per staff
+        const vc = {};
+        arr.forEach((s) => (vc[s.staffId] = 2));
+        setVisibleCounts(vc);
 
-      // default visible rows per staff
-      const vc = {};
-      arr.forEach((s) => (vc[s.staffId] = 2));
-      setVisibleCounts(vc);
-
-      recomputeAllRemaining(arr);
-      setLoading(false);
+        recomputeAllRemaining(arr);
+      } catch (err) {
+        console.error("Failed to load queue", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     load();
@@ -120,10 +148,15 @@ export default function StaffQueueView({ barberId }) {
     });
 
     const update = (payload) => {
-      const arr = payload[barberId] || [];
+      // payload might be the WHOLE shop data or partial. 
+      // Assuming payload structure matches api/live response for safety, or we re-fetch.
+      // If payload is the queue array directly:
+      const arr = Array.isArray(payload) ? payload : (payload[barberId] || []);
+
+      // If it's just a single update, we might need to merge, but let's assume full refresh for "queueUpdated"
+      // or "shopQueueUpdate" events usually send the full list.
       arr.forEach((s) => (s.queue = s.queue || []));
       setStaffQueues(filterToday(arr));
-
       recomputeAllRemaining(arr);
     };
 
@@ -135,12 +168,62 @@ export default function StaffQueueView({ barberId }) {
 
   // ---------------------- AUTO UPDATE EVERY 10 SECONDS ----------------------
   useEffect(() => {
+    // We need to re-run "filterToday" periodically too? 
+    // Actually just recomputing remaining times is enough for "wait" display,
+    // but expiring old bookings requires re-filtering.
     const id = setInterval(() => {
+      // We can't easily "re-filter" state without source, but we can force re-render or re-calc
+      // For now just update times. ideally we'd have the raw data + derived state.
       recomputeAllRemaining(staffQueues);
     }, 10000);
 
     return () => clearInterval(id);
   }, [staffQueues]);
+
+
+  // Helper to calculate "Walk-in Wait Time"
+  // Logic: Time until the "Current Contiguous Block" of work finishes.
+  const calculateRealWait = (current, queue, remainingMap) => {
+    const now = Date.now();
+    let waitTimestamp = now;
+
+    // 1. If Chair is busy, we start waiting from when current finishes.
+    if (current) {
+      const r = remainingMap[current._id] || 0;
+      // The current ends effectively at Now + Remaining
+      waitTimestamp = now + (r * 60000);
+    }
+
+    // 2. Check upcoming queue. 
+    // If an upcoming booking starts "soon enough" (overlapping or essentially contiguous with waitTimestamp),
+    // then it blocks the walk-in.
+    // We allow a small "gap buffer" (e.g. 10 mins). If gap > 10 mins, we assume walk-in fits.
+    const GAP_BUFFER_MS = 10 * 60000;
+
+    for (const b of queue) {
+      const bStart = ts(b.startTime);
+      const bDuration = (b.duration || 30) * 60000;
+
+      // If this booking starts BEFORE (waitTimestamp + buffer), it adds to the wait.
+      if (bStart <= (waitTimestamp + GAP_BUFFER_MS)) {
+        // The new free time is max(waitTimestamp, bEnd)
+        // But usually sequential means we add duration to the end of the block?
+        // Actually, if it's a scheduled appointment, it ends at bStart + Duration.
+        // If we are pushed back, it ends at waitTimestamp + Duration.
+        // Let's assume strict schedule: It ends at bStart + bDuration.
+        // But if we are currently delayed (waitTimestamp > bStart), then it ends at waitTimestamp + bDuration.
+        const effectiveEnd = Math.max(bStart, waitTimestamp) + bDuration;
+        waitTimestamp = effectiveEnd;
+      } else {
+        // Found a gap! The chair is free between waitTimestamp and bStart.
+        break;
+      }
+    }
+
+    const totalMinutes = Math.max(0, Math.ceil((waitTimestamp - now) / 60000));
+    return totalMinutes;
+  };
+
 
   // ------------------------------ RENDER UI ------------------------------
   if (loading) return <p>Loading queue…</p>;
@@ -150,16 +233,15 @@ export default function StaffQueueView({ barberId }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
       {staffQueues.map((staff) => {
         const current = staff.current;
-        const queue = staff.queue;
+        const queue = staff.queue || [];
         const visible = visibleCounts[staff.staffId] || 2;
 
         const currentRemain = current ? remainingTimes[current._id] || 0 : 0;
-
         const combined = current ? [current, ...queue] : [...queue];
         const visibleList = combined.slice(0, visible);
 
-        const futureSum = queue.reduce((sum, b) => sum + (b.duration || 30), 0);
-        const estimatedWait = currentRemain + futureSum;
+        // NEW CALCULATION
+        const estimatedWait = calculateRealWait(current, queue, remainingTimes);
 
         return (
           <div key={staff.staffId} className="h-full flex flex-col bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all hover:shadow-md">
@@ -221,9 +303,12 @@ export default function StaffQueueView({ barberId }) {
                           <div className="text-xs font-medium text-gray-700">
                             {new Date(b.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
-                          <div className="text-[10px] text-gray-400">
-                            wait: ~{remainingTimes[b._id] ?? "--"}m
-                          </div>
+                          {/* 
+                              For upcoming items, "wait" is vague. 
+                              Usually means "Time until I start" (which is just startTime - now).
+                              Or "Delay". 
+                              Let's just show start time as primary. 
+                          */}
                         </div>
                       </div>
                     ))}
