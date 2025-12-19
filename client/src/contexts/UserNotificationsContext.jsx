@@ -37,6 +37,21 @@ export const NotificationProvider = ({ children }) => {
   const persist = (arr) => {
     localStorage.setItem("notifications", JSON.stringify(arr));
   };
+  const deleteNotification = useCallback((id) => {
+    if (!id) return;
+
+    setNotifications((prev) => {
+      const updated = prev.filter((n) => n.id !== id);
+
+      // persist to localStorage
+      persist(updated);
+
+      // recompute unread count safely
+      setUnreadCount(updated.filter((n) => !n.read).length);
+
+      return updated;
+    });
+  }, []);
 
   const addNotification = useCallback((notif) => {
     if (!notif) return;
@@ -64,6 +79,20 @@ export const NotificationProvider = ({ children }) => {
       return updated;
     });
   };
+  const markAsUnread = useCallback((id) => {
+    if (!id) return;
+
+    setNotifications((prev) => {
+      const updated = prev.map((n) =>
+        n.id === id ? { ...n, read: false } : n
+      );
+
+      persist(updated);
+      setUnreadCount(updated.filter((n) => !n.read).length);
+
+      return updated;
+    });
+  }, []);
 
   /* -------------------- SOCKET -------------------- */
 
@@ -159,9 +188,11 @@ export const NotificationProvider = ({ children }) => {
       value={{
         notifications,
         unreadCount,
+        deleteNotification,
         notificationsOpen,
         setNotificationsOpen,
         addNotification,
+        markAsUnread,
         markAllAsRead,
       }}
     >
