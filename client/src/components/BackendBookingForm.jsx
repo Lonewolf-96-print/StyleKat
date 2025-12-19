@@ -510,7 +510,7 @@ export default function BackendBookingForm({ shop, barberId }) {
             type="text"
             value={customerName}
             onChange={(e) => setCustomerName(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             placeholder="Enter your name"
             required
           />
@@ -523,7 +523,7 @@ export default function BackendBookingForm({ shop, barberId }) {
             type="tel"
             value={customerPhone}
             onChange={(e) => setCustomerPhone(e.target.value)}
-            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:ring-2 focus:ring-blue-400 focus:border-transparent outline-none transition-all"
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             placeholder="Enter your phone number"
             required
           />
@@ -536,7 +536,7 @@ export default function BackendBookingForm({ shop, barberId }) {
             <select
               value={selectedService}
               onChange={(e) => setSelectedService(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none cursor-pointer"
+              className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 appearance-none focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none cursor-pointer"
               required
             >
               <option value="" className="bg-gray-800 text-gray-400">Choose a service...</option>
@@ -556,7 +556,7 @@ export default function BackendBookingForm({ shop, barberId }) {
           <label className="block text-sm font-semibold text-gray-700 ml-1">Preferred Staff</label>
           <div
             onClick={() => setShowStaffList((prev) => !prev)}
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors flex justify-between items-center"
+            className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 cursor-pointer hover:bg-gray-100 transition-colors flex justify-between items-center"
           >
             <span>{selectedStaff ? selectedStaff.name : "Select Staff Member"}</span>
             <User size={18} className="text-gray-500" />
