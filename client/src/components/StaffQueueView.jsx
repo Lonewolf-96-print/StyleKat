@@ -162,6 +162,20 @@ export default function StaffQueueView({ barberId }) {
 
     socket.on("shopQueueUpdate", update);
     socket.on("queueUpdated", update);
+    socket.on("bookingStatusUpdate", () => {
+      // When status changes (e.g. pending -> confirmed), re-fetch the full queue
+      // We can reuse the same update logic if the payload was the full queue, 
+      // but here we might just want to trigger a re-fetch or manual update.
+      // For simplicity and correctness, let's re-fetch the initial load logic.
+      // Or if we can't easily access the load function here (it's inside useEffect), 
+      // we can just emit a "fetch" or "join" again? 
+      // Actually, easiest is to just rely on the fact that `load` was defined in another effect.
+      // Let's refactor `load` out or just duplicate the fetch logic which is safer to ensure we get "status-filtered" data.
+      fetch(`${API_URL}/api/live/${barberId}`)
+        .then(res => res.json())
+        .then(update)
+        .catch(err => console.error("Socket refresh failed", err));
+    });
 
     return () => socket.disconnect();
   }, [barberId]);
