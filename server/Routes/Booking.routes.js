@@ -415,7 +415,7 @@ router.delete("/my/:id", protectUser, async (req, res) => {
 });
 
 
-/* ---------------------------
+/* ---------------------------:
    Other routes (delete/permanent/archive/status/today) — unchanged except emits kept consistent
 ---------------------------- */
 router.delete("/my/:id/permanent", protectUser, async (req, res) => {
@@ -459,31 +459,45 @@ router.delete("/:id", protect, async (req, res) => {
 
 router.put("/status/:id", protect, async (req, res) => {
   try {
-    if (!req.barber) return res.status(403).json({ message: "Only barbers can update booking status" });
+    if (!req.barber) {
+      return res.status(403).json({ message: "Only barbers can update booking status" });
+    }
+
+    const { id } = req.params;
+    const { status, staffId } = req.body;
+
+    const booking = await Booking.findById(id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
     if (booking.status === "completed") {
       return res.status(400).json({
         message: "Completed bookings cannot be updated",
       });
     }
 
-    const { id } = req.params;
-    const { status, staffId } = req.body;
-    const booking = await Booking.findById(id);
-    if (!booking) return res.status(404).json({ message: "Booking not found" });
     booking.status = status;
+
     if (status === "confirmed" || status === "accepted") {
-      if (!staffId) return res.status(400).json({ message: "Staff ID required for confirmation" });
+      if (!staffId) {
+        return res.status(400).json({ message: "Staff ID required" });
+      }
       booking.staffId = staffId;
     }
+
     await booking.save();
-    if (booking.status !== "barber_deleted") req.io.to(`user-${booking.userId}`).emit("bookingStatusUpdate", booking);
+
+    req.io.to(`user-${booking.userId}`).emit("bookingStatusUpdate", booking);
     req.io.to(`shop-${booking.shopId}`).emit("bookingStatusUpdate", booking);
+
     return res.json(booking);
   } catch (err) {
-    console.error(err);
+    console.error("❌ Status update error:", err);
     return res.status(500).json({ message: "Failed to update booking status" });
   }
 });
+
 
 router.get("/today", protect, async (req, res) => {
   try {
