@@ -23,7 +23,7 @@ export default function CalendarDate({ onChange }) {
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto rounded-xl border shadow-sm p-4 bg-white">
+    <div className="w-full max-w-[320px] md:max-w-sm mx-auto rounded-xl border shadow-sm p-3 md:p-4 bg-white">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <button
@@ -66,7 +66,7 @@ export default function CalendarDate({ onChange }) {
               onClick={() => handleSelect(day)}
               className={`
                 
-                p-2 text-center rounded-lg cursor-pointer transition
+                p-2 text-center rounded-lg cursor-pointer transition text-sm md:text-base
                 ${isSelected ? "bg-blue-600 text-white" : ""}
                 ${!isSelected && isToday ? "ring-1 ring-blue-500" : ""}
                 hover:bg-blue-50

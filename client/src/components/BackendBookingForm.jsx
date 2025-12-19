@@ -493,10 +493,10 @@ export default function BackendBookingForm({ shop, barberId }) {
         className="
     bg-white/10 
     backdrop-blur-2xl 
-    p-8 
+    p-4 md:p-8 
     space-y-6 
     w-full 
-    max-w-lg 
+    max-w-[95%] md:max-w-lg 
     rounded-3xl 
     border border-white/20
     shadow-2xl

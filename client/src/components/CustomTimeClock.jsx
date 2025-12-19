@@ -1,57 +1,39 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import { Button } from "../components/ui/button"; // using shadcn button if available, or fallback
+import { cn } from "../lib/utils"; // assuming shadcn utils exist, otherwise we'll inline logic
+import { Moon, Sun, Sunset } from "lucide-react";
 
 dayjs.extend(customParseFormat);
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { TimeClock } from "@mui/x-date-pickers/TimeClock";
-import { Button } from "@mui/material";
-import toast from "react-hot-toast";
+
 export default function CustomTimeClock({
   onChange,
   blockedTimes = [],
   selectedDate,
   initialValue = null,
-  serviceDuration = 30, // Default 30 min if not provided
+  serviceDuration = 30,
 }) {
+  const [selectedTime, setSelectedTime] = useState(initialValue ? dayjs(initialValue) : null);
 
-  // DEBUG: Check what we receive
-  useEffect(() => {
-    console.log("⏰ CustomTimeClock Props:", {
-      blockedTimesCount: blockedTimes.length,
-      blockedTimes,
-      selectedDate,
-      serviceDuration
-    });
-  }, [blockedTimes, selectedDate, serviceDuration]);
+  // Default Shop Hours: 9:00 AM to 9:00 PM (Configurable if needed)
+  const SHOP_START_HOUR = 9;
+  const SHOP_END_HOUR = 21; // 9 PM
 
-  const [value, setValue] = useState(initialValue ? dayjs(initialValue) : null);
-  const [ampmMode, setAmpmMode] = useState("AM"); // "AM" or "PM"
-  const [clockKey, setClockKey] = useState(Date.now()); // use to force full re-render when needed
+  // Helper: Check if a specific time slot is blocked
+  const isBlocked = (slotTime) => {
+    if (!selectedDate || !slotTime) return false;
 
-  // ---------- helpers ----------
-  // ---------- helpers ----------
-  const parseBlocked = (timeValue) => {
-    if (!selectedDate || !timeValue) return false;
-
-    // Proposed New Booking Range
-    // Start: timeValue
-    // End: timeValue + serviceDuration
-    // format: dayjs objects
     const duration = Number(serviceDuration) || 30;
-    const newStart = timeValue;
-    const newEnd = timeValue.add(duration, "minute");
+    const newStart = slotTime;
+    const newEnd = slotTime.add(duration, "minute");
 
     return blockedTimes.some((block) => {
-      // Existing Block Range
       const blockStart = dayjs(`${selectedDate} ${block.startTime}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD hh:mm A"]);
       const blockEnd = dayjs(`${selectedDate} ${block.endTime}`, ["YYYY-MM-DD HH:mm", "YYYY-MM-DD hh:mm A"]);
 
-      // OVERLAP LOGIC: (StartA < EndB) && (EndA > StartB)
-      // Using minute precision to be safe
       return (
         newStart.isBefore(blockEnd) &&
         newEnd.isAfter(blockStart)
@@ -59,142 +41,104 @@ export default function CustomTimeClock({
     });
   };
 
-  // Normalize a dayjs (which comes from TimeClock) using the current ampmMode.
-  // Returns a new dayjs instance that's adjusted to AM/PM.
-  const applyAmpmToDayjs = (d, targetMode) => {
-    if (!d) return d;
-    let hour = d.hour();
+  // Generate Slots
+  const timeSlots = useMemo(() => {
+    const slots = [];
+    let current = dayjs().set("hour", SHOP_START_HOUR).set("minute", 0).set("second", 0);
+    const end = dayjs().set("hour", SHOP_END_HOUR).set("minute", 0).set("second", 0);
 
-    // If target is PM and hour < 12 -> add 12 (1pm becomes 13)
-    if (targetMode === "PM" && hour < 12) {
-      // special-case: if hour === 0 (midnight), make 12 AM -> 12 PM? but TimeClock in 24h gives 0..23
-      // So simply add 12 for <12
-      return d.hour(hour + 12);
+    while (current.isBefore(end)) {
+      slots.push(current);
+      current = current.add(30, "minute"); // 30 min intervals
     }
+    return slots;
+  }, []);
 
-    // If target is AM and hour >= 12 -> subtract 12 (13 -> 1 AM, 12 -> 0)
-    if (targetMode === "AM" && hour >= 12) {
-      return d.hour(hour - 12);
-    }
+  // Sections
+  const sections = [
+    { label: "Morning", icon: Sun, filter: (t) => t.hour() < 12 },
+    { label: "Afternoon", icon: Sun, filter: (t) => t.hour() >= 12 && t.hour() < 17 }, // 12pm - 5pm
+    { label: "Evening", icon: Moon, filter: (t) => t.hour() >= 17 },
+  ];
 
-    return d;
+  const handleTimeSelect = (time) => {
+    if (isBlocked(time)) return;
+    setSelectedTime(time);
+    onChange?.(time);
   };
 
-  // Auto-detect AM/PM heuristic (keeps your existing idea)
-  const autoDetectAMPM = (hour, prev) => {
-    if (hour >= 12 && prev !== "PM") return "PM";
-    if (hour <= 7 && prev !== "AM") return "AM";
-    return prev;
-  };
-
-  // ----------------- handle TimeClock selection -----------------
-  const handleTimeChange = (newValue) => {
-    if (!newValue) {
-      setValue(null);
-      onChange?.(null);
-      return;
-    }
-
-    // newValue is a Dayjs object; check blocks using selectedDate + newValue
-    if (parseBlocked(newValue)) {
-      toast.error("⛔ This time is already booked!");
-      return;
-    }
-
-    // run auto-detect (doesn't override user explicit mode, but helps)
-    const hour = newValue.hour();
-    const detected = autoDetectAMPM(hour, ampmMode);
-    if (detected !== ampmMode) {
-      setAmpmMode(detected);
-      // optional toast letting user know
-      toast(`Auto-switched to ${detected}`, { icon: "✨" });
-    }
-
-    // Apply the *current* ampmMode to the dayjs value
-    const adjusted = applyAmpmToDayjs(newValue, ampmMode);
-
-    // store and emit adjusted value (parent should format with .format("hh:mm A"))
-    setValue(adjusted);
-    onChange?.(adjusted);
-  };
-
-  // ----------------- when user toggles AM/PM manually -----------------
-  // If a time is already chosen, convert it to the newly selected AM/PM.
-  useEffect(() => {
-    if (!value) return;
-
-    const adjusted = applyAmpmToDayjs(value, ampmMode);
-
-    // If apply changes the hour, update stored value and emit
-    if (adjusted.hour() !== value.hour()) {
-      setValue(adjusted);
-      onChange?.(adjusted);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ampmMode]); // run when user clicks AM/PM
-
-  // ------------- Clear helper -------------
-  const handleClear = () => {
-    setValue(null);
-    onChange?.(null);
-    setClockKey(Date.now());
-  };
-
-  // ------------- UI -------------
   return (
-    <div className="bg-white/50 p-5 rounded-xl shadow space-y-4 max-w-md">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <div className="flex gap-3">
-          <Button
-            variant={ampmMode === "AM" ? "contained" : "outlined"}
-            onClick={() => setAmpmMode("AM")}
-            size="small"
-          >
-            AM
-          </Button>
+    <div className="w-full bg-white/50 backdrop-blur-sm p-4 rounded-xl shadow border border-white/20">
+      <div className="flex flex-col space-y-4">
 
-          <Button
-            variant={ampmMode === "PM" ? "contained" : "outlined"}
-            onClick={() => setAmpmMode("PM")}
-            size="small"
-          >
-            PM
-          </Button>
+        {/* Selected Time Display */}
+        <div className="flex justify-between items-center bg-white/60 p-3 rounded-lg">
+          <span className="text-sm font-medium text-gray-600">Selected Time</span>
+          <span className="text-lg font-bold text-blue-700">
+            {selectedTime ? selectedTime.format("hh:mm A") : "-- : --"}
+          </span>
         </div>
 
-        <TimeClock
-          key={clockKey}
-          ampm={false} // we handle AM/PM by toggle
-          value={value}
-          onChange={handleTimeChange}
-          minutesStep={5}
-          shouldDisableTime={(timeValue) => {
-            // timeValue is Dayjs without date info — attach selectedDate for checking
-            if (!selectedDate || !timeValue) return false;
-            // create a dayjs with date + time
-            let merged = dayjs(`${selectedDate} ${timeValue.format("HH:mm")}`, "YYYY-MM-DD HH:mm");
+        <div className="h-[300px] overflow-y-auto custom-scroll pr-2 space-y-6">
+          {sections.map(({ label, icon: Icon, filter }) => {
+            const sectionSlots = timeSlots.filter(filter);
+            if (sectionSlots.length === 0) return null;
 
-            // CRITICAL FIX: Apply the current AM/PM mode to the time check
-            // Otherwise, checking "11:35" in PM mode checks 11:35 AM (not blocked) instead of 11:35 PM (blocked)
-            merged = applyAmpmToDayjs(merged, ampmMode);
+            return (
+              <div key={label}>
+                <div className="flex items-center gap-2 mb-2 text-gray-500 text-xs font-semibold uppercase tracking-wider">
+                  <Icon size={14} />
+                  {label}
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {sectionSlots.map((slot, idx) => {
+                    const blocked = isBlocked(slot);
+                    const isSelected = selectedTime && slot.format("HH:mm") === selectedTime.format("HH:mm");
 
-            return parseBlocked(merged);
-          }}
-        />
-      </LocalizationProvider>
+                    return (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => handleTimeSelect(slot)}
+                        disabled={blocked}
+                        className={cn(
+                          "px-2 py-2 text-sm font-medium rounded-lg transition-all border",
+                          isSelected
+                            ? "bg-blue-600 text-white border-blue-600 shadow-md scale-105"
+                            : "bg-white text-gray-700 border-gray-200 hover:border-blue-400 hover:bg-blue-50",
+                          blocked && "opacity-40 cursor-not-allowed bg-gray-100 text-gray-400 border-transparent hover:bg-gray-100"
+                        )}
+                      >
+                        {slot.format("h:mm A")}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
-      <div className="flex gap-2">
-        <Button variant="outlined" color="error" fullWidth onClick={handleClear}>
-          Clear Time
-        </Button>
+        {/* Legend */}
+        <div className="flex items-center gap-4 text-xs text-gray-500 justify-center pt-2 border-t border-gray-200/50">
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-white border border-gray-300"></div>
+            <span>Available</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-blue-600"></div>
+            <span>Selected</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-3 h-3 rounded bg-gray-200 opacity-50"></div>
+            <span>Booked</span>
+          </div>
+        </div>
+
       </div>
-
-      <p className="text-sm text-gray-700">
-        Selected Time:{" "}
-        <span className="font-semibold">
-          {value ? dayjs(value).format("hh:mm A") : "None"}
-        </span>
-      </p>
     </div>
   );
 }
+
+
+
