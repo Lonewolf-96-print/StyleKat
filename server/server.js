@@ -26,13 +26,13 @@ import Staff from "./model/Staff.model.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://style-8sevd3uts-naitiks-projects-15e2f418.vercel.app/"
+  "https://style-hthhhv24k-naitiks-projects-15e2f418.vercel.app"
 ];
 const app = express();
 
 app.use(
   cors({
-    origin: "https://style-8sevd3uts-naitiks-projects-15e2f418.vercel.app/",
+    origin: "https://style-hthhhv24k-naitiks-projects-15e2f418.vercel.app",
     credentials: true,
   })
 );
@@ -51,7 +51,7 @@ function getTodayString(offsetDays = 0) {
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://style-8sevd3uts-naitiks-projects-15e2f418.vercel.app/",
+    origin: "https://style-hthhhv24k-naitiks-projects-15e2f418.vercel.app",
     methods: ["GET", "POST"],
     credentials: true,
   },
