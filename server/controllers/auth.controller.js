@@ -7,31 +7,32 @@ import Service from "../model/Service.js";
 import Staff from "../model/Staff.model.js";
 import PaymentMethod from "../model/PaymentMethod.model.js";
 import { generateToken } from "../lib/utils.js";
-export const userSignup = async(req,res) =>{
-    try{
-    const {name,email,password,role} = req.body;
-    if(!name ||!email || !password) return res.status(400).json({message:"All fields are required"});
-    const hashed = await bcrypt.hash(password,10);
+export const userSignup = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+    if (!name || !email || !password) return res.status(400).json({ message: "All fields are required" });
+    const hashed = await bcrypt.hash(password, 10);
     const user = await User.findOne({ email });
 
     if (user) return res.status(400).json({ message: "Email already exists" });
     const newUser = new User({
-       name,email,password : hashed,role:role || "CUSTOMER"
+      name, email, password: hashed, role: role || "CUSTOMER"
     })
     if (newUser) {
       // generate jwt token here
-      generateToken(newUser._id,"user",null);
+      generateToken(newUser._id, "user", null);
       await newUser.save();
       res.status(201).json({ message: "Signup successful", user: newUser });
 
-    
+
+    }
+
+
+  } catch (error) {
+    console.error("Error in signup controller", error.message)
+
+  }
 }
-
-
-}catch(error){
-    console.error("Error in signup controller",error.message)
-
-}}
 
 export const userLogin = async (req, res) => {
   try {
@@ -51,7 +52,7 @@ export const userLogin = async (req, res) => {
   }
 }
 export const barberSignup = async (req, res) => {
- try {
+  try {
     const { salonName, ownerName, phoneNumber, email, address, password } = req.body;
 
     // Validate required fields
@@ -65,19 +66,19 @@ export const barberSignup = async (req, res) => {
       return res.status(400).json({ message: "Email already exists" });
     }
 
-  
-  
+
+
 
     // Create new barber
     const newBarber = new Barber({
-       
+
       salonName,
       ownerName,
       phoneNumber,
       email,
       password,
       address,
-      barberCode : "BARBER"+Date.now(),
+      barberCode: "BARBER" + Date.now(),
     });
 
     await newBarber.save();
@@ -85,11 +86,10 @@ export const barberSignup = async (req, res) => {
     // Default services to create for the barber
     const defaultServices = [
       { name: "Haircut", price: 250, duration: 30, isActive: true },
-      { name: "Beard Trim", price: 150, duration: 20, isActive: true },
-      { name: "Facial", price: 500, duration: 45, isActive: true },
-      
+
+
     ];
- 
+
 
     // Attach barberId to each service
     const servicesWithBarber = defaultServices.map((svc) => ({
@@ -99,26 +99,23 @@ export const barberSignup = async (req, res) => {
 
     // Save default services in DB
     const existingServices = await Service.find({ barberId: newBarber._id });
-if (existingServices.length === 0) {
-  await Service.insertMany(servicesWithBarber);
-  console.log("Default services added:", servicesWithBarber);
-} else {
-  console.log("✅ Services already exist, skipping default insert.");
-}
-    
+    if (existingServices.length === 0) {
+      await Service.insertMany(servicesWithBarber);
+
+    }
 
 
-//  Default staff info
+    //  Default staff info
 
     // Generate token
-    const token = generateToken(newBarber._id,"barber",newBarber.shopId,res);
+    const token = generateToken(newBarber._id, "barber", newBarber.shopId, res);
 
     // Respond with barber info
     res.status(201).json({
       message: "Signup successful",
       barber: {
         id: newBarber._id,
-        
+
         salonName: newBarber.salonName,
         ownerName: newBarber.ownerName,
         email: newBarber.email,
@@ -134,10 +131,10 @@ if (existingServices.length === 0) {
 };
 export const barberLogin = async (req, res) => {
   try {
-    
+
     const { email, password } = req.body;
     const barber = await Barber.findOne({ email }).select("+password");
-console.log("🧩 Barber found:", barber);
+    console.log("🧩 Barber found:", barber);
     if (!barber) {
       return res.status(404).json({ message: "Barber not found" });
     }
@@ -155,11 +152,11 @@ console.log("🧩 Barber found:", barber);
 
     // ✅ Fix: generate the token correctly
     const token = generateToken(barber._id, "barber", barber._id);
-  
+
     console.log("🔐 Barber logged in:", barber);
     res.json({
       message: "Login successful",
-       // ✅ send token explicitly
+      // ✅ send token explicitly
       user: {
         id: barber._id,
         ownerName: barber.ownerName,
