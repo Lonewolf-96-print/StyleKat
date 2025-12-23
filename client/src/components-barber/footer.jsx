@@ -25,7 +25,7 @@ export default function DashboardFooter() {
 
           {/* Brand Info */}
           <div className="space-y-6">
-            <h3 className="font-display font-bold text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">StyleKat</h3>
+            <h3 className="font-display font-bold text-4xl text-white">StyleKat</h3>
             <p className="text-slate-400 leading-relaxed">
               Grow your business with StyleKat. Manage appointments, staff, and customers seamlessly.
             </p>
@@ -66,15 +66,15 @@ export default function DashboardFooter() {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">{t("footer.contact")}</h4>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <Phone className="h-5 w-5 mt-1 text-primary" />
                 <span>+91 6306430533</span>
               </div>
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <Mail className="h-5 w-5 mt-1 text-primary" />
                 <span>info@styleKat.co</span>
               </div>
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <MapPin className="h-5 w-5 mt-1 text-primary" />
                 <span>Plot No.40 Knowledge Park 3, GB Nagar</span>
               </div>
@@ -103,10 +103,10 @@ export default function DashboardFooter() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">© 2025 StyleKat. {t("footer.allRights")}</p>
-          <div className="flex space-x-6 text-sm text-slate-500">
+          {/* <div className="flex space-x-6 text-sm text-slate-500">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

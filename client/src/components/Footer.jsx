@@ -25,7 +25,7 @@ export default function UserDashboardFooter() {
           {/* Brand Info */}
           <div className="space-y-6">
             {/* <h3 className="font-display font-bold text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">StyleKat</h3> */}
-            <h3 className="text-black font-bold text-4xl">StyleKat</h3>
+            <h3 className="text-white font-bold text-4xl">StyleKat</h3>
             <p className="text-slate-400 leading-relaxed">
               Experience the best grooming and style services in your city. Book effortlessly, look great, and feel confident.
             </p>
@@ -66,15 +66,15 @@ export default function UserDashboardFooter() {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">Contact Us</h4>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <Phone className="h-5 w-5 mt-1 text-primary" />
                 <span>+91 6306430533</span>
               </div>
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <Mail className="h-5 w-5 mt-1 text-primary" />
                 <span>support@stylekat.co</span>
               </div>
-              <div className="flex items-start space-x-3 text-black">
+              <div className="flex items-start space-x-3 text-white">
                 <MapPin className="h-5 w-5 mt-1 text-primary" />
                 <span>Plot No.40, Knowledge Park 3,<br />GB Nagar, India</span>
               </div>
@@ -103,11 +103,11 @@ export default function UserDashboardFooter() {
         {/* Bottom bar */}
         <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-500 text-sm">© 2025 StyleKat. All rights reserved.</p>
-          <div className="flex space-x-6 text-sm text-slate-500">
+          {/* <div className="flex space-x-6 text-sm text-slate-500">
             <Link to="/privacy" className="hover:text-white transition-colors">{t("footer.privacy") || "Privacy Policy"}</Link>
             <Link to="/terms" className="hover:text-white transition-colors">{t("footer.terms") || "Terms of Service"}</Link>
             <Link to="/support" className="hover:text-white transition-colors">{t("footer.support") || "Support"}</Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>
