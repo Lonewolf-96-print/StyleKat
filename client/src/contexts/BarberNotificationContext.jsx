@@ -111,6 +111,26 @@ export const BarberNotificationProvider = ({ children }) => {
       });
     });
 
+    socket.on("bookingStatusUpdate", (info) => {
+      addNotification({
+        id: info._id,
+        type: "bookingUpdated",
+        message: `Booking updated to ${info.status}`,
+        read: false,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
+    socket.on("booking:updated", (info) => {
+      addNotification({
+        id: info._id,
+        type: "bookingUpdated",
+        message: `Booking updated to ${info.status}`,
+        read: false,
+        timestamp: new Date().toISOString(),
+      });
+    });
+
     socket.on("bookingUpdated", (info) => {
       addNotification({
         id: info._id,

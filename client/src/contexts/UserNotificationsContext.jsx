@@ -141,6 +141,19 @@ export const NotificationProvider = ({ children }) => {
       });
     });
 
+    socket.on("user:bookingCreated", (booking) => {
+      addNotification({
+        type: "booking:new",
+        message: `Booking request sent to ${booking.shopName || "salon"}`,
+        booking,
+        // Ensure we have an ID
+        id: booking._id || crypto.randomUUID(),
+        read: false,
+        timestamp: new Date().toISOString(),
+        status: "user:bookingCreated"
+      });
+    });
+
     socket.on("bookingStatusUpdate", (info) => {
       addNotification({
         id: info._id ?? info.bookingId ?? crypto.randomUUID(),
