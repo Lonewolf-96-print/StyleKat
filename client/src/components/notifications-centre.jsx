@@ -25,7 +25,7 @@ export function NotificationsCenter() {
   const { navigate } = useApp()
   const { customer } = useCustomer();
   const unreadCount = notifications.filter((n) => !n.read).length;
-  console.log("Notifications recieved", notifications)
+  // console.log("Notifications recieved", notifications)
   if (!customer) return null;
   function capitalize(word) {
     if (!word) return "";

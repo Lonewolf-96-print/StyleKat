@@ -55,7 +55,7 @@ export default function BackendBookingForm({ shop, barberId }) {
   const fetchLiveState = async (resolvedBarberId) => {
     try {
       if (!resolvedBarberId) return;
-      console.log("Barber Id inside fetch live status ", resolvedBarberId)
+      // console.log("Barber Id inside fetch live status ", resolvedBarberId)
       const res = await fetch(
         `${API_URL}/api/live/${resolvedBarberId}`
       );
@@ -98,9 +98,9 @@ export default function BackendBookingForm({ shop, barberId }) {
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
-      console.log("⚡ Connected to server");
+      // console.log("⚡ Connected to server");
       newSocket.emit("joinShopRoom", `shop-${resolvedBarberId}`);
-      console.log("🔵 Joining shop room:", `shop-${resolvedBarberId}`);
+      // console.log("🔵 Joining shop room:", `shop-${resolvedBarberId}`);
       // Join user room
       if (userId) newSocket.emit("joinUserRoom", userId);
 
@@ -229,7 +229,7 @@ export default function BackendBookingForm({ shop, barberId }) {
 
 
   useEffect(() => {
-    console.log("🔥 BLOCKED TIMES UPDATED:", blockedTimes);
+    // console.log("🔥 BLOCKED TIMES UPDATED:", blockedTimes);
   }, [blockedTimes]);
 
 
