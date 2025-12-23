@@ -24,12 +24,13 @@ export default function UserDashboardFooter() {
 
           {/* Brand Info */}
           <div className="space-y-6">
-            <h3 className="font-display font-bold text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">StyleKat</h3>
+            {/* <h3 className="font-display font-bold text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">StyleKat</h3> */}
+            <h3 className="text-black font-bold text-4xl">StyleKat</h3>
             <p className="text-slate-400 leading-relaxed">
               Experience the best grooming and style services in your city. Book effortlessly, look great, and feel confident.
             </p>
-            <div className="flex space-x-4">
-              {/* Social Icons placeholders */}
+            {/* <div className="flex space-x-4">
+              Social Icons placeholders
               <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Facebook className="w-5 h-5" />
               </a>
@@ -39,7 +40,7 @@ export default function UserDashboardFooter() {
               <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Instagram className="w-5 h-5" />
               </a>
-            </div>
+            </div> */}
           </div>
 
           {/* Quick Links */}
@@ -65,15 +66,15 @@ export default function UserDashboardFooter() {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">Contact Us</h4>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <Phone className="h-5 w-5 mt-1 text-primary" />
                 <span>+91 6306430533</span>
               </div>
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <Mail className="h-5 w-5 mt-1 text-primary" />
                 <span>support@stylekat.co</span>
               </div>
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <MapPin className="h-5 w-5 mt-1 text-primary" />
                 <span>Plot No.40, Knowledge Park 3,<br />GB Nagar, India</span>
               </div>
@@ -81,9 +82,9 @@ export default function UserDashboardFooter() {
           </div>
 
           {/* Newsletter */}
-          <div className="space-y-6">
+          {/* <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">Newsletter</h4>
-            <p className="text-slate-400">Subscribe to get the latest offers and style tips directly in your inbox.</p>
+            <p className="text-black">Subscribe to get the latest offers and style tips directly in your inbox.</p>
             <form className="relative" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
@@ -96,7 +97,7 @@ export default function UserDashboardFooter() {
                 </svg>
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom bar */}

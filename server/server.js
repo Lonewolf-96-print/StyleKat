@@ -26,7 +26,7 @@ import Staff from "./model/Staff.model.js";
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://extraordinary-mooncake-e927f9.netlify.app/"
+  "https://extraordinary-mooncake-e927f9.netlify.app"
 ];
 const app = express();
 

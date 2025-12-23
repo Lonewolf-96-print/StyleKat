@@ -6,7 +6,8 @@ import { Scissors } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
-import barbershop from '/barbershop.jpg';
+import salonCover from '/salon-cover.jpg';
+import barberShop from '/barbershop.jpg';
 
 import { useAuthModal } from '../contexts/AuthModelContext';
 
@@ -96,7 +97,7 @@ export const Home = () => {
       <section className="relative py-32 px-4 overflow-hidden min-h-[85vh] flex items-center justify-center">
         <div className="absolute inset-0 bg-black/40 z-0"></div>
         <img
-          src={barbershop}
+          src={barberShop}
           alt={t("home.heroAlt")}
           className="w-full h-full object-cover absolute inset-0 -z-10 animate-fade-in"
         />
@@ -223,7 +224,7 @@ export const Home = () => {
             <div className="md:w-1/2">
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-br from-primary to-purple-600 rounded-3xl opacity-20 blur-xl transform rotate-3"></div>
-                <img src="https://images.unsplash.com/photo-1560066984-12186d30b7e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Barber cutting hair" className="relative rounded-3xl shadow-2xl w-full object-cover h-[500px]" />
+                <img src={salonCover} alt="Barber cutting hair" className="relative rounded-3xl shadow-2xl w-full object-cover h-[500px]" />
               </div>
             </div>
             <div className="md:w-1/2 space-y-8">
@@ -281,7 +282,7 @@ export const Home = () => {
                 <Button
                   variant="outline"
                   onClick={() => window.location.href = '#'}
-                  className="border-gray-500 text-white hover:bg-white/10 px-10 py-6 rounded-full text-lg font-semibold"
+                  className="border-gray-500 text-black hover:bg-white/10 px-10 py-6 rounded-full text-lg font-semibold"
                 >
                   Learn More
                 </Button>
