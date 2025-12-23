@@ -40,9 +40,9 @@ L.Icon.Default.mergeOptions({
 export default function SettingsPage() {
   const { t } = useLanguage();
   const user = localStorage.getItem("user");
-  console.log("SettingsPage - User from localStorage:", user);
+  // console.log("SettingsPage - User from localStorage:", user);
   const { currentUser } = useApp();
-  console.log("SettingsPage - Current User:", currentUser);
+  // console.log("SettingsPage - Current User:", currentUser);
   const [formData, setFormData] = useState({
     salonName: "",
     ownerName: "",

@@ -26,10 +26,10 @@ export function NotificationsPanel() {
       // Assuming your token payload contains role: "barber" or "user"
       if (decoded.role === "barber") {
         setRole("barber");
-        console.log("Role set to barber");
+        // console.log("Role set to barber");
       } else if (decoded.role === "user") {
         setRole("user");
-        console.log("Role set to user");
+        // console.log("Role set to user");
       } else {
         // fallback: if token doesn't contain role, check stored role
         const storedRole = localStorage.getItem("role");
