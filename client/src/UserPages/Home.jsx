@@ -7,7 +7,7 @@ import { useApp } from '../contexts/AppContext';
 import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
 import salonCover from '/salon-cover.jpg';
-import barberShop from '/barbershop.jpg';
+// import barberShop from '/barbershop.jpg';
 
 import { useAuthModal } from '../contexts/AuthModelContext';
 
@@ -17,6 +17,7 @@ import { DashboardHeader } from '../components-barber/header';
 import DashboardFooter from "../components-barber/footer"
 
 import { useUser } from '../contexts/BarberContext';
+import UserDashboardFooter from '../components/Footer';
 export const Home = () => {
   const { t } = useLanguage();
   const { user } = useUser();
@@ -97,33 +98,33 @@ export const Home = () => {
       <section className="relative py-32 px-4 overflow-hidden min-h-[85vh] flex items-center justify-center">
         <div className="absolute inset-0 bg-black/40 z-0"></div>
         <img
-          src={barberShop}
+          src="/barbershop.jpg"
           alt={t("home.heroAlt")}
           className="w-full h-full object-cover absolute inset-0 -z-10 animate-fade-in"
         />
 
         <div className="container mx-auto text-center relative z-10 space-y-8">
           {currentUser?.email && (
-            <div className="animate-slide-up opacity-0 [animation-delay:200ms] [animation-fill-mode:forwards]">
+            <div className="">
               <h2 className="font-display text-2xl md:text-3xl font-medium mb-2 text-white/90 drop-shadow-md">
                 {t("home.welcomeUser", { name: currentUser.name })}
               </h2>
             </div>
           )}
 
-          <div className="animate-slide-up opacity-0 [animation-delay:400ms] [animation-fill-mode:forwards]">
+          <div className="">
             <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-white drop-shadow-2xl tracking-tight leading-tight">
               {t("home.heroTitleLine1")} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-primary">{t("home.heroTitleLine2")}</span>
             </h1>
           </div>
 
-          <p className="text-xl md:text-2xl mb-12 text-gray-200 max-w-2xl mx-auto drop-shadow-lg font-light animate-slide-up opacity-0 [animation-delay:600ms] [animation-fill-mode:forwards]">
+          <p className="text-xl md:text-2xl mb-12 text-gray-200 max-w-2xl mx-auto drop-shadow-lg font-light">
             {t("home.heroSubtitle")}
           </p>
 
           {/* Search Bar Container */}
-          <div className="animate-slide-up opacity-0 [animation-delay:800ms] [animation-fill-mode:forwards]">
+          <div className="">
             <div className="max-w-xl mx-auto backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl p-3 shadow-2xl transition-all hover:bg-white/20">
               <Button
                 onClick={handleButtonClick}
@@ -274,18 +275,12 @@ export const Home = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  onClick={() => navigate('/auth/signup')}
+                  onClick={() => navigate('/login/barber')}
                   className="bg-white text-slate-900 hover:bg-gray-100 px-10 py-6 rounded-full text-lg font-bold shadow-xl transition-transform hover:scale-105"
                 >
-                  Join as Partner
+                  Join as Barber
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => window.location.href = '#'}
-                  className="border-gray-500 text-black hover:bg-white/10 px-10 py-6 rounded-full text-lg font-semibold"
-                >
-                  Learn More
-                </Button>
+
               </div>
             </div>
           </div>
@@ -310,7 +305,7 @@ export const Home = () => {
                 </div>
             </div> */}
       {/* <TrendingSalons/> */}
-      <DashboardFooter />
+      <UserDashboardFooter />
       {/* … Other sections can be similarly translated using t("key") … */}
     </div>
   );

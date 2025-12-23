@@ -31,7 +31,7 @@ export default function DashboardFooter() {
             </p>
             <div className="flex space-x-4">
               {/* Social Icons placeholders */}
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+              {/* <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Facebook className="w-5 h-5" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
@@ -39,7 +39,7 @@ export default function DashboardFooter() {
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Instagram className="w-5 h-5" />
-              </a>
+              </a> */}
             </div>
           </div>
 
@@ -66,15 +66,15 @@ export default function DashboardFooter() {
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">{t("footer.contact")}</h4>
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <Phone className="h-5 w-5 mt-1 text-primary" />
                 <span>+91 6306430533</span>
               </div>
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <Mail className="h-5 w-5 mt-1 text-primary" />
                 <span>info@styleKat.co</span>
               </div>
-              <div className="flex items-start space-x-3 text-slate-400">
+              <div className="flex items-start space-x-3 text-black">
                 <MapPin className="h-5 w-5 mt-1 text-primary" />
                 <span>Plot No.40 Knowledge Park 3, GB Nagar</span>
               </div>
@@ -82,7 +82,7 @@ export default function DashboardFooter() {
           </div>
 
           {/* Newsletter / Legal */}
-          <div className="space-y-6">
+          {/* <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">Newsletter</h4>
             <p className="text-slate-400">Stay updated with new features and business tips.</p>
             <form className="relative" onSubmit={(e) => e.preventDefault()}>
@@ -97,7 +97,7 @@ export default function DashboardFooter() {
                 </svg>
               </button>
             </form>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom bar */}
