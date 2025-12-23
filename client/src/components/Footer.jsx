@@ -17,78 +17,96 @@ export default function UserDashboardFooter() {
   const { t } = useLanguage()
 
   return (
-    <footer className="bg-primary text-primary-foreground border-t border-border">
-      <div className="px-6 py-4">
+    <footer className="bg-slate-900 text-white pt-16 pb-8 border-t border-slate-800">
+      <div className="container mx-auto px-6">
         {/* Main grid */}
-        <div className="lg:grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
 
           {/* Brand Info */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-white text-3xl">StyleKat</h3>
-            <p className="text-sm text-primary-foreground/80">
-              {"Book, manage and enjoy salon experiences effortlessly."}
+          <div className="space-y-6">
+            <h3 className="font-display font-bold text-4xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">StyleKat</h3>
+            <p className="text-slate-400 leading-relaxed">
+              Experience the best grooming and style services in your city. Book effortlessly, look great, and feel confident.
             </p>
-
+            <div className="flex space-x-4">
+              {/* Social Icons placeholders */}
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+                <Facebook className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+                <Twitter className="w-5 h-5" />
+              </a>
+              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+                <Instagram className="w-5 h-5" />
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-3">
-            <h4 className="text-white mt-4 font-medium">Quick Links</h4>
-            <div className="space-y-2 text-sm">
-              <Link to="/user/dashboard" className="block hover:text-accent transition-colors">
+          <div className="space-y-6">
+            <h4 className="text-lg font-bold text-white">Quick Links</h4>
+            <div className="space-y-3 flex flex-col">
+              <Link to="/user/dashboard" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 Dashboard
               </Link>
-              <Link to="/my-bookings" className="block hover:text-accent transition-colors">
+              <Link to="/my-bookings" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 My Bookings
               </Link>
-              <Link to="/notifications" className="block hover:text-accent transition-colors">
+              <Link to="/notifications" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 Notifications
               </Link>
-              <Link to="/profile" className="block hover:text-accent transition-colors">
+              <Link to="/profile" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 Profile Settings
               </Link>
             </div>
           </div>
 
           {/* Contact Info */}
-          <div className="space-y-3">
-            <h4 className="text-white mt-4 font-medium">Contacts</h4>
-            <div className="space-y-2 text-sm text-primary-foreground/80">
-              <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4" />
+          <div className="space-y-6">
+            <h4 className="text-lg font-bold text-white">Contact Us</h4>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-3 text-slate-400">
+                <Phone className="h-5 w-5 mt-1 text-primary" />
                 <span>+91 6306430533</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
+              <div className="flex items-start space-x-3 text-slate-400">
+                <Mail className="h-5 w-5 mt-1 text-primary" />
                 <span>support@stylekat.co</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" />
-                <span>Plot No.40, Knowledge Park 3, GB Nagar</span>
+              <div className="flex items-start space-x-3 text-slate-400">
+                <MapPin className="h-5 w-5 mt-1 text-primary" />
+                <span>Plot No.40, Knowledge Park 3,<br />GB Nagar, India</span>
               </div>
             </div>
           </div>
 
-          {/* Legal */}
-          <div className="space-y-3">
-            <h4 className="mt-4 font-medium text-white">Legal</h4>
-            <div className="space-y-2 text-sm">
-              <Link to="/privacy" className="block hover:text-accent transition-colors">
-                {t("footer.privacy")}
-              </Link>
-              <Link to="/terms" className="block hover:text-accent transition-colors">
-                {t("footer.terms")}
-              </Link>
-              <Link to="/support" className="block hover:text-accent transition-colors">
-                {t("footer.support")}
-              </Link>
-            </div>
+          {/* Newsletter */}
+          <div className="space-y-6">
+            <h4 className="text-lg font-bold text-white">Newsletter</h4>
+            <p className="text-slate-400">Subscribe to get the latest offers and style tips directly in your inbox.</p>
+            <form className="relative" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="w-full bg-slate-800 border border-slate-700 rounded-full py-3 px-5 text-white focus:outline-none focus:border-primary transition-colors"
+              />
+              <button type="submit" className="absolute right-1 top-1 bg-primary text-white rounded-full p-2 hover:bg-primary/90 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </form>
           </div>
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-6 pt-4 border-t border-primary-foreground/20 text-center text-sm text-primary-foreground/80">
-          <p>© 2025 StyleKat — {t("footer.allRights") || "All rights reserved."}</p>
+        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-slate-500 text-sm">© 2025 StyleKat. All rights reserved.</p>
+          <div className="flex space-x-6 text-sm text-slate-500">
+            <Link to="/privacy" className="hover:text-white transition-colors">{t("footer.privacy") || "Privacy Policy"}</Link>
+            <Link to="/terms" className="hover:text-white transition-colors">{t("footer.terms") || "Terms of Service"}</Link>
+            <Link to="/support" className="hover:text-white transition-colors">{t("footer.support") || "Support"}</Link>
+          </div>
         </div>
       </div>
     </footer>
