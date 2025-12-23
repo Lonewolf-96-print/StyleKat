@@ -1,0 +1,16 @@
+# ENV FILES (never commit)
+.env
+.env.*
+
+# Client env
+client/.env
+client/.env.*
+
+# Server env
+server/.env
+server/.env.*
+
+# Node
+node_modules/
+dist/
+build/
