@@ -23,11 +23,11 @@ export const Home = () => {
   const { user } = useUser();
   const currentUser = user;
   const { setIsAuthOpen } = useAuthModal();
-  console.log("Home - Current User from BarberContext:", currentUser);
+  // console.log("Home - Current User from BarberContext:", currentUser);
   const { setCurrentUser, salons, setSalons } = useApp();
   const navigate = useNavigate();
   const { userId } = useParams();
-  console.log("Home - Current User:", currentUser);
+  // console.log("Home - Current User:", currentUser);
 
   useEffect(() => {
     setSalons(mockSalons);

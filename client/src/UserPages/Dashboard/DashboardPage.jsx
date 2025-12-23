@@ -43,7 +43,7 @@ export default function DashboardPage() {
         if (userId) {
           // join user room so server can push user-specific events
           s.emit("joinUserRoom", userId);
-          console.log("🔌 Dashboard socket connected, joined user room:", `user-${userId}`);
+          // console.log("🔌 Dashboard socket connected, joined user room:", `user-${userId}`);
         } else {
           console.warn("Could not decode customerToken to get user id");
         }
@@ -52,7 +52,7 @@ export default function DashboardPage() {
       }
     });
     s.emit("joinShopRoom", `shop-${userBookings.barberId}`);
-    console.log("User Booking socket inside Dashboard Page", `shop-${userBookings.barberId}`)
+    // console.log("User Booking socket inside Dashboard Page", `shop-${userBookings.barberId}`)
     // Handle reconnection / errors gracefully
     s.on("connect_error", (err) => {
       console.error("Dashboard socket connection error:", err?.message ?? err);
@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
     // --- Event: new booking created for this user ---
     s.on("user:bookingCreated", (newBooking) => {
-      console.log("socket event user:bookingCreated", newBooking);
+      // console.log("socket event user:bookingCreated", newBooking);
       // newBooking might be full booking object
       setUserBookings((prev) => {
         // prev may have shape { bookings: [...] } or array depending on your context
@@ -82,7 +82,7 @@ export default function DashboardPage() {
     // --- Event: booking status changed (barber emits bookingStatusChanged) ---
     // payload could be: full booking object OR { bookingId, status } OR { bookingId, newStatus }
     s.on("bookingStatusChanged", (payload) => {
-      console.log("socket event bookingStatusChanged", payload);
+      // console.log("socket event bookingStatusChanged", payload);
       const bookingObj = payload?.booking || payload;
       const id = bookingObj?._id || bookingObj?.bookingId || bookingObj?.id;
       const status = bookingObj?.status || bookingObj?.newStatus || bookingObj?.state;
@@ -118,14 +118,14 @@ export default function DashboardPage() {
 
     // optional: booking reminder or other user events
     s.on("booking:reminder", (payload) => {
-      console.log("booking:reminder", payload);
+      // console.log("booking:reminder", payload);
       // optionally show UI toast or patch specific booking
     });
 
     return () => {
       s.disconnect();
       setSocket(null);
-      console.log("Dashboard socket disconnected");
+      // console.log("Dashboard socket disconnected");
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customerToken]);

@@ -81,7 +81,7 @@ const BackendShopPage = () => {
         setShowMap(true);
       },
       (err) => {
-        console.error(err);
+        // console.error(err);
         alert("Failed to get location");
       }
     );
@@ -107,7 +107,7 @@ const BackendShopPage = () => {
         const data = await res.json();
         setShop(data);
       } catch (err) {
-        console.error("Error fetching shop:", err);
+        // console.error("Error fetching shop:", err);
       } finally {
         setLoading(false);
       }

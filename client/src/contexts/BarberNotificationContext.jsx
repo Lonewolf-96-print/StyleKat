@@ -97,7 +97,7 @@ export const BarberNotificationProvider = ({ children }) => {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("✅ Barber socket connected:", socket.id);
+      // console.log("✅ Barber socket connected:", socket.id);
       socket.emit("joinShopRoom", shopId);
     });
 

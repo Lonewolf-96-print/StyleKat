@@ -12,7 +12,7 @@ export const UserProvider = ({ children }) => {
   // ✅ Load user on mount (either from localStorage or backend verification)
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
-    console.log("Stored Barber on load:", storedUser);
+    // console.log("Stored Barber on load:", storedUser);
     const token = localStorage.getItem("token");
 
 
@@ -45,7 +45,7 @@ export const UserProvider = ({ children }) => {
 
         if (res.ok) {
           setUser(data);
-          console.log("✅ Barber verified from backend:", user);
+          // console.log("✅ Barber verified from backend:", user);
           localStorage.setItem("user", JSON.stringify(data.user));
         } else {
           console.warn("⚠️ Token invalid or expired, not clearing yet:", data.message);
@@ -83,7 +83,7 @@ export const UserProvider = ({ children }) => {
     if (res.ok && data.success) {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-      console.log("Logged in user data:", data);
+      // console.log("Logged in user data:", data);
       setUser(data.user);
     }
     return data;

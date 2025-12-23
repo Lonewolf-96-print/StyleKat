@@ -81,7 +81,7 @@ export const AppProvider = ({ children }) => {
       setToken(savedToken);
       // setCurrentUser(JSON.parse(savedUser));
     } else {
-      console.warn("⚠️ No saved user/token found");
+      // console.warn("⚠️ No saved user/token found");
       setToken(null);
       setCurrentUser(null);
     }
@@ -121,7 +121,7 @@ export const AppProvider = ({ children }) => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
-          console.warn("⚠️ No token found, cannot fetch bookings");
+          // console.warn("⚠️ No token found, cannot fetch bookings");
           return;
         }
         const res = await fetch(`${API_URL}/api/bookings`, {

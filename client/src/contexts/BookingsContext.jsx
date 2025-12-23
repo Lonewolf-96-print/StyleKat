@@ -64,7 +64,7 @@ export function BookingProvider({ children }) {
     try {
       const decoded = jwtDecode(token)
       if (role === "barber") {
-        console.log("✂️ Barber connected:", decoded.id);
+        // console.log("✂️ Barber connected:", decoded.id);
         fetchAllBookings(token);
         fetchTodayBookings(token);
         initBarberSocket(token);
@@ -80,7 +80,7 @@ export function BookingProvider({ children }) {
         }
       }
     } catch (err) {
-      console.error("❌ Error decoding barber token:", err);
+      // console.error("❌ Error decoding barber token:", err);
     }
   }, [ready, token]);
 
@@ -97,12 +97,12 @@ export function BookingProvider({ children }) {
       if (role === "user") {
         const customer = jwtDecode(customerToken)
         const id = customer.id
-        console.log("🙋‍♂️ User connected:", id);
+        // console.log("🙋‍♂️ User connected:", id);
         fetchUserBookings(customerToken);
         initUserSocket(customerToken);
       }
     } catch (err) {
-      console.error("❌ Error decoding user token:", err);
+      // console.error("❌ Error decoding user token:", err);
     }
   }, [ready, customerToken]);
 
@@ -171,17 +171,17 @@ export function BookingProvider({ children }) {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("✅ Socket connected:", socket.id);
+      // console.log("✅ Socket connected:", socket.id);
 
       try {
-        console.log("Token", token)
+        // console.log("Token", token)
         const decoded = jwtDecode(token);
-        console.log("Decoded", decoded)
+        // console.log("Decoded", decoded)
         const shopRoom = `shop-${decoded.id}`;
         socket.emit("joinShopRoom", shopRoom);
-        console.log(`🛠 Barber joined room: ${shopRoom}`);
+        // console.log(`🛠 Barber joined room: ${shopRoom}`);
       } catch (err) {
-        console.error("❌ Failed to decode barber token:", err);
+        // console.error("❌ Failed to decode barber token:", err);
       }
     });
 
@@ -206,20 +206,20 @@ export function BookingProvider({ children }) {
       const normalized = normalizePayload(data);
       if (!normalized) return;
       setShopQueue((prev) => ({ ...prev, [normalized.shopId]: normalized.payload }));
-      console.log("Received shopQueueUpdate", normalized.shopId, normalized.payload);
+      // console.log("Received shopQueueUpdate", normalized.shopId, normalized.payload);
     });
 
     socket.on("queueUpdated", (data) => {
       const normalized = normalizePayload(data);
       if (!normalized) return;
       setShopQueue((prev) => ({ ...prev, [normalized.shopId]: normalized.payload }));
-      console.log("Received queueUpdated", normalized.shopId, normalized.payload);
+      // console.log("Received queueUpdated", normalized.shopId, normalized.payload);
     });
 
 
     socket.on("newBookingRequest", (booking) => {
       setAllBookings((prev) => [booking, ...prev]);
-      console.log("📩 New booking received via socket:", booking);
+      // console.log("📩 New booking received via socket:", booking);
 
       const today = new Date().toDateString();
       const bookingDate = new Date(booking.date).toDateString();
@@ -236,7 +236,7 @@ export function BookingProvider({ children }) {
 
       setAllBookings((prev) => prev.map((x) => (x._id === id ? { ...x, status } : x)));
       setTodayBookings((prev) => prev.map((x) => (x._id === id ? { ...x, status } : x)));
-      console.log("socket bookingStatusUpdate", updated);
+      // console.log("socket bookingStatusUpdate", updated);
     });
     return () => socket.disconnect();
   };
@@ -245,7 +245,7 @@ export function BookingProvider({ children }) {
   // Socket Setup: User
   // =========================
   const initUserSocket = (customerToken) => {
-    console.log("In the user socket handler")
+    // console.log("In the user socket handler")
     const socket = io(SOCKET_URL, { auth: { token: customerToken } });
     socketRef.current = socket;
 
@@ -253,19 +253,19 @@ export function BookingProvider({ children }) {
     socket.on("disconnect", () => console.log("⚠️ User socket disconnected"));
     try {
       const decoded = jwtDecode(customerToken);
-      console.log("Decoded customer Token for init user socket", decoded)
+      // console.log("Decoded customer Token for init user socket", decoded)
       const shopRoom = `shop-${decoded.id}`;
       socket.emit("joinShopRoom", shopRoom);
-      console.log(`🛠 User joined room: ${shopRoom}`);
+      // console.log(`🛠 User joined room: ${shopRoom}`);
     } catch (err) {
-      console.error("❌ Failed to decode barber token:", err);
+      // console.error("❌ Failed to decode barber token:", err);
     }
 
 
 
     // User listens for booking confirmations or updates
     socket.on("bookingStatusUpdate", (updated) => {
-      console.log("📢 User booking update:", updated);
+      // console.log("📢 User booking update:", updated);
       setUserBookings((prev) => ({
         ...prev,
         bookings: prev.bookings.map((b) =>
@@ -276,7 +276,7 @@ export function BookingProvider({ children }) {
 
     // Optional: Listen for booking creation confirmation (if backend emits)
     socket.on("bookingCreated", (newBooking) => {
-      console.log("🆕 Booking created (user view):", newBooking);
+      // console.log("🆕 Booking created (user view):", newBooking);
       setUserBookings((prev) => ({
         ...prev,
         bookings: [newBooking, ...(prev.bookings || [])],

@@ -25,10 +25,10 @@ export function RecentAppointments() {
   const [bookings, setBookings] = useState([]);
   const { t } = useLanguage();
   const { todayBookings, setTodayBookings, setAllBookings, allBookings } = useBookings();
-  console.log("Todays bookings", todayBookings)
+  // console.log("Todays bookings", todayBookings)
   const { navigate, customerName } = useApp();
   const token = localStorage.getItem("token");
-  console.log("Token in RecentAppointments:", token);
+  // console.log("Token in RecentAppointments:", token);
   const handleStatusChange = async (bookingId, newStatus) => {
     try {
       const res = await fetch(
@@ -71,15 +71,15 @@ export function RecentAppointments() {
         console.log("Fetch response:", res);
         if (!res.ok) throw new Error(`Failed to fetch bookings: ${res.status}`);
         const data = await res.json();
-        console.log("✅ Bookings fetched from backend:", data);
+        // console.log("✅ Bookings fetched from backend:", data);
         setBookings(data);
       } catch (err) {
         console.error("❌ Error fetching bookings:", err);
       }
     }
     fetchBookings();
-    console.log("Username", customerName);
-    console.log("Booking:", bookings)
+    // console.log("Username", customerName);
+    // console.log("Booking:", bookings)
   }, [token]);
   return (
 

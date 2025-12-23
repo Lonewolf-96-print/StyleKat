@@ -118,16 +118,16 @@ export const NotificationProvider = ({ children }) => {
     socket.connect();
 
     socket.on("connect", () => {
-      console.log("🔌 Notification socket connected:", socket.id);
+      // console.log("🔌 Notification socket connected:", socket.id);
 
       if (role === "barber" && shopId) {
         socket.emit("joinShopRoom", shopId);
-        console.log("🏪 Joined shop room:", shopId);
+        // console.log("🏪 Joined shop room:", shopId);
       }
 
       if (userId) {
         socket.emit("joinUserRoom", userId);
-        console.log("👤 Joined user room:", userId);
+        // console.log("👤 Joined user room:", userId);
       }
     });
 
@@ -169,7 +169,7 @@ export const NotificationProvider = ({ children }) => {
         read: false,
         timestamp: new Date().toISOString(),
       });
-      console.log("Updated booking request received for the user side", info)
+      // console.log("Updated booking request received for the user side", info)
     });
 
 
@@ -186,7 +186,7 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socket.on("disconnect", () => {
-      console.log("🔌 Notification socket disconnected");
+      // console.log("🔌 Notification socket disconnected");
     });
 
     return () => {

@@ -44,12 +44,12 @@ export function ServicesList() {
             Authorization: `Bearer ${token} `,
           },
         });
-        console.log("📡 Raw response:", res)
+        // console.log("📡 Raw response:", res)
 
 
         const data = await res.json();
         if (res.ok) setServices(data);
-        console.log("Services info")
+        // console.log("Services info")
       } catch (error) {
         console.error("Error fetching services:", error);
       }
@@ -82,11 +82,11 @@ export function ServicesList() {
         .join(", ");
 
       if (!changeSummary) {
-        console.log("No actual changes detected — skipping update");
+        // console.log("No actual changes detected — skipping update");
         return;
       }
 
-      console.log("🧾 Service changes detected:", changeSummary);
+      // console.log("🧾 Service changes detected:", changeSummary);
       const res = await fetch(`${API_URL}/${updatedService._id}`, {
         method: "PUT",
         headers: {
@@ -105,7 +105,7 @@ export function ServicesList() {
         );
 
       }
-      console.log("Windows socket object:", window.socket);
+      // console.log("Windows socket object:", window.socket);
       if (window.socket) {
         const payload = {
           type: "SERVICE_UPDATED",
@@ -118,7 +118,7 @@ export function ServicesList() {
           timestamp: new Date().toISOString(),
         };
 
-        console.log("📡 Emitting socket event:", payload);
+        // console.log("📡 Emitting socket event:", payload);
         window.socket.emit("serviceUpdated", payload);
       }
 

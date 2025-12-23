@@ -25,7 +25,7 @@ export default function DashboardContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const socketRef = useRef(null);
   const shopId = currentUser?.shopId;
-  console.log("DashboardContent - Current User:", currentUser);
+  // console.log("DashboardContent - Current User:", currentUser);
   useEffect(() => {
     if (!shopId) return;
     const room = `shop - ${shopId} `;
@@ -40,7 +40,7 @@ export default function DashboardContent() {
       navigate("/login/barber");
       return;
     }
-    console.log("Token used in the dashboard socket connection:", token);
+    // console.log("Token used in the dashboard socket connection:", token);
 
     // ✅ Initialize socket only once
     socketRef.current = io(SOCKET_URL, {
@@ -53,16 +53,16 @@ export default function DashboardContent() {
     const socket = socketRef.current;
 
     socket.on("connect", () => {
-      console.log("✅ Barber socket connected:", socket.id);
+      // console.log("✅ Barber socket connected:", socket.id);
       socket.emit("joinAsBarber");
       socket.emit("joinShopTest", "68f88ca7d12733c84cb598f6");
     });
     socket.on("shopPresenceUpdate", (data) => {
-      console.log("📢 Presence Update:", data);
+      // console.log("📢 Presence Update:", data);
     });
 
     socket.on("testMessageReceived", (data) => {
-      console.log("💬 Message Received:", data);
+      // console.log("💬 Message Received:", data);
     });
     setTimeout(() => {
       socket.emit("testMessage", {
@@ -81,7 +81,7 @@ export default function DashboardContent() {
 
     return () => {
       socket.disconnect();
-      console.log("🧹 Socket disconnected");
+      // console.log("🧹 Socket disconnected");
     };
   }, [isAuthReady, token]);
 
