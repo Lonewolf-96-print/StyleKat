@@ -21,8 +21,8 @@ export function NotificationsPanel() {
 
     try {
       const decoded = jwtDecode(token);
-      console.log("Decoded token:", decoded);
-      console.log("Role from token:", decoded.role);
+      // console.log("Decoded token:", decoded);
+      // console.log("Role from token:", decoded.role);
       // Assuming your token payload contains role: "barber" or "user"
       if (decoded.role === "barber") {
         setRole("barber");

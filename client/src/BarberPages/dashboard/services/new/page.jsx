@@ -10,7 +10,7 @@ import { useLanguage } from "../../../../components-barber/language-provider"
 export default function ServicesPage() {
   const { t } = useLanguage();
   const { currentUser } = useApp();
-  console.log("CurrentUser ", currentUser)
+  // console.log("CurrentUser ", currentUser)
   return (
     <div className="flex flex-col lg:flex-row">
       {/* Sidebar (Fixed) */}

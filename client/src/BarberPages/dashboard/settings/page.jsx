@@ -87,11 +87,11 @@ export default function SettingsPage() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log("Fetching shop details for shopId:", shopId);
+        // console.log("Fetching shop details for shopId:", shopId);
 
         if (!res.ok) throw new Error("Failed to fetch shop details");
         const data = await res.json();
-        console.log("Fetched shop details:", data);
+        // console.log("Fetched shop details:", data);
         setShopCoords(data.coords);
         setFormData({
           salonName: data.salonName || "",
@@ -108,7 +108,7 @@ export default function SettingsPage() {
 
 
       } catch (err) {
-        console.error("Error fetching shop info:", err);
+        // console.error("Error fetching shop info:", err);
         setMessage("⚠️ Failed to load shop info. Please refresh.");
       } finally {
         setLoading(false);
@@ -172,7 +172,7 @@ export default function SettingsPage() {
 
       if (!res.ok) throw new Error("Failed to update shop");
       const data = await res.json();
-      console.log("Shop updated successfully:", data);
+      // console.log("Shop updated successfully:", data);
       setFormData({
         salonName: data.salonName,
         ownerName: data.ownerName,
@@ -186,7 +186,7 @@ export default function SettingsPage() {
 
       toast.success(" Settings saved successfully!");
     } catch (err) {
-      console.error("Save error:", err);
+      // console.error("Save error:", err);
       setMessage("❌ Failed to save settings. Try again.");
     } finally {
       setSaving(false);

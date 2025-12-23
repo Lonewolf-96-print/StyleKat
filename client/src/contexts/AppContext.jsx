@@ -27,12 +27,12 @@ export const AppProvider = ({ children }) => {
     const originalClear = localStorage.clear;
 
     localStorage.removeItem = (...args) => {
-      console.trace("🧨 localStorage.removeItem called with:", args);
+      // console.trace("🧨 localStorage.removeItem called with:", args);
       originalRemoveItem.apply(localStorage, args);
     };
 
     localStorage.clear = (...args) => {
-      console.trace("🧨 localStorage.clear called");
+      // console.trace("🧨 localStorage.clear called");
       originalClear.apply(localStorage, args);
     };
   }, []);

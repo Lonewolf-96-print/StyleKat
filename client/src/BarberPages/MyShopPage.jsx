@@ -43,7 +43,7 @@ export default function MyShopPage() {
       });
       const staffData = await resStaff.json();
       setStaff(staffData);
-      console.log("Loaded staff:", staffData);
+      // console.log("Loaded staff:", staffData);
 
       // BOOKINGS
       const resBookings = await fetch(`${API_URL}/api/bookings`, {
@@ -54,7 +54,7 @@ export default function MyShopPage() {
       });
       const bookingData = await resBookings.json();
       setBookings(bookingData);
-      console.log("Loaded bookings:", bookingData);
+      // console.log("Loaded bookings:", bookingData);
     }
 
     loadData();
@@ -83,23 +83,23 @@ export default function MyShopPage() {
     });
 
     s.on("connect", () => {
-      console.log("Socket connected:", s.id);
+      // console.log("Socket connected:", s.id);
       s.emit("requestShopQueue", shopId);
     });
 
     // LIVE QUEUE UPDATES
     s.on("shopQueueUpdate", (data) => {
-      console.log("🔴 shopQueueUpdate:", data);
+      // console.log("🔴 shopQueueUpdate:", data);
       setShopQueue(data); // ✅ THIS WAS MISSING
     });
 
     s.on("queueUpdated", (data) => {
-      console.log("🟢 queueUpdated:", data);
+      // console.log("🟢 queueUpdated:", data);
     });
 
     // NEW: HANDLE USER CANCELLATIONS
     s.on("bookingStatusUpdate", (data) => {
-      console.log("📢 bookingStatusUpdate:", data);
+      // console.log("📢 bookingStatusUpdate:", data);
 
       if (data.status === "cancelled") {
         const cancelledId = data._id;

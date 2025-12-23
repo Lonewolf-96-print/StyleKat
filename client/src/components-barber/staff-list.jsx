@@ -21,8 +21,8 @@ export function StaffList() {
   const [selectedStaff, setSelectedStaff] = useState(null);
   const [staffData, setStaffData] = useState([]);
   const barberId = localStorage.getItem("token"); // or from context if you store it
-  console.log("🔑 Barber ID:", barberId)
-  console.log("🗄️ Staff Data:", staff);
+  // console.log("🔑 Barber ID:", barberId)
+  // console.log("🗄️ Staff Data:", staff);
   // Fetch staff data
   useEffect(() => {
     const fetchStaff = async () => {
@@ -37,12 +37,12 @@ export function StaffList() {
             Authorization: `Bearer ${token}`, // <-- critical
           },
         });
-        console.log("📡 Raw response:", res);
+        // console.log("📡 Raw response:", res);
 
         const data = await res.json();
         setStaff(data);
       } catch (err) {
-        console.error("❌ Error fetching staff:", err);
+        // console.error("❌ Error fetching staff:", err);
       } finally {
         setLoading(false);
       }
@@ -67,7 +67,7 @@ export function StaffList() {
 
       setStaff((prev) => prev.filter((m) => m._id !== id));
     } catch (err) {
-      console.error("❌ Failed to delete staff:", err);
+      // console.error("❌ Failed to delete staff:", err);
       // Optional: Add toast notification here
     }
   };
@@ -110,7 +110,7 @@ export function StaffList() {
       if (!res.ok) throw new Error("Failed to update status");
 
     } catch (err) {
-      console.error("❌ Failed to update status:", err);
+      // console.error("❌ Failed to update status:", err);
       setStaff(originalStaff); // Revert on error
     }
   };

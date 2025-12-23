@@ -17,7 +17,7 @@ import { API_URL } from "../../../lib/config"
 export default function CompanyInfoPage() {
   const { t } = useLanguage()
   const barberId = localStorage.getItem("shopId")
-  console.log("BarberId in the company info page", barberId);// /company/[barberId]
+  // console.log("BarberId in the company info page", barberId);// /company/[barberId]
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [barberData, setBarberData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -30,7 +30,7 @@ export default function CompanyInfoPage() {
         const res = await fetch(`${API_URL}/api/barbers/${barberId}`)
         const data = await res.json()
         setBarberData(data)
-        console.log("Fetched barber data:", data)
+        // console.log("Fetched barber data:", data)
       } catch (err) {
         console.error("Failed to load barber data:", err)
       } finally {
