@@ -6,7 +6,7 @@ import { Scissors } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
-// import salonCover from '/salon-cover.jpg';
+import salonCover from '/salon-cover.jpg';
 import barberShop from '/barbershop.jpg';
 
 import { useAuthModal } from '../contexts/AuthModelContext';
