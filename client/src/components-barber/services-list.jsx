@@ -87,7 +87,7 @@ export function ServicesList() {
       }
 
       // console.log("🧾 Service changes detected:", changeSummary);
-      const res = await fetch(`${API_URL}/${updatedService._id}`, {
+      const res = await fetch(`${API_URL}/api/services/${updatedService._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
