@@ -98,7 +98,7 @@ export const Home = () => {
       <section className="relative py-32 px-4 overflow-hidden min-h-[85vh] flex items-center justify-center">
         <div className="absolute inset-0 bg-black/40 z-0"></div>
         <img
-          src={salonCover}
+          src="/salon-cover.jpg"
           alt={t("home.heroAlt")}
           className="w-full h-full object-cover absolute inset-0 -z-10 animate-fade-in"
         />
