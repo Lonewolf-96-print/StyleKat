@@ -44,7 +44,7 @@ export function ServiceForm({ serviceId, existingService }) {
       setIsLoading(true);
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`${API_URL}/${serviceId}`, {
+        const res = await fetch(`${API_URL}/api/services/${serviceId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -87,7 +87,7 @@ export function ServiceForm({ serviceId, existingService }) {
     try {
       const token = localStorage.getItem("token");
       const method = serviceId ? "PUT" : "POST";
-      const url = serviceId ? `${API_URL}/${serviceId}` : API_URL;
+      const url = serviceId ? `${API_URL}/api/services/${serviceId}` : `${API_URL}/api/services`;
 
 
       // Update existing service
