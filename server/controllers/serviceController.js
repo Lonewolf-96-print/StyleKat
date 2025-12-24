@@ -11,28 +11,28 @@ export const getAllServices = async (req, res) => {
   }
 }
 
-export const createService = async(req,res)=>{
-    try{
-       const { name, description, price, duration, category, isActive, barberId } = req.body;
-       if(!name || !price ||!duration || !category)
-       return res.status(400).json({ message: "Name, price, duration, and category are required" });
-       const newService = new Service({
-         barberId: req.barber._id,
-        name,
+export const createService = async (req, res) => {
+  try {
+    const { name, description, price, duration, category, isActive, barberId } = req.body;
+    if (!name || !price || !duration || !category)
+      return res.status(400).json({ message: "Name, price, duration, and category are required" });
+    const newService = new Service({
+      barberId: req.barber._id,
+      name,
       description,
       price,
       duration,
       category,
       isActive: isActive ?? true,
-       // optional if you have a barber reference
+      // optional if you have a barber reference
     });
     const savedService = await newService.save();
 
-   res.status(201).json({ message: "Service added successfully", service: savedService });
-    }catch(err){
-        console.error("Error creating service",err);
-        res.status(500).json({ message: "Server error", error: err });
-    }
+    res.status(201).json({ message: "Service added successfully", service: savedService });
+  } catch (err) {
+    console.error("Error creating service", err);
+    res.status(500).json({ message: "Server error", error: err });
+  }
 }
 
 // controllers/service.controller.js
@@ -73,12 +73,12 @@ export const updateService = async (req, res) => {
 // ✅ Toggle Service Status
 export const toggleServiceStatus = async (req, res) => {
   try {
-    const {  serviceId } = req.params;
+    const { serviceId } = req.params;
 
     const service = await Service.findById(serviceId);
     if (!service) return res.status(404).json({ message: "Service not found" });
 
-    
+
     service.isActive = !service.isActive;
     await service.save();
 
@@ -98,5 +98,22 @@ export const deleteService = async (req, res) => {
     res.status(200).json({ message: "Service deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: "Error deleting service", error: err });
+  }
+};
+
+// ✅ Get Single Service by ID
+export const getServiceById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const service = await Service.findById(id);
+
+    if (!service) {
+      return res.status(404).json({ message: "Service not found" });
+    }
+
+    res.status(200).json(service);
+  } catch (err) {
+    console.error("Error fetching service:", err);
+    res.status(500).json({ message: "Server error", error: err });
   }
 };

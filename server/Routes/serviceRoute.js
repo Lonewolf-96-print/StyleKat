@@ -48,7 +48,7 @@ router.get("/public/:barberId", async (req, res) => {
   }
 });
 
-router.put("/:barberId", protect, updateService);
+router.put("/:id", protect, updateService);
 router.post("/", protect, createService);
 
 // PATCH → Toggle active/inactive status
