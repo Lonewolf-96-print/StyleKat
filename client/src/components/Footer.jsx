@@ -67,15 +67,15 @@ export default function UserDashboardFooter() {
             <h4 className="text-lg font-bold text-white">Contact Us</h4>
             <div className="space-y-4">
               <div className="flex items-start space-x-3 text-white">
-                <Phone className="h-5 w-5 mt-1 text-primary" />
+                <Phone className="h-5 w-5 mt-1 text-white" />
                 <span>+91 6306430533</span>
               </div>
               <div className="flex items-start space-x-3 text-white">
-                <Mail className="h-5 w-5 mt-1 text-primary" />
+                <Mail className="h-5 w-5 mt-1 text-white" />
                 <span>support@stylekat.co</span>
               </div>
               <div className="flex items-start space-x-3 text-white">
-                <MapPin className="h-5 w-5 mt-1 text-primary" />
+                <MapPin className="h-5 w-5 mt-1 text-white" />
                 <span>Plot No.40, Knowledge Park 3,<br />GB Nagar, India</span>
               </div>
             </div>

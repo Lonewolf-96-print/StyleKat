@@ -6,7 +6,7 @@ import { Scissors } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
-import salonCover from '/salon-cover.jpg';
+// import salonCover from '/salon-cover.jpg';
 import barberShop from '/barbershop.jpg';
 
 import { useAuthModal } from '../contexts/AuthModelContext';
@@ -95,15 +95,15 @@ export const Home = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative py-32 px-4 overflow-hidden min-h-[85vh] flex items-center justify-center">
-        <div className="absolute inset-0 bg-black/40 z-0"></div>
+      <section className="relative py-32 px-4 overflow-hidden min-h-[85vh] flex items-center justify-center isolate">
+        <div className="absolute inset-0 bg-black/40 z-10"></div>
         <img
           src="/salon-cover.jpg"
           alt={t("home.heroAlt")}
-          className="w-full h-full object-cover absolute inset-0 -z-10 animate-fade-in"
+          className="w-full h-full object-cover absolute inset-0 z-0"
         />
 
-        <div className="container mx-auto text-center relative z-10 space-y-8">
+        <div className="container mx-auto text-center relative z-20 space-y-8">
           {currentUser?.email && (
             <div className="">
               <h2 className="font-display text-2xl md:text-3xl font-medium mb-2 text-white/90 drop-shadow-md">
