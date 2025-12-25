@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Home, Search, Calendar, User, Store, Scissors, LayoutDashboard, Building } from 'lucide-react';
+import { Home, Search, Calendar, User, Store, Scissors, LayoutDashboard, Building, Settings } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { cn } from '../lib/utils'; // Assuming you have a utils file for merging classes, or I'll just use template literals
 
