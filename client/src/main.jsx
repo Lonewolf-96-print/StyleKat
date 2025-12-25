@@ -17,13 +17,13 @@ const client = import.meta.env.VITE_CLIENT_ID
 
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
-    <BarberNotificationProvider>
-      <CustomerProvider>
-        <BookingProvider>
+    <CustomerProvider>
+      <BookingProvider>
 
-          <ScrollToTop />
-          <GoogleOAuthProvider clientId={client}>
-            <UserProvider>
+        <ScrollToTop />
+        <GoogleOAuthProvider clientId={client}>
+          <UserProvider>
+            <BarberNotificationProvider>
               <LanguageProvider>
 
                 <NotificationProvider>
@@ -31,18 +31,16 @@ createRoot(document.getElementById('root')).render(
                     <AuthModalProvider>
                       <App />
                     </AuthModalProvider>
-
-
                   </AppProvider>
 
                 </NotificationProvider>
               </LanguageProvider>
-            </UserProvider>
-          </GoogleOAuthProvider>
+            </BarberNotificationProvider>
+          </UserProvider>
+        </GoogleOAuthProvider>
 
-        </BookingProvider>
-      </CustomerProvider>
-    </BarberNotificationProvider>
+      </BookingProvider>
+    </CustomerProvider>
   </BrowserRouter>
 
 )

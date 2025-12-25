@@ -16,7 +16,7 @@ import { useNotifications } from "../contexts/UserNotificationsContext";
 const navItems = [
   { href: "/user/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/search-salon", label: "Find Salons", icon: Store },
-  { href: "/my-bookings", label: "My Bookings", icon: Calendar },
+  { href: "/my-bookings", label: "Bookings", icon: Calendar },
   { href: "/notifications", label: "Notifications", icon: Bell },
   { href: "/profile", label: "Profile", icon: User },
 ];
