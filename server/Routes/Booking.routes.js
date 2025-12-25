@@ -288,7 +288,11 @@ router.get("/my", protectUser, async (req, res) => {
   try {
     const user = await User.findById(req.user._id).lean();
     const hidden = user.userHiddenBookings || [];
-    const bookings = await Booking.find({ userId: req.user._id, _id: { $nin: hidden } }).sort({ createdAt: -1 });
+    const bookings = await Booking.find({
+      userId: req.user._id,
+      _id: { $nin: hidden },
+      status: { $ne: "barber_deleted" }
+    }).sort({ createdAt: -1 });
     return res.json({ success: true, bookings });
   } catch (err) {
     console.error(err);
