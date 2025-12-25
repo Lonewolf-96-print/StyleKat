@@ -94,7 +94,7 @@ export default function UserDashboardFooter() {
           </div>
 
           {/* Newsletter Column */}
-          <div className="lg:col-span-4 space-y-8">
+          {/* <div className="lg:col-span-4 space-y-8">
             <div className="p-8 rounded-[2.5rem] bg-indigo-600/10 border border-indigo-500/20 backdrop-blur-sm relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 rotate-12 group-hover:scale-[2] transition-transform duration-700">
                 <Mail className="w-24 h-24" />
@@ -116,7 +116,7 @@ export default function UserDashboardFooter() {
                 </form>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Bottom Bar */}
