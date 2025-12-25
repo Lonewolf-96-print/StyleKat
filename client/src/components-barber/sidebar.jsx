@@ -32,8 +32,8 @@ export function DashboardSidebar() {
       <div
         className={cn(
           // Base styles (Mobile First - Bottom Bar)
-          "fixed bottom-0 left-0 z-50 w-full bg-white border-t border-gray-200 shadow-lg lg:shadow-none lg:border-t-0",
-          "flex flex-row justify-between items-center px-4 py-2",
+          "fixed bottom-0 left-0 z-50 w-full bg-white border-t border-gray-200 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] lg:shadow-none lg:border-t-0",
+          "flex flex-row justify-around items-center px-2 py-2 safe-area-bottom",
 
           // Desktop styles (Sidebar)
           "lg:fixed lg:inset-y-0 lg:left-0 lg:flex-col lg:justify-start lg:w-64 lg:bg-sidebar lg:border-r lg:border-sidebar-border lg:px-0 lg:py-0"
@@ -112,7 +112,7 @@ export function DashboardSidebar() {
 
       </div>
       {/* Spacer for mobile to prevent content being hidden behind bottom bar */}
-      <div className="lg:hidden h-20 w-full" />
+
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../components/ui/button';
 import { useParams, useNavigate } from "react-router-dom";
 import Divider from '@mui/material/Divider';
-import { Scissors } from 'lucide-react';
+import { Scissors, Menu, X } from 'lucide-react';
 import { useApp } from '../contexts/AppContext';
 import { mockSalons } from '../data/MockData';
 import { useLanguage } from '../components-barber/language-provider';
@@ -27,6 +27,7 @@ export const Home = () => {
   const { setCurrentUser, salons, setSalons } = useApp();
   const navigate = useNavigate();
   const { userId } = useParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   // console.log("Home - Current User:", currentUser);
 
   useEffect(() => {
@@ -71,7 +72,15 @@ export const Home = () => {
             <span className="font-display text-2xl font-bold text-foreground">{t("common.brandName") || "StyleKat"}</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* Mobile Menu Toggle */}
+          <div className="md:hidden">
+            <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center gap-4">
             {/* <img src={salon} onClick={() => navigate("/salons")} className="h-10 w-10" alt={t("common.salon")} /> */}
             {/* <img src={scissors} className="h-10 w-10" alt={t("common.scissors")} /> */}
 
@@ -92,6 +101,27 @@ export const Home = () => {
             )}
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        {isMenuOpen && (
+          <div className="md:hidden border-t bg-white/95 backdrop-blur-md absolute top-full left-0 right-0 px-4 py-4 space-y-4 shadow-lg animate-in slide-in-from-top-2">
+            {currentUser ? (
+              <Button onClick={() => navigate(currentUser.role === 'user' ? '/user/dashboard' : '/dashboard')} className="w-full justify-start" variant="outline">
+                {t("common.dashboard")}
+              </Button>
+            ) : (
+              <Button onClick={() => navigate("/login/user")} className="w-full justify-start bg-green-50 text-black font-semibold hover:bg-green-200">
+                {t("auth.signIn")}
+              </Button>
+            )}
+
+            {currentUser?.email && (
+              <Button onClick={() => setCurrentUser({ name: "", email: "", password: "" })} className="w-full justify-start text-red-500" variant="ghost">
+                {t("auth.logout") || "Logout"}
+              </Button>
+            )}
+          </div>
+        )}
       </nav>
 
       {/* Hero Section */}
@@ -150,10 +180,10 @@ export const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Featured Stats */}
-      <section className="py-20 bg-background relative z-20 -mt-10 rounded-t-[3rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]">
+      < section className="py-20 bg-background relative z-20 -mt-10 rounded-t-[3rem] shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]" >
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
             <div className="group p-4">
@@ -174,10 +204,10 @@ export const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* How It Works Section */}
-      <section className="py-24 bg-gray-50">
+      < section className="py-24 bg-gray-50" >
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">How StyleKat Works</h2>
@@ -216,10 +246,10 @@ export const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Why Choose Us */}
-      <section className="py-24">
+      < section className="py-24" >
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-16">
             <div className="md:w-1/2">
@@ -259,10 +289,10 @@ export const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Join as Barber CTA */}
-      <section className="py-20 px-4">
+      < section className="py-20 px-4" >
         <div className="container mx-auto">
           <div className="bg-slate-900 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden">
             {/* Decorative circles */}
@@ -285,7 +315,7 @@ export const Home = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section >
       <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
             
@@ -307,6 +337,6 @@ export const Home = () => {
       {/* <TrendingSalons/> */}
       <UserDashboardFooter />
       {/* … Other sections can be similarly translated using t("key") … */}
-    </div>
+    </div >
   );
 };

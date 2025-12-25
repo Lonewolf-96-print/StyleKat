@@ -1,7 +1,7 @@
 
 import { DashboardSidebar } from "../../components-barber/sidebar"
 import { DashboardHeader } from "../../components-barber/header"
-import  DashboardFooter  from "../../components-barber/footer"
+import DashboardFooter from "../../components-barber/footer"
 
 export default function DashboardLayout({
   children,
