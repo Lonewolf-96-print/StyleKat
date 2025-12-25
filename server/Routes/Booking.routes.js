@@ -424,7 +424,9 @@ router.delete("/my/:id/permanent", protectUser, async (req, res) => {
     const booking = await Booking.findById(bookingId);
     if (!booking) return res.status(404).json({ message: "Booking not found" });
     if (String(booking.userId) !== String(req.user._id)) return res.status(403).json({ message: "Not your booking" });
-    if (booking.status !== "cancelled") return res.status(400).json({ message: "You can only delete bookings that are cancelled" });
+    if (!["cancelled", "completed", "in-service"].includes(booking.status)) {
+      return res.status(400).json({ message: "You can only delete cancelled, completed or in-service bookings" });
+    }
     await User.findByIdAndUpdate(req.user._id, { $addToSet: { userHiddenBookings: bookingId } });
     const shopRoom = `shop-${booking.shopId}`;
     const userRoom = `user-${booking.userId}`;
