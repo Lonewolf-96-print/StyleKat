@@ -1,5 +1,5 @@
 "use client"
-
+import { useEffect, useState } from "react"
 import { Card, CardHeader } from "../components/ui/card"
 import { Badge } from "../components/ui/badge"
 import { Button } from "../components/ui/button"
@@ -7,7 +7,8 @@ import { motion } from "framer-motion"
 import { useApp } from "../contexts/AppContext.jsx"
 import { useBookings } from "../contexts/BookingsContext"
 import { compareDesc, parseISO } from "date-fns"
-import { SOCKET_URL } from "../config"
+import { SOCKET_URL, API_URL } from "../lib/config.js"
+import { io } from "socket.io-client"
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-700",
   accepted: "bg-blue-500/10 text-blue-700",
