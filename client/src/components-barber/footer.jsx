@@ -50,9 +50,7 @@ export default function DashboardFooter() {
               <Link to="/dashboard" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 {t("navigation.dashboard")}
               </Link>
-              <Link to="/dashboard/services" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                {t("navigation.services")}
-              </Link>
+
               <Link to="/dashboard/appointments" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
                 {t("navigation.appointments")}
               </Link>

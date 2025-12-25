@@ -50,7 +50,10 @@ export default function BottomNav() {
         { label: "Settings", icon: Settings, path: "/dashboard/settings" },
     ];
 
-    const tabs = currentUser?.role === "barber" ? barberTabs : userTabs;
+    const storedRole = localStorage.getItem("role");
+    const role = currentUser?.role || storedRole;
+
+    const tabs = role === "barber" ? barberTabs : userTabs;
 
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 py-2 px-6 z-50 lg:hidden shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] pb-safe">

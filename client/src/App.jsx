@@ -93,10 +93,10 @@ function App() {
         <Route path="/dashboard" element={<DashboardContent />} />
         <Route path="/dashboard/appointments" element={<AppointmentsPage />} />
 
-        <Route path="/dashboard/services" element={currentUser ? <ServicesPage /> : <LoginForm />} />
+        {/* <Route path="/dashboard/services" element={currentUser ? <ServicesPage /> : <LoginForm />} /> */}
         <Route path="/dashboard/services/new" element={currentUser ? <EditServicePage /> : <LoginForm />} />
         <Route path="/dashboard/settings" element={currentUser ? <SettingsPage /> : <LoginForm />} />
-        <Route path="/dashboard/staff" element={currentUser ? <StaffPage /> : <LoginForm />} />
+        {/* <Route path="/dashboard/staff" element={currentUser ? <StaffPage /> : <LoginForm />} /> */}
         <Route path="/dashboard/staff/:id/edit" element={currentUser ? <EditStaffPage /> : <LoginForm />} />
         <Route path="/dashboard/staff/new" element={currentUser ? <NewStaffPage /> : <LoginForm />} />
         <Route path="/dashboard/company-info/:id" element={currentUser ? <CompanyInfoPage /> : <LoginForm />} />
