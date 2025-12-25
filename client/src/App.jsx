@@ -47,7 +47,6 @@ import { CustomerLoginForm } from './components/CustomerLoginForm.jsx'
 import { CustomerSignupForm } from './components/CustomerSignupForm.jsx'
 import NotFound from './UserPages/Dashboard/NotFound.jsx'
 import AuthPage from './components/UserAuthModel.jsx'
-import BottomNav from './components/BottomNav.jsx'
 function App() {
   const [count, setCount] = useState(0)
   // Debug localStorage changes
@@ -104,7 +103,6 @@ function App() {
 
         <Route path="*" element={<NotFound />} />
       </Routes>
-      <BottomNav />
     </>
   )
 }

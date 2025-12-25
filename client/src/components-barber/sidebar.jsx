@@ -6,11 +6,9 @@ import {
   Calendar,
   Users,
   Settings,
-  Menu,
-  X,
-  Store
+  Store,
+  Building
 } from "lucide-react";
-import { useState } from "react";
 import { useLanguage } from "../components-barber/language-provider";
 import Image from "/salon.png";
 
@@ -19,76 +17,49 @@ const barberId = localStorage.getItem("shopId");
 const navigation = [
   { name: "dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "myShop", href: "/my-shop", icon: Store },
-  { name: "companyInfo", href: `/dashboard/company-info/${barberId}`, icon: Store },
-
+  { name: "companyInfo", href: `/dashboard/company-info/${barberId}`, icon: Building },
   { name: "appointments", href: "/dashboard/appointments", icon: Calendar },
-
   { name: "settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardSidebar() {
   const { pathname } = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        className="lg:hidden fixed top-4 left-4 z-[90] bg-white border rounded-md p-2 shadow"
-        onClick={() => setIsMobileMenuOpen(true)}
-      >
-        <Menu className="h-5 w-5" />
-      </button>
-
-      {/* Sidebar Drawer */}
+      {/* Sidebar Container */}
       <div
         className={cn(
-          // Base styles
-          "fixed inset-y-0 left-0 w-64 bg-sidebar z-[80] transform transition-transform duration-300",
+          // Base styles (Mobile First - Bottom Bar)
+          "fixed bottom-0 left-0 z-50 w-full bg-white border-t border-gray-200 shadow-lg lg:shadow-none lg:border-t-0",
+          "flex flex-row justify-between items-center px-4 py-2",
 
-          // Mobile slide effect
-          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full",
-
-          // Desktop: ALWAYS visible and FIXED
-          "lg:translate-x-0 lg:fixed lg:left-0 lg:top-0 lg:h-full"
+          // Desktop styles (Sidebar)
+          "lg:fixed lg:inset-y-0 lg:left-0 lg:flex-col lg:justify-start lg:w-64 lg:bg-sidebar lg:border-r lg:border-sidebar-border lg:px-0 lg:py-0"
         )}
       >
-        {/* Mobile Menu Button */}
-        {!isMobileMenuOpen && (
-          <button
-            className="lg:hidden fixed top-4 left-4 z-[90] bg-white border rounded-md p-2 shadow"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        )}
 
-        {/* Header */}
-        <div className="flex items-center justify-between h-20 px-4 border-b border-sidebar-border bg-primary lg:justify-center">
+        {/* Header (Desktop Only) */}
+        <div className="hidden lg:flex items-center justify-center h-24 border-b border-sidebar-border bg-primary w-full mb-6">
           <div className="flex items-center space-x-3">
-            <div className="relative w-10 h-10">
-              <img src={Image} alt="Salon Logo" className="object-contain" />
+            <div className="relative w-10 h-10 bg-white rounded-full p-1">
+              <img src={Image} alt="Salon Logo" className="object-contain w-full h-full" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-primary-foreground">StyleKat</h1>
-              <p className="text-xs text-primary-foreground/80">
+              <h1 className="text-xl font-bold text-primary-foreground leading-none">StyleKat</h1>
+              <p className="text-[10px] text-primary-foreground/80 mt-1 uppercase tracking-wider">
                 {t("auth.salonOwner")}
               </p>
             </div>
           </div>
-
-          {/* Close button mobile only */}
-          <button
-            className="lg:hidden p-2"
-            onClick={() => setIsMobileMenuOpen(false)}
-          >
-            <X className="h-5 w-5 text-white" />
-          </button>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        {/* Navigation items */}
+        <nav className={cn(
+          "flex flex-1 w-full justify-between items-center", // Mobile: spread horizontally
+          "lg:flex-col lg:justify-start lg:space-y-4 lg:px-4" // Desktop: stack vertically with more space
+        )}>
           {navigation.map((item) => {
             const isActive = pathname === item.href;
 
@@ -96,29 +67,52 @@ export function DashboardSidebar() {
               <Link
                 key={item.name}
                 to={item.href}
-                onClick={() => setIsMobileMenuOpen(false)}
                 className={cn(
-                  "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                  // Base (Mobile)
+                  "flex flex-col items-center justify-center space-y-1 p-2 rounded-xl transition-all duration-200 group flex-1 lg:flex-none",
+
+                  // Desktop
+                  "lg:flex-row lg:space-y-0 lg:w-full lg:px-4 lg:py-3.5",
+
                   isActive
-                    ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                    ? "text-primary lg:bg-sidebar-accent lg:text-sidebar-accent-foreground"
+                    : "text-gray-400 hover:text-gray-600 lg:text-sidebar-foreground lg:hover:bg-sidebar-accent lg:hover:text-sidebar-accent-foreground"
                 )}
               >
-                <item.icon className="mr-3 h-5 w-5" />
-                {t(`navigation.${item.name}`)}
+                {/* Icon Wrapper for better active state control */}
+                <div className={cn(
+                  "p-1.5 rounded-lg transition-colors",
+                  isActive ? "bg-primary/10 lg:bg-transparent" : "bg-transparent"
+                )}>
+                  <item.icon className={cn(
+                    "h-6 w-6 lg:mr-3 lg:h-5 lg:w-5",
+                    isActive ? "fill-current lg:fill-none" : ""
+                  )} />
+                </div>
+
+                {/* Label */}
+                <span className={cn(
+                  "text-[10px] font-medium lg:text-sm",
+                  isActive ? "font-semibold" : ""
+                )}>
+                  {t(`navigation.${item.name}`)}
+                </span>
               </Link>
             );
           })}
         </nav>
-      </div>
 
-      {/* Mobile Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-[70] lg:hidden"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
+        {/* Bottom Spacer/Footer area on Desktop (Optional) */}
+        <div className="hidden lg:block mt-auto p-4 w-full">
+          {/* Could add Logout here later */}
+          <div className="text-xs text-center text-gray-400">
+            v1.0.0
+          </div>
+        </div>
+
+      </div>
+      {/* Spacer for mobile to prevent content being hidden behind bottom bar */}
+      <div className="lg:hidden h-20 w-full" />
     </>
   );
 }
