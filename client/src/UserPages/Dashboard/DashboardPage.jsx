@@ -81,7 +81,7 @@ export default function DashboardPage() {
 
     // --- Event: booking status changed (barber emits bookingStatusChanged) ---
     // payload could be: full booking object OR { bookingId, status } OR { bookingId, newStatus }
-    s.on("bookingStatusChanged", (payload) => {
+    s.on("bookingStatusUpdate", (payload) => {
       // console.log("socket event bookingStatusChanged", payload);
       const bookingObj = payload?.booking || payload;
       const id = bookingObj?._id || bookingObj?.bookingId || bookingObj?.id;
