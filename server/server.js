@@ -22,7 +22,7 @@ import Booking from "./model/Booking.model.js";
 import User from "./model/User.model.js";
 import Staff from "./model/Staff.model.js";
 
-
+const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
