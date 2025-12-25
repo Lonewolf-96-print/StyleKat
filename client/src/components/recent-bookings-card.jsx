@@ -1,14 +1,10 @@
 "use client"
-import { useEffect, useState } from "react"
-import { Card, CardHeader } from "../components/ui/card"
+import { Card } from "../components/ui/card"
 import { Badge } from "../components/ui/badge"
 import { Button } from "../components/ui/button"
 import { motion } from "framer-motion"
 import { useApp } from "../contexts/AppContext.jsx"
-import { useBookings } from "../contexts/BookingsContext"
-import { compareDesc, parseISO } from "date-fns"
-import { SOCKET_URL, API_URL } from "../lib/config.js"
-import { io } from "socket.io-client"
+
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-700",
   accepted: "bg-blue-500/10 text-blue-700",
@@ -16,70 +12,14 @@ const statusColors = {
   cancelled: "bg-red-500/10 text-red-700",
 }
 
-export function RecentBookingsCard() {
+export function RecentBookingsCard({ bookings = [] }) {
   const { navigate } = useApp()
-  const [socket, setSocket] = useState(null)
-  const { userBookings, userRecentBookings } = useBookings()
-  const [bookings, setBookings] = useState([])
-  // Always pull this directly—this is reactive
-  const recentBookings = userRecentBookings()
-  useEffect(() => {
-    const token = localStorage.getItem("customerToken")
-    if (!token) return
 
-    fetch(`${API_URL}/api/bookings/my`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data?.bookings) setBookings(data.bookings)
-      })
-      .catch(console.error)
-  }, [])
-
-  useEffect(() => {
-    const token = localStorage.getItem("customerToken")
-    const userId = localStorage.getItem("userId")
-    if (!token) return
-
-    const userSocket = io(SOCKET_URL, {
-      auth: { token },
-      transports: ["polling", "websocket"],
-    })
-
-    setSocket(userSocket)
-
-    userSocket.on("connect", () => {
-      if (userId) userSocket.emit("joinUserRoom", `user-${userId}`)
-    })
-
-    userSocket.on("bookingStatusUpdate", (updatedBooking) => {
-      if (updatedBooking.status === "barber_deleted") return
-
-      setBookings(prev => {
-        if (!Array.isArray(prev)) return []
-
-        const exists = prev.some(b => b._id === updatedBooking._id)
-
-        if (exists) {
-          return prev.map(b =>
-            b._id === updatedBooking._id ? updatedBooking : b
-          )
-        } else {
-          return [...prev, updatedBooking]
-        }
-      })
-    })
-
-    return () => userSocket.disconnect()
-  }, [])
   return (
     <Card className="border-none shadow-none bg-transparent">
       {/* We remove the internal header since the parent page handles the section title */}
 
-      {recentBookings.length === 0 ? (
+      {bookings.length === 0 ? (
         <div className="flex flex-col items-center justify-center p-8 border rounded-xl border-dashed bg-card/50 text-center space-y-3">
           <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
             <span className="text-2xl">📅</span>
@@ -94,7 +34,7 @@ export function RecentBookingsCard() {
         </div>
       ) : (
         <div className="space-y-4">
-          {recentBookings.map((booking, index) => (
+          {bookings.map((booking, index) => (
             <motion.div
               key={booking._id}
               initial={{ opacity: 0, y: 10 }}

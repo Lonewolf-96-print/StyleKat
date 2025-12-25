@@ -400,7 +400,7 @@ export default function BookingsDashboardPage() {
                           className="bg-white border rounded-lg p-1 shadow-xl min-w-[160px] z-50 animate-in fade-in zoom-in-95"
                         >
                           {/* ACTIONS BASED ON STATUS */}
-                          {booking.status === "completed" || booking.status === "cancelled" ? (
+                          {booking.status === "completed" || booking.status === "cancelled" || booking.status === "in-service" ? (
                             <DropdownMenu.Item
                               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 rounded-md hover:bg-gray-100 cursor-pointer outline-none transition-colors"
                               onClick={() => handleDelete(booking._id)}
