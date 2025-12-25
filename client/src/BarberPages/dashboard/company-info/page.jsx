@@ -191,7 +191,7 @@ export default function CompanyInfoPage() {
                 </div>
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-6">
-                    <ServicesList />
+                    <ServicesList showAddButton={true} />
                   </CardContent>
                 </Card>
               </div>
@@ -205,7 +205,7 @@ export default function CompanyInfoPage() {
                 </div>
                 <Card className="border-0 shadow-sm">
                   <CardContent className="p-6">
-                    <StaffList />
+                    <StaffList showAddButton={true} />
                   </CardContent>
                 </Card>
               </div>

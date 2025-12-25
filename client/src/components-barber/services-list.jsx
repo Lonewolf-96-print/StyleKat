@@ -24,7 +24,7 @@ function capitalizeSentence(sentence) {
   if (!sentence) return "";
   return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }
-export function ServicesList() {
+export function ServicesList({ showAddButton = false }) {
   const barberId = localStorage.getItem("barberId");
   const [selectedService, setSelectedService] = useState(null);
   const [services, setServices] = useState([])
@@ -173,8 +173,15 @@ export function ServicesList() {
             className="pl-10 bg-gray-50 border-gray-200 focus:bg-white transition-colors"
           />
         </div>
-        <div className="flex gap-2 text-sm text-muted-foreground">
-          <span>{filteredServices.length} {filteredServices.length === 1 ? 'Service' : 'Services'} found</span>
+        <div className="flex items-center gap-4">
+          <div className="flex gap-2 text-sm text-muted-foreground">
+            <span>{filteredServices.length} {filteredServices.length === 1 ? 'Service' : 'Services'} found</span>
+          </div>
+          {showAddButton && (
+            <Link to="/dashboard/services/new">
+              <Button size="sm">Add Service</Button>
+            </Link>
+          )}
         </div>
       </div>
 
