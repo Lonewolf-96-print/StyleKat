@@ -18,12 +18,13 @@ export function DashboardLayout({ children }) {
           <Header onMenuClick={() => { }} />
 
           <main className="flex-1 overflow-auto">
-            <div className="p-6 pb-24 lg:p-6 lg:pb-10">{children}</div>
+            <div className="p-6 pb-24 lg:p-6 lg:pb-10 min-h-[80vh]">{children}</div>
+            <div className="pb-20 lg:pb-0">
+              <UserDashboardFooter />
+            </div>
           </main>
         </div>
       </div>
-
-      <UserDashboardFooter />
     </>
   );
 }

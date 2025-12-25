@@ -93,7 +93,7 @@ export function Sidebar({ open, onToggle, isMobile, closeMobile }) {
       </div>
 
       {/* Mobile Spacer */}
-      <div className="lg:hidden h-20 w-full" />
+
     </>
   );
 }
