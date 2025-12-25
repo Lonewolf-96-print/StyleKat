@@ -29,38 +29,49 @@ export default function UserDashboardFooter() {
             <p className="text-slate-400 leading-relaxed">
               Experience the best grooming and style services in your city. Book effortlessly, look great, and feel confident.
             </p>
-            {/* <div className="flex space-x-4">
-              Social Icons placeholders
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+            <div className="flex space-x-4">
+              {/* Social Icons placeholders */}
+              {/* <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+              </a> */}
+              {/* <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
+              </a> */}
+              <a href="https://www.instagram.com/stylekat.in?igsh=N21kdDVnd3o1ZWV4" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
                 <Instagram className="w-5 h-5" />
               </a>
-            </div> */}
+            </div>
           </div>
-
+          <div className="hidden lg:block w-px bg-slate-700/50 mx-auto"></div>
+          {/* Quick Links */}
           {/* Quick Links */}
           <div className="space-y-6">
             <h4 className="text-lg font-bold text-white">Quick Links</h4>
             <div className="space-y-3 flex flex-col">
-              <Link to="/user/dashboard" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                Dashboard
-              </Link>
-              <Link to="/my-bookings" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                My Bookings
-              </Link>
-              <Link to="/notifications" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                Notifications
-              </Link>
-              <Link to="/profile" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                Profile Settings
-              </Link>
+              {[
+                { to: "/user/dashboard", label: "Dashboard" },
+                { to: "/my-bookings", label: "My Bookings" },
+                { to: "/notifications", label: "Notifications" },
+                { to: "/profile", label: "Profile Settings" },
+              ].map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="
+                    text-slate-300
+                    hover:text-sky-400
+                    transition-all duration-200
+                    hover:translate-x-1
+                    hover:underline
+                    underline-offset-4
+                  "
+                >
+                  {link.label}
+                </Link>
+              ))}
             </div>
           </div>
+          <div className="hidden lg:block w-px bg-slate-700/50 mx-auto"></div>
 
           {/* Contact Info */}
           <div className="space-y-6">
@@ -72,7 +83,7 @@ export default function UserDashboardFooter() {
               </div>
               <div className="flex items-start space-x-3 text-white">
                 <Mail className="h-5 w-5 mt-1 text-white" />
-                <span>support@stylekat.co</span>
+                <span>usersupport@stylekat.in</span>
               </div>
               <div className="flex items-start space-x-3 text-white">
                 <MapPin className="h-5 w-5 mt-1 text-white" />

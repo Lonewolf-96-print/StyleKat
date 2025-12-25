@@ -23,7 +23,7 @@ const navigation = [
   { name: "services", href: "/dashboard/services", icon: Scissors },
   { name: "appointments", href: "/dashboard/appointments", icon: Calendar },
   { name: "staff", href: "/dashboard/staff", icon: Users },
-  { name: "profile", href: "/dashboard/settings", icon: Settings },
+  { name: "settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function DashboardSidebar() {
@@ -55,14 +55,14 @@ export function DashboardSidebar() {
         )}
       >
         {/* Mobile Menu Button */}
-{!isMobileMenuOpen && (
-  <button
-    className="lg:hidden fixed top-4 left-4 z-[90] bg-white border rounded-md p-2 shadow"
-    onClick={() => setIsMobileMenuOpen(true)}
-  >
-    <Menu className="h-5 w-5" />
-  </button>
-)}
+        {!isMobileMenuOpen && (
+          <button
+            className="lg:hidden fixed top-4 left-4 z-[90] bg-white border rounded-md p-2 shadow"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        )}
 
         {/* Header */}
         <div className="flex items-center justify-between h-20 px-4 border-b border-sidebar-border bg-primary lg:justify-center">

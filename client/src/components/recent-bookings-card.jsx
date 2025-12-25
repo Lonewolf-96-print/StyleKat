@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 import { useApp } from "../contexts/AppContext.jsx"
 import { useBookings } from "../contexts/BookingsContext"
 import { compareDesc, parseISO } from "date-fns"
-
+import { SOCKET_URL } from "../config"
 const statusColors = {
   pending: "bg-yellow-500/10 text-yellow-700",
   accepted: "bg-blue-500/10 text-blue-700",
@@ -17,11 +17,63 @@ const statusColors = {
 
 export function RecentBookingsCard() {
   const { navigate } = useApp()
+  const [socket, setSocket] = useState(null)
   const { userBookings, userRecentBookings } = useBookings()
-
+  const [bookings, setBookings] = useState([])
   // Always pull this directly—this is reactive
   const recentBookings = userRecentBookings()
+  useEffect(() => {
+    const token = localStorage.getItem("customerToken")
+    if (!token) return
 
+    fetch(`${API_URL}/api/bookings/my`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data?.bookings) setBookings(data.bookings)
+      })
+      .catch(console.error)
+  }, [])
+
+  useEffect(() => {
+    const token = localStorage.getItem("customerToken")
+    const userId = localStorage.getItem("userId")
+    if (!token) return
+
+    const userSocket = io(SOCKET_URL, {
+      auth: { token },
+      transports: ["polling", "websocket"],
+    })
+
+    setSocket(userSocket)
+
+    userSocket.on("connect", () => {
+      if (userId) userSocket.emit("joinUserRoom", `user-${userId}`)
+    })
+
+    userSocket.on("bookingStatusUpdate", (updatedBooking) => {
+      if (updatedBooking.status === "barber_deleted") return
+
+      setBookings(prev => {
+        if (!Array.isArray(prev)) return []
+
+        const exists = prev.some(b => b._id === updatedBooking._id)
+
+        if (exists) {
+          return prev.map(b =>
+            b._id === updatedBooking._id ? updatedBooking : b
+          )
+        } else {
+          return [...prev, updatedBooking]
+        }
+      })
+    })
+
+    return () => userSocket.disconnect()
+  }, [])
   return (
     <Card className="border-none shadow-none bg-transparent">
       {/* We remove the internal header since the parent page handles the section title */}
@@ -35,7 +87,7 @@ export function RecentBookingsCard() {
           <p className="text-sm text-muted-foreground max-w-xs">
             You don't have any appointments scheduled for today or tomorrow.
           </p>
-          <Button onClick={() => navigate("/shops")} variant="outline" size="sm" className="mt-2">
+          <Button onClick={() => navigate("/search-salon")} variant="outline" size="sm" className="mt-2">
             Book an Appointment
           </Button>
         </div>
@@ -77,11 +129,18 @@ export function RecentBookingsCard() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={() => navigate("/my-bookings")}
+                  className="
+    opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity
+    text-green-600
+    hover:text-green-700
+    hover:bg-green-100/70
+    focus-visible:ring-green-500
+  "
                 >
                   Details
                 </Button>
+
               </div>
             </motion.div>
           ))}

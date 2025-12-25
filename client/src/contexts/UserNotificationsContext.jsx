@@ -79,6 +79,24 @@ export const NotificationProvider = ({ children }) => {
       return updated;
     });
   };
+  const markAsRead = useCallback((id) => {
+    if (!id) return;
+
+    setNotifications((prev) => {
+      const updated = prev.map((n) =>
+        n.id === id ? { ...n, read: true } : n
+      );
+
+      // persist to localStorage
+      persist(updated);
+
+      // recompute unread count
+      setUnreadCount(updated.filter((n) => !n.read).length);
+
+      return updated;
+    });
+  }, []);
+
   const markAsUnread = useCallback((id) => {
     if (!id) return;
 
@@ -203,6 +221,7 @@ export const NotificationProvider = ({ children }) => {
         unreadCount,
         deleteNotification,
         notificationsOpen,
+        markAsRead,
         setNotificationsOpen,
         addNotification,
         markAsUnread,

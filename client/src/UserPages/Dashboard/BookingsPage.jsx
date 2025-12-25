@@ -31,7 +31,7 @@ const getStatusColor = (status) => {
   }
 };
 function UserBadge({ label, name }) {
-  const initial = name?.charAt(0)?.toUpperCase() || "?";
+  const initial = name?.charAt(0)?.toUpperCase() || "U";
 
   return (
     <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg border border-gray-100">
@@ -399,21 +399,23 @@ export default function BookingsDashboardPage() {
                           align="end"
                           className="bg-white border rounded-lg p-1 shadow-xl min-w-[160px] z-50 animate-in fade-in zoom-in-95"
                         >
-                          {booking.status !== "cancelled" ? (
+                          {/* ACTIONS BASED ON STATUS */}
+                          {booking.status === "completed" || booking.status === "cancelled" ? (
+                            <DropdownMenu.Item
+                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 rounded-md hover:bg-gray-100 cursor-pointer outline-none transition-colors"
+                              onClick={() => handleDelete(booking._id)}
+                            >
+                              <X className="w-4 h-4" /> Delete Booking
+                            </DropdownMenu.Item>
+                          ) : (
                             <DropdownMenu.Item
                               className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 rounded-md hover:bg-red-50 cursor-pointer outline-none transition-colors"
                               onClick={() => handleCancel(booking._id)}
                             >
                               <X className="w-4 h-4" /> Cancel Booking
                             </DropdownMenu.Item>
-                          ) : (
-                            <DropdownMenu.Item
-                              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 rounded-md hover:bg-gray-100 cursor-pointer outline-none transition-colors"
-                              onClick={() => handleDelete(booking._id)}
-                            >
-                              <X className="w-4 h-4" /> Remove
-                            </DropdownMenu.Item>
                           )}
+
                         </DropdownMenu.Content>
                       </DropdownMenu.Root>
                     </div>
