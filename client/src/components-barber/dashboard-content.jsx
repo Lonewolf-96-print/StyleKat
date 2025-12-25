@@ -109,11 +109,8 @@ export default function DashboardContent() {
       {/* Sidebar Components (Fixed) */}
       <DashboardSidebar />
 
-      {/* Desktop Layout Spacer */}
-      <div className="hidden lg:block w-64 flex-shrink-0" />
-
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-64 transition-all duration-300">
         <DashboardHeader />
 
         <div className="flex-1 space-y-8 p-6 lg:p-10 max-w-[1600px] mx-auto w-full">

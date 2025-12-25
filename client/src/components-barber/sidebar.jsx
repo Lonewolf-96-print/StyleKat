@@ -41,7 +41,7 @@ export function DashboardSidebar() {
       >
 
         {/* Header (Desktop Only) */}
-        <div className="hidden lg:flex items-center justify-center h-24 border-b border-sidebar-border bg-primary w-full mb-6">
+        <div className="hidden lg:flex items-center justify-center h-16 border-b border-sidebar-border bg-primary w-full mb-4">
           <div className="flex items-center space-x-3">
             <div className="relative w-10 h-10 bg-white rounded-full p-1">
               <img src={Image} alt="Salon Logo" className="object-contain w-full h-full" />

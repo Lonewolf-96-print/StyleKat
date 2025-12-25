@@ -7,18 +7,18 @@ import UserDashboardFooter from "./Footer";
 export function DashboardLayout({ children }) {
   return (
     <>
-      <div className="flex h-screen bg-background relative py-4">
+      <div className="flex min-h-screen bg-background relative">
 
         {/* Sidebar (Responsive) */}
         <Sidebar />
 
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 lg:pl-64 transition-all duration-300">
 
           {/* Header */}
           <Header onMenuClick={() => { }} />
 
           <main className="flex-1 overflow-auto">
-            <div className="p-6 pb-20 lg:pb-6">{children}</div>
+            <div className="p-6 pb-24 lg:p-6 lg:pb-10">{children}</div>
           </main>
         </div>
       </div>

@@ -16,98 +16,119 @@ export function ScrollToTop() {
 export default function DashboardFooter() {
   const { t } = useLanguage()
   const barberId = localStorage.getItem("shopId")
+
   return (
+    <footer className="bg-slate-950 text-white pt-24 pb-12 relative overflow-hidden">
+      {/* Decorative gradient flare */}
+      <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-indigo-600/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 
-    <footer className="bg-slate-900 text-white pt-16 pb-8 border-t border-slate-800">
-      <div className="container mx-auto px-6">
-        {/* Main grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-20">
 
-          {/* Brand Info */}
-          <div className="space-y-6">
-            <h3 className="font-display font-bold text-4xl text-white">StyleKat</h3>
-            <p className="text-slate-400 leading-relaxed">
-              Grow your business with StyleKat. Manage appointments, staff, and customers seamlessly.
-            </p>
-            <div className="flex space-x-4">
-              {/* Social Icons placeholders */}
-              {/* <a href="#" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
-                <Facebook className="w-5 h-5" />
-              </a>*/}
-              <a href="https://x.com/StyleKatCo" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="https://www.instagram.com/stylekat.in?igsh=N21kdDVnd3o1ZWV4" className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all transform hover:scale-110">
-                <Instagram className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Barber Quick Links */}
-          <div className="space-y-6">
-            <h4 className="text-lg font-bold text-white">{t("footer.quickLinks")}</h4>
-            <div className="space-y-3 flex flex-col">
-              <Link to="/dashboard" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                {t("navigation.dashboard")}
-              </Link>
-
-              <Link to="/dashboard/appointments" className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                {t("navigation.appointments")}
-              </Link>
-              <Link to={`/dashboard/company-info/${barberId}`} className="text-slate-400 hover:text-primary transition-colors hover:translate-x-1 inline-block">
-                {t("footer.companyInfo")}
-              </Link>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="space-y-6">
-            <h4 className="text-lg font-bold text-white">{t("footer.contact")}</h4>
+          {/* Brand Column */}
+          <div className="lg:col-span-4 space-y-8">
             <div className="space-y-4">
-              <div className="flex items-start space-x-3 text-white">
-                <Phone className="h-5 w-5 mt-1 text-white" />
-                <span>+91 6306430533</span>
-              </div>
-              <div className="flex items-start space-x-3 text-white">
-                <Mail className="h-5 w-5 mt-1 text-white" />
-                <span>salon@stylekat.in</span>
-              </div>
-              <div className="flex items-start space-x-3 text-white">
-                <MapPin className="h-5 w-5 mt-1 text-white" />
-                <span>Plot No.40 Knowledge Park 3, GB Nagar</span>
-              </div>
+              <h3 className="text-4xl font-black tracking-tighter">
+                Style<span className="text-indigo-500">Kat</span>
+              </h3>
+              <p className="text-slate-400 text-lg font-light leading-relaxed max-w-sm">
+                Empowering barber shop owners with intelligent tools to scale their business and manage their craft with ease.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              {[
+                { icon: <Twitter className="w-5 h-5" />, href: "https://x.com/StyleKatCo" },
+                { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/stylekat.in?igsh=N21kdDVnd3o1ZWV4" },
+                { icon: <Facebook className="w-5 h-5" />, href: "#" }
+              ].map((social, i) => (
+                <a
+                  key={i}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-12 h-12 rounded-2xl bg-slate-900 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all transform hover:-translate-y-1 border border-slate-800"
+                >
+                  {social.icon}
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* Newsletter / Legal */}
-          {/* <div className="space-y-6">
-            <h4 className="text-lg font-bold text-white">Newsletter</h4>
-            <p className="text-slate-400">Stay updated with new features and business tips.</p>
-            <form className="relative" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="w-full bg-slate-800 border border-slate-700 rounded-full py-3 px-5 text-white focus:outline-none focus:border-primary transition-colors"
-              />
-              <button type="submit" className="absolute right-1 top-1 bg-primary text-white rounded-full p-2 hover:bg-primary/90 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </form>
-          </div> */}
+          {/* Links Columns */}
+          <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+            <div className="space-y-6">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-indigo-400">{t("footer.quickLinks")}</h4>
+              <ul className="space-y-4">
+                {[
+                  { to: "/dashboard", label: t("navigation.dashboard") },
+                  { to: "/dashboard/appointments", label: t("navigation.appointments") },
+                  { to: `/dashboard/company-info/${barberId}`, label: t("footer.companyInfo") },
+                  { to: "/dashboard/settings", label: t("navigation.settings") }
+                ].map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to} className="text-slate-400 hover:text-white transition-colors font-light">
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="space-y-6">
+              <h4 className="text-sm font-bold uppercase tracking-widest text-indigo-400">{t("footer.contact")}</h4>
+              <ul className="space-y-4 text-slate-400 font-light">
+                <li className="flex items-center gap-3">
+                  <Mail className="w-4 h-4 text-slate-500" />
+                  <span className="text-sm">salon@stylekat.in</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Phone className="w-4 h-4 text-slate-500" />
+                  <span className="text-sm">+91 6306430533</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <MapPin className="w-4 h-4 text-slate-500 mt-1 shrink-0" />
+                  <span className="text-sm">Knowledge Park 3, <br />GB Nagar, India</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Newsletter Column */}
+          <div className="lg:col-span-4 space-y-8">
+            <div className="p-8 rounded-[2.5rem] bg-indigo-600/10 border border-indigo-500/20 backdrop-blur-sm relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 transform scale-150 rotate-12 group-hover:scale-[2] transition-transform duration-700">
+                <Mail className="w-24 h-24" />
+              </div>
+              <div className="relative z-10 space-y-4">
+                <h4 className="text-xl font-bold italic">Barber Digest</h4>
+                <p className="text-slate-400 text-sm font-light leading-relaxed">
+                  Stay updated with new features, business growth tips, and success stories.
+                </p>
+                <form className="relative" onSubmit={(e) => e.preventDefault()}>
+                  <input
+                    type="email"
+                    placeholder="salon@email.com"
+                    className="w-full bg-slate-900/50 border border-slate-700 rounded-2xl py-4 px-5 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 transition-all shadow-inner"
+                  />
+                  <button type="submit" className="absolute right-2 top-2 bg-indigo-600 text-white rounded-xl p-2.5 hover:bg-indigo-500 transition-all shadow-lg active:scale-95">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7-7 7" /></svg>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">© 2025 StyleKat. {t("footer.allRights")}</p>
-          {/* <div className="flex space-x-6 text-sm text-slate-500">
+        {/* Bottom Bar */}
+        <div className="pt-12 border-t border-slate-900 flex flex-col md:flex-row justify-between items-center gap-8 text-slate-500 text-xs font-medium tracking-wide">
+          <div className="flex items-center gap-6">
             <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-          </div> */}
+          </div>
+          <p>© 2025 STYLEKAT. {t("footer.allRights").toUpperCase()}</p>
         </div>
       </div>
     </footer>
-
   )
 }
