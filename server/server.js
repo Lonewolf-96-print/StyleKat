@@ -28,17 +28,25 @@ const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
   "https://stylekt.netlify.app",
   "http://localhost:5173",
-  "http://localhost:3000"
+  "http://localhost:3000",
 ];
-const app = express();
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // allow server-to-server or curl
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
