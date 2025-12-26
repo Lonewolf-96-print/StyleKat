@@ -555,6 +555,38 @@ app.post("/api/notifications/test-send", async (req, res) => {
   res.json({ success: true });
 });
 
+app.post("/api/notifications/test-direct", async (req, res) => {
+  const { userId } = req.body;
+  try {
+    if (!userId) {
+      return res.status(400).json({ error: "Missing userId" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    console.log(`[TEST] Found user ${user._id}. Subscriptions: ${user.pushSubscriptions.length}`);
+
+    if (user.pushSubscriptions.length === 0) {
+      return res.status(400).json({ error: "No subscriptions found for user" });
+    }
+
+    await NotificationService.send(
+      userId,
+      "user",
+      "Test DIRECT",
+      "This is a direct test message."
+    );
+
+    res.json({ success: true, count: user.pushSubscriptions.length });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 (async () => {
   await dropIdIndexIfExists();
   await connectData();
