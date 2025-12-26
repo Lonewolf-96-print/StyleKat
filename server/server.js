@@ -453,15 +453,16 @@ import webpush from "web-push";
 import { NotificationService } from "./services/NotificationService.js";
 
 // Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
+// Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
 // webpush.generateVAPIDKeys()
-const publicVapidKey = process.env.VAPID_PUBLIC_KEY || "BJe5O2...placeholder...";
-const privateVapidKey = process.env.VAPID_PRIVATE_KEY || "your_private_key";
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY || "BJDyArv_gCxbB0lwoCniyX7k3lOqjwL4l3KEQfqlRk5vBTzlE_vYOBKwLMPNt5nFYolkbCD2hihEXtqw0MPPLtTs";
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY || "jklKScmDYopUPP2aDwCurEVoKwWQF5KbEg6yF6OXilw";
 
-// webpush.setVapidDetails(
-//  "mailto:example@yourdomain.org",
-//  publicVapidKey,
-//  privateVapidKey
-// );
+webpush.setVapidDetails(
+  "mailto:naitikprateek347@gmail.com",
+  publicVapidKey,
+  privateVapidKey
+);
 
 // --- NOTIFICATION ROUTES ---
 app.post("/api/notifications/subscribe", async (req, res) => {
