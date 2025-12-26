@@ -45,4 +45,25 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ✅ Update barber preferences
+router.put("/:id/preferences", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { notificationPreferences } = req.body;
+
+    const updated = await Barber.findByIdAndUpdate(
+      id,
+      { notificationPreferences },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "Barber not found" });
+
+    res.json(updated);
+  } catch (err) {
+    console.error("Error updating preferences:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;

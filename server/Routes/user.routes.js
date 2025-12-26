@@ -212,4 +212,25 @@ router.put("/me", protectUser, async (req, res) => {
 
 
 
+// ✅ Update user preferences
+router.put("/:userId/preferences", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { notificationPreferences } = req.body;
+
+    const updated = await User.findByIdAndUpdate(
+      userId,
+      { notificationPreferences },
+      { new: true }
+    );
+
+    if (!updated) return res.status(404).json({ message: "User not found" });
+
+    res.json({ success: true, preferences: updated.notificationPreferences });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 export default router;
