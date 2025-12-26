@@ -1,8 +1,4 @@
 {
-  
-  
-  
- 
   "home": {
     "heroAlt": "लक्ज़री सैलून इंटीरियर",
     "welcomeUser": "स्वागत है, {{name}}",
@@ -13,50 +9,40 @@
     "location": "स्थान",
     "allLocations": "सभी स्थान",
     "category": "श्रेणी",
-    "findSalons": "सैलून खोजें"
-    
-    ,"stats": {
+    "findSalons": "सैलून खोजें",
+    "stats": {
       "partnerSalons": "साझेदार सैलून",
       "happyCustomers": "खुश ग्राहक",
       "averageRating": "औसत रेटिंग",
       "easyBooking": "सहज बुकिंग",
-      "expectedRevenue":"अपेक्षित राजस्व",
+      "expectedRevenue": "अपेक्षित राजस्व",
       "pendingConfirmations": "लंबित पुष्टि",
-  "changeBookings": "बुकिंग में बदलाव",
-  "changeRevenue": "राजस्व में बदलाव",
-  "changeStaff": "स्टाफ में बदलाव",
-  "changeConfirmations": "पुष्टियों में बदलाव",
-     
-  "todaysBookings": "आज की बुकिंग",
-  "todayExpectedRevenue":"आज की अपेक्षित आय",
-  "totalRevenue":"कुल राजस्व",
-  "totalBookings":"कुल बुकिंग",
-  "todayRevenue": "आज की राजस्व",
-  "activeStaff": "सक्रिय स्टाफ"
- 
-}
-    
-  },
-
-"servicePage":{
-    "title":"सेवाएँ खोजें",
-    "serviceInput":"सेवा खोजें",
-    "cityInput":"शहर दर्ज करें ",
-    "button":"खोजें"
-},
-
-
-    "features": {
-      "instantBooking": "तुरंत बुकिंग",
-      "instantBookingDesc": "रीयल-टाइम उपलब्धता के साथ अपनी अपॉइंटमेंट सेकंड में बुक करें",
-      "verifiedProfessionals": "सत्यापित प्रोफेशनल्स",
-      "verifiedProfessionalsDesc": "सभी सैलून और स्टाफ सत्यापित और उच्च रेटिंग वाले हैं",
-      "flexibleScheduling": "लचीला शेड्यूलिंग",
-      "flexibleSchedulingDesc": "सरल री-शेड्यूलिंग और रद्द करना"
+      "changeBookings": "बुकिंग में बदलाव",
+      "changeRevenue": "राजस्व में बदलाव",
+      "changeStaff": "स्टाफ में बदलाव",
+      "changeConfirmations": "पुष्टियों में बदलाव",
+      "todaysBookings": "आज की बुकिंग",
+      "todayExpectedRevenue": "आज की अपेक्षित आय",
+      "totalRevenue": "कुल राजस्व",
+      "totalBookings": "कुल बुकिंग",
+      "todayRevenue": "आज की राजस्व",
+      "activeStaff": "सक्रिय स्टाफ"
     }
-  ,
-
-
+  },
+  "servicePage": {
+    "title": "सेवाएँ खोजें",
+    "serviceInput": "सेवा खोजें",
+    "cityInput": "शहर दर्ज करें ",
+    "button": "खोजें"
+  },
+  "features": {
+    "instantBooking": "तुरंत बुकिंग",
+    "instantBookingDesc": "रीयल-टाइम उपलब्धता के साथ अपनी अपॉइंटमेंट सेकंड में बुक करें",
+    "verifiedProfessionals": "सत्यापित प्रोफेशनल्स",
+    "verifiedProfessionalsDesc": "सभी सैलून और स्टाफ सत्यापित और उच्च रेटिंग वाले हैं",
+    "flexibleScheduling": "लचीला शेड्यूलिंग",
+    "flexibleSchedulingDesc": "सरल री-शेड्यूलिंग और रद्द करना"
+  },
   "navigation": {
     "dashboard": "डैशबोर्ड",
     "services": "सेवाएं",
@@ -64,13 +50,13 @@
     "staff": "स्टाफ",
     "payments": "भुगतान",
     "settings": "सेटिंग्स",
-    "logout":"लॉग आउट",
-    "myShop":"मेरा सैलून",
-    "companyInfo":"कंपनी जानकारी",
-    "profile":"प्रोफाइल"
+    "logout": "लॉग आउट",
+    "myShop": "मेरा सैलून",
+    "companyInfo": "कंपनी जानकारी",
+    "profile": "प्रोफाइल",
+    "shopInfo": "सैलून जानकारी"
   },
   "dashboard": {
-    
     "title": "डैशबोर्ड",
     "subtitle": "वापस स्वागत है! यहाँ देखें कि आज आपके सैलून में क्या हो रहा है।",
     "todaysBookings": "आज की बुकिंग",
@@ -83,40 +69,40 @@
     "newAppointment": "नया अपॉइंटमेंट",
     "addService": "सेवा जोड़ें",
     "addStaff": "स्टाफ जोड़ें",
-     "appointmentsTitle" :"आज की बुकिंग्स",
-    "appoinmentsSubtitle" :"आज के लिए कोई बुकिंग नहीं",
-    "viewAll":"सभी देखें"
+    "appointmentsTitle": "आज की बुकिंग्स",
+    "appoinmentsSubtitle": "आज के लिए कोई बुकिंग नहीं",
+    "viewAll": "सभी देखें"
   },
-   "day":{
-    "Mon":" सोम",
-    "Tue":" मंगल",
-    "Wed" :" बुध",
-    "Thu":"गुरु",
-    "Fri":" शुक्र",
-    "Sat":" शनि",
-    "Sun":"रवि"
+  "day": {
+    "Mon": " सोम",
+    "Tue": " मंगल",
+    "Wed": " बुध",
+    "Thu": "गुरु",
+    "Fri": " शुक्र",
+    "Sat": " शनि",
+    "Sun": "रवि"
   },
-   "charts": {
+  "charts": {
     "weeklyRevenue": "साप्ताहिक राजस्व",
     "weeklyRevenueDescription": "इस सप्ताह आपके सैलून का राजस्व",
     "revenue": "राजस्व",
-    "weekRange":"सप्ताह का रेंज"
+    "weekRange": "सप्ताह का रेंज"
   },
-  "stat":{
-    "Today's Bookings":"आज की बुकिंग",
-    "Total Revenue" : "कुल मुनाफा",
-    "Active Staff":"सक्रिय कर्मचारी",
-    "Pending Confirmations" :"लंबित पुष्टि",
-    "Title":"साप्ताहिक राजस्व",
-    "Subtitle":"इस सप्ताह आपके सैलून का राजस्व"
+  "stat": {
+    "Today's Bookings": "आज की बुकिंग",
+    "Total Revenue": "कुल मुनाफा",
+    "Active Staff": "सक्रिय कर्मचारी",
+    "Pending Confirmations": "लंबित पुष्टि",
+    "Title": "साप्ताहिक राजस्व",
+    "Subtitle": "इस सप्ताह आपके सैलून का राजस्व"
   },
-  "myShop":{
-    "title":"मेरा सैलून",
-    "subtitle":"अपने सैलून को वास्तविक समय में देखें और प्रबंधित करें और अपनी सेवाओं को अद्यतित रखें"
+  "myShop": {
+    "title": "मेरा सैलून",
+    "subtitle": "अपने सैलून को वास्तविक समय में देखें और प्रबंधित करें और अपनी सेवाओं को अद्यतित रखें"
   },
   "auth": {
     "salonManager": "सैलून मैनेजर",
-    "salonOwner":"सैलून मालिक",
+    "salonOwner": "सैलून मालिक",
     "signInSubtitle": "अपने सैलून व्यवसाय को प्रबंधित करने के लिए साइन इन करें",
     "createAccount": "खाता बनाएं",
     "signUpSubtitle": "आज ही अपने सैलून व्यवसाय का प्रबंधन शुरू करें",
@@ -131,7 +117,6 @@
     "continueWithGoogle": "Google के साथ जारी रखें",
     "dontHaveAccount": "खाता नहीं है?",
     "alreadyHaveAccount": "पहले से खाता है?",
-   
     "enterEmail": "अपना ईमेल दर्ज करें",
     "enterPassword": "अपना पासवर्ड दर्ज करें",
     "createPassword": "पासवर्ड बनाएं",
@@ -143,19 +128,14 @@
     "accountCreated": "खाता सफलतापूर्वक बनाया गया!",
     "loggedIn": "सफलतापूर्वक लॉग इन किया गया!",
     "name": "नाम",
-   
-   
     "roleQuestion": "क्या आप बार्बर हैं?",
-    
     "createAccountQuestion": "खाता बनाना चाहते हैं?",
     "clickHere": "यहाँ क्लिक करें",
     "namePlaceholder": "अपना नाम दर्ज करें",
     "emailPlaceholder": "अपना ईमेल दर्ज करें",
     "passwordPlaceholder": "अपना पासवर्ड दर्ज करें",
     "rolePlaceholder": "अपना रोल दर्ज करें"
-  }
-   
-  ,
+  },
   "services": {
     "title": "सेवाएं",
     "subtitle": "अपने सैलून की सेवाओं, मूल्य निर्धारण और अवधि का प्रबंधन करें",
@@ -194,14 +174,11 @@
     "bookAppointment": "अपॉइंटमेंट बुक करें",
     "booking": "बुकिंग हो रही है...",
     "allAppointments": "सभी अपॉइंटमेंट",
-   
     "confirmed": "पुष्ट",
     "confirm": "पुष्टि करें",
     "decline": "अस्वीकार करें",
     "searchCustomers": "ग्राहक खोजें...",
-    "noAppointmentsFound": "कोई अपॉइंटमेंट नहीं मिला।"
-    ,
-  
+    "noAppointmentsFound": "कोई अपॉइंटमेंट नहीं मिला।",
     "filters": {
       "all": "सभी अपॉइंटमेंट्स",
       "today": "आज",
@@ -212,10 +189,7 @@
     },
     "searchPlaceholder": "ग्राहकों को खोजें...",
     "filterByStatus": "स्थिति द्वारा फ़िल्टर करें"
-  }
-
-
-  ,
+  },
   "staff": {
     "title": "स्टाफ प्रबंधन",
     "subtitle": "अपने टीम सदस्यों, सेवाओं और शेड्यूल का प्रबंधन करें",
@@ -229,12 +203,10 @@
     "role": "भूमिका",
     "phoneNumber": "फोन नंबर",
     "emailAddress": "ईमेल पता",
- 
     "workingSchedule": "कार्य अनुसूची",
     "startTime": "शुरुआती समय",
     "endTime": "समाप्ति समय",
     "workingDays": "कार्य दिवस",
-    
     "status": {
       "active": "सक्रिय",
       "inactive": "निष्क्रिय"
@@ -249,8 +221,7 @@
     "totalAppointments": "कुल अपॉइंटमेंट्स",
     "joined": "शामिल हुए",
     "noStaff": "कोई स्टाफ सदस्य नहीं मिला।"
-  }
-  ,
+  },
   "payments": {
     "title": "भुगतान और आय",
     "subtitle": "अपने सैलून की आय, लेनदेन और वित्तीय प्रदर्शन को ट्रैक करें",
@@ -272,7 +243,6 @@
     "viewAll": "सभी देखें",
     "noTransactionsFound": "कोई लेनदेन नहीं मिला।"
   },
-  
   "settings": {
     "salonProfile": "सैलून प्रोफाइल",
     "title": "शीर्षक",
@@ -287,16 +257,15 @@
     "phoneNumber": "फोन नंबर",
     "email": "ईमेल",
     "website": "आपकी वेबसाइट",
-    "saveSettings":"सेटिंग्स सेव करें"
-  }
-,
-"appointmentsPage": {
+    "saveSettings": "सेटिंग्स सेव करें"
+  },
+  "appointmentsPage": {
     "status": {
       "confirmed": "पुष्ट",
       "pending": "लंबित",
       "completed": "पूर्ण",
       "cancelled": "रद्द",
-      "in-service":"शुरू"
+      "in-service": "शुरू"
     },
     "minutes": "मिनट",
     "staff": "कर्मचारी",
@@ -310,7 +279,6 @@
     "delete": "हटाएं",
     "noAppointments": "कोई अपॉइंटमेंट नहीं मिला।"
   },
-
   "common": {
     "save": "सहेजें",
     "cancel": "रद्द करें",
@@ -330,7 +298,6 @@
     "remove": "हटाएं",
     "viewDetails": "विवरण देखें",
     "downloadReceipt": "रसीद डाउनलोड करें",
-    
     "brandName": "स्टाइलकैट",
     "salon": "सैलून",
     "scissors": "कैंची",
@@ -338,19 +305,15 @@
     "allCategories": "सभी श्रेणियाँ",
     "logout": "लॉग आउट"
   },
-  "footer" :{
-    
-  "quickLinks": "त्वरित लिंक",
-  "companyInfo": "कंपनी जानकारी",
-  "legal": "कानूनी",
-  "privacy": "गोपनीयता",
-  "terms": "नियम और शर्तें",
-  "support": "सहायता",
-  "allRights": "सभी अधिकार सुरक्षित",
-  "description": "विवरण",
-  "contact":"संपर्क"
-}
+  "footer": {
+    "quickLinks": "त्वरित लिंक",
+    "companyInfo": "कंपनी जानकारी",
+    "legal": "कानूनी",
+    "privacy": "गोपनीयता",
+    "terms": "नियम और शर्तें",
+    "support": "सहायता",
+    "allRights": "सभी अधिकार सुरक्षित",
+    "description": "विवरण",
+    "contact": "संपर्क"
   }
-  
-
-
+}

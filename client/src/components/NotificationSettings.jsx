@@ -60,35 +60,63 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
     const subscribeToPush = async () => {
         setLoading(true);
         try {
+            if (!userId) {
+                toast.error("User ID missing. Try refreshing.");
+                setLoading(false);
+                return;
+            }
+
+            console.log("🚀 Starting Push Subscription...");
+
             // 1. Register SW
+            console.log("Installing Service Worker...");
             const register = await navigator.serviceWorker.register("/sw.js", { scope: "/" });
+            console.log("✅ Service Worker Registered:", register.scope);
 
             // 2. Ask Permission
+            console.log("Requesting Notification Permission...");
             const result = await Notification.requestPermission();
+            console.log("🔔 Permission Result:", result);
             setPermission(result);
 
             if (result === "granted") {
                 // 3. Subscribe
+                console.log("Subscribing to Push Manager...");
+
+                // Check VAPID Key
+                if (!PUBLIC_VAPID_KEY || PUBLIC_VAPID_KEY.length < 50) {
+                    throw new Error("Invalid Public VAPID Key on client");
+                }
+
                 const subscription = await register.pushManager.subscribe({
                     userVisibleOnly: true,
                     applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
                 });
 
+                console.log("✅ Subscribed to Push Manager:", subscription);
+
                 // 4. Send to Server
-                await fetch(`${API_URL}/api/notifications/subscribe`, {
+                console.log("Sending subscription to server...");
+                const res = await fetch(`${API_URL}/api/notifications/subscribe`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ subscription, role, userId }),
                 });
 
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.error || "Failed to save subscription to server");
+                }
+
                 setIsPushEnabled(true);
                 toast.success("Push notifications enabled!");
+                console.log("🎉 Push setup complete!");
             } else {
-                toast.error("Permission denied. Check browser settings.");
+                toast.error("Permission denied. You must allow notifications in your browser settings.");
             }
         } catch (err) {
-            console.error("Push Setup Error:", err);
-            toast.error("Failed to enable push notifications.");
+            console.error("❌ Push Setup Error:", err);
+            toast.error(`Error: ${err.message || "Failed to enable notifications"}`);
         } finally {
             setLoading(false);
         }

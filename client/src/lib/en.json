@@ -52,7 +52,8 @@
     "logout": "Logout",
     "myShop": "My Shop",
     "companyInfo": "Company Info",
-    "profile": "Profile"
+    "profile": "Profile",
+    "shopInfo": "Shop Info"
   },
   "day": {
     "Mon": "Mon",
