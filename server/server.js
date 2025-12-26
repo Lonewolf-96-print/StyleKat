@@ -567,7 +567,14 @@ app.post("/api/notifications/test-send", async (req, res) => {
       entity = await User.findById(userId);
     }
 
-    if (!entity) return res.status(404).json({ error: "Entity not found" });
+    if (!entity) {
+      console.warn(`[test-send] ${role} ID ${userId} not found in database.`);
+      return res.status(404).json({
+        error: `Database Error: ${role} ID not found`,
+        foundOnServer: false,
+        advice: "Ensure you are testing with a valid ID from the CURRENT database."
+      });
+    }
 
     const subCount = entity.pushSubscriptions?.length || 0;
 
@@ -592,7 +599,11 @@ app.post("/api/notifications/test-direct", async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({
+        error: "Database Error: User ID not found",
+        foundOnServer: false,
+        advice: "Try logging out and logging back in."
+      });
     }
 
     const subCount = user.pushSubscriptions?.length || 0;
