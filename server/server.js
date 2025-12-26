@@ -33,22 +33,28 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow server-to-server or curl
+    origin: (origin, callback) => {
+      // allow server-to-server, mobile apps, curl, Postman
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
 
-      return callback(new Error("Not allowed by CORS"));
+      // ❗ DO NOT throw error — just disallow silently
+      return callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// 🔥 Explicit preflight handler (VERY IMPORTANT)
+app.options("*", cors());
+
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 function getTodayString(offsetDays = 0) {
   const d = new Date();

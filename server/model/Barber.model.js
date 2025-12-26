@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 
+function arrayLimit(val) {
+  return val.length <= 3;
+}
+
 const barberSchema = new mongoose.Schema(
-  {  
-    ownerName:{
-        type:String,
-        required :[true,"Owner Name is required"],
-        trim:true,
+  {
+    ownerName: {
+      type: String,
+      required: [true, "Owner Name is required"],
+      trim: true,
     },
     salonName: {
       type: String,
@@ -15,9 +19,9 @@ const barberSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      
+
       match: [/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"],
-      
+
     },
     email: {
       type: String,
@@ -27,42 +31,46 @@ const barberSchema = new mongoose.Schema(
       trim: true,
       match: [/\S+@\S+\.\S+/, "Please enter a valid email address"],
     },
-    barberCode:{ String},
+    barberCode: { String },
     address: {
       type: String,
-      
+
       trim: true,
     },
     password: {
-  type: String,
-  required: false,
-  select: false,
-},
-city: {
-  type: String,
-  default: "",
-},
- website: {
-    type: String,
-    default: "",
-  },
-  coordinates: {
-  lat: {
-    type: Number,
-    default: 28.480808, // Default: Gurugram (example)
-  },
-  lng: {
-    type: Number,
-    default: 77.500617, // Default: Gurugram (example)
-  }
-},
+      type: String,
+      required: false,
+      select: false,
+    },
+    city: {
+      type: String,
+      default: "",
+    },
+    website: {
+      type: String,
+      default: "",
+    },
+    coordinates: {
+      lat: {
+        type: Number,
+        default: 28.480808, // Default: Gurugram (example)
+      },
+      lng: {
+        type: Number,
+        default: 77.500617, // Default: Gurugram (example)
+      }
+    },
+    images: {
+      type: [String],
+      validate: [arrayLimit, "{PATH} exceeds the limit of 3"],
+    },
 
     role: {
       type: String,
       default: "barber",
     },
-      services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
-       staff: [{ type: mongoose.Schema.Types.ObjectId, ref: "Staff" }],
+    services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
+    staff: [{ type: mongoose.Schema.Types.ObjectId, ref: "Staff" }],
     createdAt: {
       type: Date,
       default: Date.now,

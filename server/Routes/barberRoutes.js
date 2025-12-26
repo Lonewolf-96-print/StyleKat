@@ -23,4 +23,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ✅ Update barber details
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    // Safety check: don't allow password update via this route if unrelated
+    delete updates.password;
+
+    const updated = await Barber.findByIdAndUpdate(id, updates, { new: true });
+
+    if (!updated) {
+      return res.status(404).json({ message: "Barber not found" });
+    }
+
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error("Error updating barber:", error);
+    res.status(500).json({ message: "Update failed" });
+  }
+});
+
 export default router;
