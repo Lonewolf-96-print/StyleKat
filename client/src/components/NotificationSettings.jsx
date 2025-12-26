@@ -9,7 +9,7 @@ import { API_URL } from "../lib/config";
 import { toast } from "sonner"; // Using 'sonner' as seen in package.json
 
 // VAPID Public Key (Ideally from env)
-const PUBLIC_VAPID_KEY = "BJDyArv_gCxbB0lwoCniyX7k3lOqjwL4l3KEQfqlRk5vBTzlE_vYOBKwLMPNt5nFYolkbCD2hihEXtqw0MPPLtTs";
+const PUBLIC_VAPID_KEY = "BJHFfLBthRyl6o1jiD7iRRmmWk59ILTX00nNh4zjWu54OoFkL8DEwy1FeZY7yeMd8F3TVXB4leu89Msst4Mx-Hk";
 
 function urlBase64ToUint8Array(base64String) {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);

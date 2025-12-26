@@ -26,7 +26,7 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://stylkat.netlify.app",
+  "https://stylekatt.netlify.app/",
   "http://localhost:5173",
   "http://localhost:3000",
 ];
@@ -486,8 +486,8 @@ import { NotificationService } from "./services/NotificationService.js";
 
 // Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
 // webpush.generateVAPIDKeys()
-const HARDCODED_PUBLIC = "BJDyArv_gCxbB0lwoCniyX7k3lOqjwL4l3KEQfqlRk5vBTzlE_vYOBKwLMPNt5nFYolkbCD2hihEXtqw0MPPLtTs";
-const HARDCODED_PRIVATE = "jklKScmDYopUPP2aDwCurEVoKwWQF5KbEg6yF6OXilw";
+const HARDCODED_PUBLIC = "BJHFfLBthRyl6o1jiD7iRRmmWk59ILTX00nNh4zjWu54OoFkL8DEwy1FeZY7yeMd8F3TVXB4leu89Msst4Mx-Hk";
+const HARDCODED_PRIVATE = "s_yc-qA0vsTi5Tzue5JVu5wTpHelX24QhD7VXK9FyK4";
 
 let publicVapidKey = process.env.VAPID_PUBLIC_KEY;
 let privateVapidKey = process.env.VAPID_PRIVATE_KEY;
