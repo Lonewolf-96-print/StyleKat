@@ -18,6 +18,7 @@ import { useApp } from "../contexts/AppContext";
 import { useCustomer } from "../contexts/CustomerContext";
 import { DashboardLayout } from "./dashboard-layout";
 import { API_URL } from "../lib/config";
+import { NotificationSettings } from "./NotificationSettings";
 
 export function UserProfile() {
   const [loading, setLoading] = useState(true);
@@ -234,6 +235,13 @@ export function UserProfile() {
                 <FormField label="Address" name="address" value={formData.address} icon={<MapPin className="w-4 h-4" />} isEditing={isEditing} handleChange={handleInputChange} />
               </CardContent>
             </Card>
+
+            {/* Notification Settings */}
+            <NotificationSettings
+              role="user"
+              userId={user?._id || customer?._id}
+              initialPreferences={user?.notificationPreferences}
+            />
 
             {/* Security Settings */}
             <Card className="border shadow-sm">
