@@ -144,7 +144,7 @@ export default function StaffQueueView({ barberId }) {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      socket.emit("joinShopRoom", `shop-${barberId}`);
+      socket.emit("joinShopRoom", { barberId });
     });
 
     const update = (payload) => {
@@ -244,10 +244,50 @@ export default function StaffQueueView({ barberId }) {
         const visible = visibleCounts[staff.staffId] || 2;
 
         const currentRemain = current ? remainingTimes[current._id] || 0 : 0;
-        const combined = current ? [current, ...queue] : [...queue];
-        const visibleList = combined.slice(0, visible);
+        // const combined = ... (replaced below)
 
-        // NEW CALCULATION
+        // NEW CALCULATION: Effective Schedule
+        const calculateEffectiveSchedule = (current, queue, remainingMap) => {
+          const now = Date.now();
+          let blockEnd = now;
+
+          // 1. Start from when current finishes
+          if (current) {
+            const r = remainingMap[current._id] || 0;
+            blockEnd = now + (r * 60000);
+          }
+
+          // 2. Map queue to expected times
+          return queue.map(b => {
+            const scheduledStart = new Date(b.startTime).getTime();
+            const duration = (b.duration || 30) * 60000;
+
+            // effective start is max(scheduled, previous_block_end)
+            const effectiveStart = Math.max(scheduledStart, blockEnd);
+
+            // This booking ends at effectiveStart + duration
+            blockEnd = effectiveStart + duration;
+
+            return {
+              ...b,
+              effectiveStart,
+              isDelayed: (effectiveStart - scheduledStart) > 5 * 60000 // > 5 mins delay
+            };
+          });
+        };
+
+        const effectiveQueue = calculateEffectiveSchedule(current, queue, remainingTimes);
+
+        // Use effectiveQueue for list calculation so we have the 'delayed' info
+        const combinedForList = current ? [current, ...effectiveQueue] : [...effectiveQueue];
+        const visibleList = combinedForList.slice(0, visible);
+
+        // Walk-in wait is basically the end of the last effective item - now
+        // BUT calculateRealWait logic was slightly different (gap filling). 
+        // Let's stick to the simpler "Total Est. Wait" which is usually "Time until Last Booking finishes" 
+        // or "Time until First Gap". 
+        // The previous calculateRealWait tries to find a gap. 
+        // Let's keep calculateRealWait for the "Walk-in" number as it checks gaps.
         const estimatedWait = calculateRealWait(current, queue, remainingTimes);
 
         return (
@@ -310,6 +350,11 @@ export default function StaffQueueView({ barberId }) {
                           <div className="text-xs font-medium text-gray-700">
                             {new Date(b.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </div>
+                          {b.isDelayed && (
+                            <div className="text-[10px] font-bold text-amber-600">
+                              Exp: {new Date(b.effectiveStart).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            </div>
+                          )}
                           {/* 
                               For upcoming items, "wait" is vague. 
                               Usually means "Time until I start" (which is just startTime - now).

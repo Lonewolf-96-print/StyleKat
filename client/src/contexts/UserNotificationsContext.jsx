@@ -139,7 +139,7 @@ export const NotificationProvider = ({ children }) => {
       // console.log("🔌 Notification socket connected:", socket.id);
 
       if (role === "barber" && shopId) {
-        socket.emit("joinShopRoom", shopId);
+        socket.emit("joinShopRoom", { barberId: shopId });
         // console.log("🏪 Joined shop room:", shopId);
       }
 
