@@ -114,14 +114,15 @@ export function ImageUploadModal({ isOpen, onClose, barberData, setBarberData, b
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-4xl">
+            {/* Added max-h and overflow for mobile scrolling fix */}
+            <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                 <DialogHeader>
                     <DialogTitle className="text-xl font-bold flex items-center gap-2">
                         Manage Shop Photos
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 py-4 sm:py-6">
                     {[0, 1, 2].map((index) => {
                         const imgDetails = shopImages[index];
                         return (

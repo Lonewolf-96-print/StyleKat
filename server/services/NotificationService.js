@@ -40,10 +40,10 @@ export const NotificationService = {
                 this.sendPush(recipient, title, body, url);
             }
 
-            // 2. EMAIL NOTIFICATION (Placeholder)
-            if (prefs.email && recipient.email) {
-                this.sendEmail(recipient.email, title, body);
-            }
+            // 2. EMAIL NOTIFICATION (Disabled per request)
+            // if (prefs.email && recipient.email) {
+            //     this.sendEmail(recipient.email, title, body);
+            // }
 
             // 3. IN-APP / SOCKET (Handled separately via IO usually, but could be triggered here if decoupled)
             // console.log(`[Notification] Sent to ${recipient.email || recipientId}: ${title}`);

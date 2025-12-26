@@ -106,15 +106,15 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
             </CardHeader>
             <CardContent className="space-y-6">
 
-                {/* PUSH NOTIFICATIONS */}
+                {/* DEVICE NOTIFICATIONS (PUSH) */}
                 <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 shadow-sm">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-100 text-blue-600 rounded-full">
                             <Smartphone size={20} />
                         </div>
                         <div>
-                            <p className="font-semibold text-gray-900">Push Notifications</p>
-                            <p className="text-sm text-gray-500">Receive alerts on your device even when offline.</p>
+                            <p className="font-semibold text-gray-900">Device Notifications</p>
+                            <p className="text-sm text-gray-500">Receive alerts on your mobile or computer notification center.</p>
                             {permission === 'denied' && <p className="text-xs text-red-500 font-medium mt-1 flex items-center gap-1"><AlertCircle size={10} /> Permission blocked by browser</p>}
                             {permission === 'granted' && <p className="text-xs text-green-600 font-medium mt-1 flex items-center gap-1"><CheckCircle2 size={10} /> Active</p>}
                         </div>
@@ -131,23 +131,6 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
                             onCheckedChange={() => handleTogglePreference('push')}
                         />
                     )}
-                </div>
-
-                {/* EMAIL NOTIFICATIONS */}
-                <div className="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100 shadow-sm opacity-80">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-purple-100 text-purple-600 rounded-full">
-                            <Mail size={20} />
-                        </div>
-                        <div>
-                            <p className="font-semibold text-gray-900">Email Alerts</p>
-                            <p className="text-sm text-gray-500">Get booking details via email.</p>
-                        </div>
-                    </div>
-                    <Switch
-                        checked={preferences.email}
-                        onCheckedChange={() => handleTogglePreference('email')}
-                    />
                 </div>
 
             </CardContent>

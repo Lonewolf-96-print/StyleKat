@@ -84,48 +84,12 @@ export default function UserSettingsPage() {
         </div>
 
         {/* Notification Settings */}
-        <Card className="p-6">
-          <h2 className="text-lg font-semibold text-foreground mb-4">Notifications</h2>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-base font-medium">Notification Sounds</Label>
-                <p className="text-sm text-muted-foreground mt-1">Play sound when you receive notifications</p>
-              </div>
-              <Switch
-                checked={settings.notificationSounds}
-                onCheckedChange={() => handleSettingChange("notificationSounds")}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-base font-medium">Email Alerts</Label>
-                <p className="text-sm text-muted-foreground mt-1">Receive email notifications for booking updates</p>
-              </div>
-              <Switch checked={settings.emailAlerts} onCheckedChange={() => handleSettingChange("emailAlerts")} />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-base font-medium">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground mt-1">Receive push notifications on your device</p>
-              </div>
-              <Switch
-                checked={settings.pushNotifications}
-                onCheckedChange={() => handleSettingChange("pushNotifications")}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div>
-                <Label className="text-base font-medium">Marketing Emails</Label>
-                <p className="text-sm text-muted-foreground mt-1">Receive promotional offers and updates</p>
-              </div>
-              <Switch checked={settings.marketingEmails} onCheckedChange={() => handleSettingChange("marketingEmails")} />
-            </div>
-          </div>
-        </Card>
+        {/* Notification Settings */}
+        <NotificationSettings
+          role="user"
+          userId={user?._id || currentUser?._id}
+          initialPreferences={user?.notificationPreferences}
+        />
 
         {/* Security Settings */}
 
