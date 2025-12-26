@@ -334,7 +334,7 @@ export default function StaffQueueView({ barberId }) {
                   <span className="text-xs text-gray-500 font-medium">{queue.length} Waiting</span>
                 </div>
 
-                {combined.length === 0 ? (
+                {combinedForList.length === 0 ? (
                   <div className="h-full flex items-center justify-center text-gray-400 text-sm italic py-4 bg-gray-50/50 rounded-lg border border-dashed border-gray-200">
                     No upcoming bookings
                   </div>
@@ -367,12 +367,12 @@ export default function StaffQueueView({ barberId }) {
 
                     {/* View More Buttons */}
                     <div className="pt-2 flex gap-2">
-                      {visible < combined.length && (
+                      {visible < combinedForList.length && (
                         <button
                           onClick={() => setVisibleCounts(prev => ({ ...prev, [staff.staffId]: visible + 2 }))}
                           className="text-xs text-blue-600 font-medium hover:underline"
                         >
-                          View More ({combined.length - visible})
+                          View More ({combinedForList.length - visible})
                         </button>
                       )}
                     </div>
