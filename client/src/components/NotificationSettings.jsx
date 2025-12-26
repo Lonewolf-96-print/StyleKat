@@ -29,10 +29,22 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Check current permission state
-        if (typeof window !== "undefined" && "Notification" in window) {
-            setPermission(Notification.permission);
-        }
+        const checkStatus = async () => {
+            if (typeof window !== "undefined" && "Notification" in window) {
+                setPermission(Notification.permission);
+
+                if (Notification.permission === "granted" && navigator.serviceWorker) {
+                    try {
+                        const reg = await navigator.serviceWorker.ready;
+                        const sub = await reg.pushManager.getSubscription();
+                        setIsPushEnabled(!!sub);
+                    } catch (err) {
+                        console.error("Error checking push status:", err);
+                    }
+                }
+            }
+        };
+        checkStatus();
     }, []);
 
     // Sync state with DB (Mock for now, would be a useEffect fetch or passed props)
@@ -157,16 +169,32 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
                         </div>
                     </div>
 
-                    {/* If not granted, show button. If granted, show toggle for preference logic (backend) */}
-                    {permission !== 'granted' ? (
-                        <Button onClick={subscribeToPush} disabled={loading} variant="outline" size="sm">
-                            {loading ? "Activating..." : "Enable"}
-                        </Button>
+                    {/* Logic: 
+                        1. If permission is NOT granted -> Show ENABLE button
+                        2. If permission IS granted BUT not registered -> Show SYNC button
+                        3. If granted AND registered -> Show Toggle
+                    */}
+                    {!isPushEnabled || permission !== 'granted' ? (
+                        <div className="flex gap-2">
+                            {permission === 'granted' && (
+                                <Button onClick={subscribeToPush} disabled={loading} variant="outline" size="sm" className="bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100">
+                                    {loading ? "Syncing..." : "Sync Device"}
+                                </Button>
+                            )}
+                            {permission !== 'granted' && (
+                                <Button onClick={subscribeToPush} disabled={loading} variant="primary" size="sm">
+                                    {loading ? "Activating..." : "Enable"}
+                                </Button>
+                            )}
+                        </div>
                     ) : (
-                        <Switch
-                            checked={preferences.push}
-                            onCheckedChange={() => handleTogglePreference('push')}
-                        />
+                        <div className="flex items-center gap-3">
+                            <span className="text-[10px] text-green-600 font-medium">Registered</span>
+                            <Switch
+                                checked={preferences.push}
+                                onCheckedChange={() => handleTogglePreference('push')}
+                            />
+                        </div>
                     )}
                 </div>
 
