@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
-import { Switch } from "./ui/switch"; // Assuming you have shadcn Switch
+import { Switch } from "../components-barber/ui/switch"; // Corrected path
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "./ui/card";
 import { Bell, Smartphone, Mail, Volume2, CheckCircle2, AlertCircle } from "lucide-react";
 import { API_URL } from "../lib/config";
