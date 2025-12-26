@@ -554,9 +554,29 @@ app.post("/api/notifications/subscribe", async (req, res) => {
 
 // Send Test Notification (Dev only)
 app.post("/api/notifications/test-send", async (req, res) => {
-  const { userId, role } = req.body;
-  await NotificationService.send(userId, role, "Test Notification", "This is a test alert from the server!");
-  res.json({ success: true });
+  try {
+    const { userId, role } = req.body;
+    let entity;
+    if (role === 'barber') {
+      entity = await Barber.findById(userId);
+    } else {
+      entity = await User.findById(userId);
+    }
+
+    if (!entity) return res.status(404).json({ error: "Entity not found" });
+
+    const subCount = entity.pushSubscriptions?.length || 0;
+
+    await NotificationService.send(userId, role, "Test Notification", "This is a test alert from the server!");
+
+    res.json({
+      success: true,
+      subscriptionCount: subCount,
+      message: subCount > 0 ? "Notification triggered" : "No active subscriptions found for this device"
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post("/api/notifications/test-direct", async (req, res) => {
