@@ -26,7 +26,7 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://stylekt.netlify.app",
+  "https://stylkat.netlify.app",
   "http://localhost:5173",
   "http://localhost:3000",
 ];
@@ -145,22 +145,38 @@ async function broadcastShopQueue(shopId, targetDate = null) {
 
   // Helper: build a normalized startTime (Date) from date + time strings
   const computeStartAndEndTimes = (b) => {
+    // 1. If DB already has valid Date objects, use them!
+    if (b.startTime && b.endTime) {
+      const s = new Date(b.startTime);
+      const e = new Date(b.endTime);
+      if (!isNaN(s.getTime()) && !isNaN(e.getTime())) {
+        return {
+          startTime: s.toISOString(),
+          endTime: e.toISOString()
+        };
+      }
+    }
+
+    // 2. Fallback: Parse from strings (using dayjs for consistency with routes)
     const durationNum = Number(b.duration ?? b.serviceDuration ?? 30);
+    const dateStr = b.date; // "2025-12-02"
+    const timeStr = b.time; // "09:40 PM"
 
-    // force parse 12-hour time like "09:40 PM"
-    const dateStr = b.date;          // "2025-12-02"
-    const timeStr = b.time;          // "09:40 PM"
+    let start = dayjs(`${dateStr} ${timeStr}`, "YYYY-MM-DD hh:mm A");
+    if (!start.isValid()) {
+      // try simpler format
+      start = dayjs(`${dateStr} ${timeStr}`);
+    }
 
-    const start = new Date(`${dateStr} ${timeStr}`);
-    if (isNaN(start)) {
-      // console.log("❌ BAD TIME PARSE:", dateStr, timeStr);
+    if (!start.isValid()) {
+      // Last resort fallback
       return {
         startTime: new Date().toISOString(),
         endTime: new Date(Date.now() + durationNum * 60000).toISOString(),
       };
     }
 
-    const end = new Date(start.getTime() + durationNum * 60000);
+    const end = start.add(durationNum, "minute");
 
     return {
       startTime: start.toISOString(),
