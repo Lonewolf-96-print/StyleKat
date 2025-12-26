@@ -51,11 +51,13 @@ app.use(
 );
 
 // 🔥 Explicit preflight handler (VERY IMPORTANT)
-app.options("*", cors());
+// Fixed: Use regex (.*) instead of * for Express 5 / path-to-regexp v3+
+app.options(/(.*)/, cors());
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
+
 function getTodayString(offsetDays = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -123,10 +125,6 @@ io.use(async (socket, next) => {
   }
 });
 
-/* ---------------------------------------------------------
-   Queue broadcaster (matches booking schema: date/time strings)
-   - Builds payload grouped by staff
---------------------------------------------------------- */
 /* ---------------------------------------------------------
    Queue broadcaster (matches booking schema: date/time strings)
    - Builds payload grouped by staff
