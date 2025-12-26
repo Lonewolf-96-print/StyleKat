@@ -61,14 +61,16 @@ export const NotificationService = {
 
         for (const sub of recipient.pushSubscriptions) {
             try {
+                // console.log("Attempting to send push to:", sub.endpoint);
                 await webpush.sendNotification(sub, payload);
+                console.log("✅ Push Sent Successfully");
                 newSubscriptions.push(sub);
             } catch (err) {
+                console.error("❌ Push Send Failed:", err.statusCode, err.body || err.message);
                 if (err.statusCode === 404 || err.statusCode === 410) {
                     // Subscription is dead (user reset permission or browser)
                     console.log("Removing dead push subscription");
                 } else {
-                    console.error("Push Error:", err);
                     newSubscriptions.push(sub); // Keep if transient error
                 }
             }

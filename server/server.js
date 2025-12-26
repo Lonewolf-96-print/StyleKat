@@ -535,8 +535,12 @@ app.post("/api/notifications/subscribe", async (req, res) => {
       // Add if unique
       const exists = entity.pushSubscriptions.some(sub => sub.endpoint === subscription.endpoint);
       if (!exists) {
+        console.log(`[Subscribe] New sub for ${role} ${userId}`);
         entity.pushSubscriptions.push(subscription);
         await entity.save();
+        console.log(`[Subscribe] Saved. Total subs: ${entity.pushSubscriptions.length}`);
+      } else {
+        console.log(`[Subscribe] Sub already exists for ${userId}`);
       }
       res.status(201).json({});
     } else {

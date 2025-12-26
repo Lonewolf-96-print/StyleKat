@@ -4,8 +4,8 @@ self.addEventListener("push", (event) => {
 
     const options = {
         body: body,
-        icon: "/icon-192x192.png", // Ensure you have this or standard icon
-        badge: "/badge-72x72.png",
+        icon: "/main-logo.png", // Using existing asset
+        badge: "/main-logo.png", // Using existing asset
         data: {
             url: url || "/",
         },

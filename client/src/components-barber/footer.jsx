@@ -40,7 +40,7 @@ export default function DashboardFooter() {
               {[
                 { icon: <Twitter className="w-5 h-5" />, href: "https://x.com/StyleKatCo" },
                 { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/stylekat.in?igsh=N21kdDVnd3o1ZWV4" },
-                { icon: <Facebook className="w-5 h-5" />, href: "#" }
+                { icon: <Facebook className="w-5 h-5" />, href: "https://www.facebook.com/share/1GDj63eeZY/" }
               ].map((social, i) => (
                 <a
                   key={i}
