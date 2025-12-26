@@ -40,16 +40,34 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["user", "barber", "admin","customer"],
+      enum: ["user", "barber", "admin", "customer"],
       default: "user",
     },
     userHiddenBookings: [{
-  type: mongoose.Schema.Types.ObjectId,
-  ref: "Booking",
-  default: []
-}],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Booking",
+      default: []
+    }],
+
+    // Notification Preferences
+    notificationPreferences: {
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: false },
+      sms: { type: Boolean, default: false },
+    },
+
+    // Push Subscriptions
+    pushSubscriptions: [
+      {
+        endpoint: String,
+        keys: {
+          p256dh: String,
+          auth: String,
+        },
+      },
+    ],
   },
-  
+
   { timestamps: true }
 );
 

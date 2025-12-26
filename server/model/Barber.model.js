@@ -71,6 +71,25 @@ const barberSchema = new mongoose.Schema(
     },
     services: [{ type: mongoose.Schema.Types.ObjectId, ref: "Service" }],
     staff: [{ type: mongoose.Schema.Types.ObjectId, ref: "Staff" }],
+
+    // Notification Preferences
+    notificationPreferences: {
+      push: { type: Boolean, default: true },
+      email: { type: Boolean, default: false }, // Default off until configured
+      sms: { type: Boolean, default: false },
+    },
+
+    // Push Subscriptions (Multiple devices)
+    pushSubscriptions: [
+      {
+        endpoint: String,
+        keys: {
+          p256dh: String,
+          auth: String,
+        },
+      },
+    ],
+
     createdAt: {
       type: Date,
       default: Date.now,

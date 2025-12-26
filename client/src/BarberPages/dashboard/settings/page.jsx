@@ -25,6 +25,7 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 import { useApp } from "../../../contexts/AppContext";
 import { API_URL } from "../../../lib/config";
+import { NotificationSettings } from "../../../components/NotificationSettings";
 // main.jsx OR app.jsx
 import "leaflet/dist/leaflet.css";
 
@@ -293,8 +294,16 @@ export default function SettingsPage() {
 
           </div>
 
-          {/* Right Column: Location */}
+          {/* Right Column: Location & Notifications */}
           <div className="space-y-6">
+
+            {/* Notification Settings */}
+            <NotificationSettings
+              role="barber"
+              userId={shopId}
+              initialPreferences={formData.notificationPreferences}
+            />
+
             <Card className="h-full flex flex-col">
               <CardHeader>
                 <CardTitle>Location</CardTitle>

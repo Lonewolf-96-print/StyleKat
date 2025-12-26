@@ -448,6 +448,62 @@ app.get("/health", (req, res) => {
   res.json({ status: "Server running" });
 });
 
+// --- WEB PUSH SETUP ---
+import webpush from "web-push";
+import { NotificationService } from "./services/NotificationService.js";
+
+// Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
+// webpush.generateVAPIDKeys()
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY || "BJe5O2...placeholder...";
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY || "your_private_key";
+
+// webpush.setVapidDetails(
+//  "mailto:example@yourdomain.org",
+//  publicVapidKey,
+//  privateVapidKey
+// );
+
+// --- NOTIFICATION ROUTES ---
+app.post("/api/notifications/subscribe", async (req, res) => {
+  // Expected body: { subscription, role, userId }
+  const { subscription, role, userId } = req.body;
+
+  if (!subscription || !userId) {
+    return res.status(400).json({ error: "Missing subscription or userId" });
+  }
+
+  try {
+    let entity;
+    if (role === "barber") {
+      entity = await Barber.findById(userId);
+    } else {
+      entity = await User.findById(userId);
+    }
+
+    if (entity) {
+      // Add if unique
+      const exists = entity.pushSubscriptions.some(sub => sub.endpoint === subscription.endpoint);
+      if (!exists) {
+        entity.pushSubscriptions.push(subscription);
+        await entity.save();
+      }
+      res.status(201).json({});
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (err) {
+    console.error("Subscription Error", err);
+    res.status(500).json({ error: "Failed to subscribe" });
+  }
+});
+
+// Send Test Notification (Dev only)
+app.post("/api/notifications/test-send", async (req, res) => {
+  const { userId, role } = req.body;
+  await NotificationService.send(userId, role, "Test Notification", "This is a test alert from the server!");
+  res.json({ success: true });
+});
+
 (async () => {
   await dropIdIndexIfExists();
   await connectData();

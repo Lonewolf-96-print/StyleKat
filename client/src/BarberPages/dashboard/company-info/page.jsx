@@ -106,14 +106,15 @@ export default function CompanyInfoPage() {
             <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none" />
 
             {/* EDIT BUTTON (Top Right) */}
-            <div className="absolute top-6 right-6 z-20">
+            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-30">
               <Button
                 onClick={() => setIsModalOpen(true)}
                 variant="secondary"
-                className="bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 gap-2 shadow-lg"
+                size="sm"
+                className="bg-black/30 hover:bg-black/50 text-white backdrop-blur-md border border-white/20 gap-2 shadow-lg h-9 px-3 md:h-10 md:px-4"
               >
-                <Camera size={18} />
-                Edit Photos
+                <Camera size={16} className="md:w-[18px] md:h-[18px]" />
+                <span className="text-xs md:text-sm font-medium">Edit Photos</span>
               </Button>
             </div>
 
