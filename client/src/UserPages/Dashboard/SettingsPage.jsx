@@ -17,12 +17,13 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog"
 import { Lock, Trash2 } from "lucide-react"
-import { useAuth } from "../../../contexts/AuthContext";
+import { useCustomer } from "../../../contexts/CustomerContext";
 import { NotificationSettings } from "../../../components/NotificationSettings";
 
 // export default function Settings() {
 //   return (
-//     <DashboardLayout>
+//     <Dashboar
+// dLayout>
 //       <SettingsPage />
 //     </DashboardLayout>
 //   )
@@ -44,7 +45,7 @@ export default function UserSettingsPage() {
   })
 
   // Get user from context or storage
-  const { user } = useAuth(); // Assuming useAuth provides 'user' object
+  const { customer: user } = useCustomer(); // useCustomer provides 'customer' object
   // If useAuth doesn't exist, check localStorage?
   const [currentUser, setCurrentUser] = useState(null);
 
