@@ -143,7 +143,16 @@ export function NotificationSettings({ role, userId, initialPreferences }) {
                         <div>
                             <p className="font-semibold text-gray-900">Device Notifications</p>
                             <p className="text-sm text-gray-500">Receive alerts on your mobile or computer notification center.</p>
-                            {permission === 'denied' && <p className="text-xs text-red-500 font-medium mt-1 flex items-center gap-1"><AlertCircle size={10} /> Permission blocked by browser</p>}
+                            {permission === 'denied' && (
+                                <div className="mt-2">
+                                    <p className="text-xs text-red-500 font-medium flex items-center gap-1">
+                                        <AlertCircle size={10} /> Permission blocked by browser
+                                    </p>
+                                    <p className="text-[10px] text-muted-foreground mt-1">
+                                        To fix: Click the lock icon 🔒 in your address bar, find "Notifications", and select "Reset" or "Allow".
+                                    </p>
+                                </div>
+                            )}
                             {permission === 'granted' && <p className="text-xs text-green-600 font-medium mt-1 flex items-center gap-1"><CheckCircle2 size={10} /> Active</p>}
                         </div>
                     </div>
