@@ -553,6 +553,10 @@ app.post("/api/notifications/subscribe", async (req, res) => {
 });
 
 // Send Test Notification (Dev only)
+app.get("/api/notifications/ping", (req, res) => {
+  res.json({ success: true, message: "Notifications API is reachable" });
+});
+
 app.post("/api/notifications/test-send", async (req, res) => {
   try {
     const { userId, role } = req.body;
@@ -591,10 +595,14 @@ app.post("/api/notifications/test-direct", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log(`[TEST] Found user ${user._id}. Subscriptions: ${user.pushSubscriptions.length}`);
+    const subCount = user.pushSubscriptions?.length || 0;
+    console.log(`[TEST] Found user ${user._id}. Subscriptions: ${subCount}`);
 
-    if (user.pushSubscriptions.length === 0) {
-      return res.status(400).json({ error: "No subscriptions found for user" });
+    if (subCount === 0) {
+      return res.status(400).json({
+        error: "No subscriptions found for user",
+        subscriptionCount: 0
+      });
     }
 
     await NotificationService.send(
@@ -604,7 +612,11 @@ app.post("/api/notifications/test-direct", async (req, res) => {
       "This is a direct test message."
     );
 
-    res.json({ success: true, count: user.pushSubscriptions.length });
+    res.json({
+      success: true,
+      subscriptionCount: subCount,
+      message: "Direct notification triggered"
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
