@@ -453,16 +453,34 @@ import webpush from "web-push";
 import { NotificationService } from "./services/NotificationService.js";
 
 // Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
-// Generate keys if not in env (For Demo/Dev). In prod, store these in .env!
 // webpush.generateVAPIDKeys()
-const publicVapidKey = process.env.VAPID_PUBLIC_KEY || "BJDyArv_gCxbB0lwoCniyX7k3lOqjwL4l3KEQfqlRk5vBTzlE_vYOBKwLMPNt5nFYolkbCD2hihEXtqw0MPPLtTs";
-const privateVapidKey = process.env.VAPID_PRIVATE_KEY || "jklKScmDYopUPP2aDwCurEVoKwWQF5KbEg6yF6OXilw";
+const HARDCODED_PUBLIC = "BJDyArv_gCxbB0lwoCniyX7k3lOqjwL4l3KEQfqlRk5vBTzlE_vYOBKwLMPNt5nFYolkbCD2hihEXtqw0MPPLtTs";
+const HARDCODED_PRIVATE = "jklKScmDYopUPP2aDwCurEVoKwWQF5KbEg6yF6OXilw";
 
-webpush.setVapidDetails(
-  "mailto:naitikprateek347@gmail.com",
-  publicVapidKey,
-  privateVapidKey
-);
+let publicVapidKey = process.env.VAPID_PUBLIC_KEY;
+let privateVapidKey = process.env.VAPID_PRIVATE_KEY;
+
+// validation: fallback if env var is "placeholder" or invalid string or too short
+// A valid public key is ~87 chars base64url. 
+if (!publicVapidKey || publicVapidKey.includes("placeholder") || publicVapidKey.length < 50) {
+  console.log("⚠️ VAPID_PUBLIC_KEY env invalid or missing. Using hardcoded fallback.");
+  publicVapidKey = HARDCODED_PUBLIC;
+}
+if (!privateVapidKey || privateVapidKey.includes("placeholder") || privateVapidKey.length < 20) {
+  console.log("⚠️ VAPID_PRIVATE_KEY env invalid or missing. Using hardcoded fallback.");
+  privateVapidKey = HARDCODED_PRIVATE;
+}
+
+try {
+  webpush.setVapidDetails(
+    "mailto:naitikprateek347@gmail.com",
+    publicVapidKey,
+    privateVapidKey
+  );
+  console.log("✅ WebPush VAPID details set successfully.");
+} catch (err) {
+  console.error("❌ Failed to set VAPID details. Push notifications will fail.", err.message);
+}
 
 // --- NOTIFICATION ROUTES ---
 app.post("/api/notifications/subscribe", async (req, res) => {
