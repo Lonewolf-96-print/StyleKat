@@ -297,6 +297,15 @@ io.on("connection", (socket) => {
       // 6️⃣ Correct queue broadcast
       await broadcastShopQueue(created.barberId, created.date);
 
+      // 7️⃣ WEB PUSH: Notify Barber
+      await NotificationService.send(
+        created.barberId,
+        'barber',
+        'New Booking Request',
+        `New appointment from ${bookingData.customerName || 'Customer'}`,
+        '/dashboard/bookings'
+      );
+
     } catch (err) {
       // console.error("newBookingRequest error:", err);
       socket.emit("booking:error", { message: "Failed to create booking." });
@@ -325,6 +334,18 @@ io.on("connection", (socket) => {
       io.to(shopRoom).emit("bookingStatusUpdate", booking);
       if (booking.status !== "barber_deleted") {
         io.to(userRoom).emit("bookingStatusUpdate", booking);
+
+        // WEB PUSH: Notify User
+        // Only if user exists (booking.userId)
+        if (booking.userId) {
+          await NotificationService.send(
+            booking.userId,
+            'user',
+            `Booking ${booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}`,
+            `Your appointment at ${booking.shopName || 'the salon'} is now ${booking.status}.`,
+            '/dashboard/appointments'
+          );
+        }
       }
 
       // 2️⃣ MATCH REST API → queueUpdated
@@ -363,6 +384,17 @@ io.on("connection", (socket) => {
       // MATCH REST API → bookingStatusUpdate
       io.to(shopRoom).emit("bookingStatusUpdate", booking);
       io.to(userRoom).emit("bookingStatusUpdate", booking);
+
+      // WEB PUSH: Notify User of Cancellation
+      if (booking.userId) {
+        await NotificationService.send(
+          booking.userId,
+          "user",
+          "Booking Cancelled",
+          `Your appointment has been cancelled.`,
+          "/dashboard/appointments"
+        );
+      }
 
       // queue refresh
       await broadcastShopQueue(booking.shopId, booking.date);
