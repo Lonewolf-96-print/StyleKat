@@ -17,8 +17,8 @@ import {
   AlertDialogTrigger,
 } from "../../components/ui/alert-dialog"
 import { Lock, Trash2 } from "lucide-react"
-import { useCustomer } from "../../../contexts/CustomerContext";
-import { NotificationSettings } from "../../../components/NotificationSettings";
+import { useCustomer } from "../../contexts/CustomerContext";
+import { NotificationSettings } from "../../components/NotificationSettings";
 
 // export default function Settings() {
 //   return (
