@@ -17,7 +17,7 @@ const barberId = localStorage.getItem("shopId");
 const navigation = [
   { name: "dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "myShop", href: "/my-shop", icon: Store },
-  { name: "companyInfo", href: `/dashboard/company-info/${barberId}`, icon: Building },
+  { name: "shopInfo", href: `/dashboard/company-info/${barberId}`, icon: Building },
   { name: "appointments", href: "/dashboard/appointments", icon: Calendar },
   { name: "settings", href: "/dashboard/settings", icon: Settings },
 ];
