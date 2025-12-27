@@ -56,7 +56,7 @@ const BackendShopPage = () => {
   const minServicePrice = shop?.services?.length
     ? Math.min(...shop.services.map(s => Number(s.price) || 0))
     : 199;
-  console.log("Min Service Price:", minServicePrice);
+
   // Intersection Observer to hide sticky footer when booking form is visible
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -80,6 +80,11 @@ const BackendShopPage = () => {
 
     return () => observer.disconnect();
   }, [loading, shop]);
+  useEffect(() => {
+    console.log("Min Service Price:", minServicePrice);
+    console.log("Shop Services:", shop?.services);
+    console.log("Min pricing", Math.min(...shop.services.map(s => Number(s.price))));
+  }, []);
 
   // Capitalize Helper
   function capitalizeText(str = "") {
@@ -285,10 +290,10 @@ const BackendShopPage = () => {
       {/* Shown only when map/details are in view, hidden when booking form becomes visible */}
       {showStickyFooter && (
         <div className={`fixed left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-40 flex items-center justify-between transition-transform duration-300 ${customer ? "bottom-16" : "bottom-0"}`}>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <span className="text-xs text-gray-500 font-medium">Starting from</span>
             <span className="text-xl font-bold text-gray-900">₹{minServicePrice}</span>
-          </div>
+          </div> */}
           <Button
             onClick={scrollToBooking}
             className="px-8 bg-red-500 hover:bg-red-600 text-white font-bold text-lg rounded-lg shadow-md"

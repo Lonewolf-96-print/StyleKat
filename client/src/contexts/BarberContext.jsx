@@ -23,11 +23,12 @@ export const UserProvider = ({ children }) => {
       return;
     }
 
-    if (storedUser && token) {
+    if (storedUser && token && storedUser !== "undefined" && storedUser !== "null") {
       try {
         setUser(JSON.parse(storedUser));
-      } catch {
-        console.warn("⚠️ Failed to parse stored user");
+      } catch (e) {
+        console.warn("⚠️ Failed to parse stored user - clearing invalid data");
+        localStorage.removeItem("user");
       }
     }
 
