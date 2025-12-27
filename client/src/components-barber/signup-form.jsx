@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { useGoogleLogin } from "@react-oauth/google";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import { ArrowLeft, Upload, Loader2, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { API_URL } from "../lib/config";
 import { useApp } from "../contexts/AppContext";

@@ -145,7 +145,7 @@ export const Home = () => {
           <div className="">
             <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-white drop-shadow-2xl tracking-tight leading-tight">
               {t("home.heroTitleLine1")} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-primary">{t("home.heroTitleLine2")}</span>
+              <span className="text-[oklch(0.99 0.04 104)]">{t("home.heroTitleLine2")}</span>
             </h1>
           </div>
 
