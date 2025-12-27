@@ -30,7 +30,6 @@ export const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [address, setAddress] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [showTerms, setShowTerms] = useState(false);
@@ -84,42 +83,40 @@ export const SignupForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const handleSubmit = async (e) => {
-      e.preventDefault();
 
-      if (!acceptedTerms) {
-        toast.error("You must accept the Terms and Conditions");
-        return;
-      }
+    if (!acceptedTerms) {
+      toast.error("You must accept the Terms and Conditions");
+      return;
+    }
 
-      setIsLoading(true);
+    setIsLoading(true);
 
-      const barberData = {
-        ownerName,
-        salonName,
-        phoneNumber,
-        email,
-        address,
-        password,
-      };
-
-      try {
-        const result = await BarberSignup(barberData);
-
-        toast.success(`Account created for ${barberData.salonName}`);
-        navigate("/dashboard");
-        socket.emit("joinshopRoom", result.barber.id);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
+    const barberData = {
+      ownerName,
+      salonName,
+      phoneNumber,
+      email,
+      address,
+      password,
     };
 
-    // ===========================================================
-    //                 🎨 UI LAYOUT (MATCH LOGIN UI)
-    // ===========================================================
-    return (
+    try {
+      const result = await BarberSignup(barberData);
+
+      toast.success(`Account created for ${barberData.salonName}`);
+      navigate("/dashboard");
+      socket.emit("joinshopRoom", result.barber.id);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ===========================================================
+  //                 🎨 UI LAYOUT (MATCH LOGIN UI)
+  // ===========================================================
+  return (
     <div className="h-screen w-full flex overflow-hidden">
 
       {/* ---------------- LEFT SIDE: SIGNUP FORM ---------------- */}
@@ -307,8 +304,7 @@ export const SignupForm = () => {
           </p>
         </div>
       </div>
-      </div>
       <TermsModal open={showTerms} onOpenChange={setShowTerms} />
-    </div >
+    </div>
   );
 }
