@@ -26,7 +26,7 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = [
-  "https://stylekatt.netlify.app",
+  "https://styllekat.netlify.app",
   "http://localhost:5173",
   "http://localhost:3000",
 ];
