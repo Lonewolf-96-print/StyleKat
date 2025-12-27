@@ -218,7 +218,7 @@ export default function SettingsPage() {
       <div className="hidden lg:block w-64 flex-shrink-0" />
 
       {/* Main Content */}
-      <div className="flex-1 p-4 sm:p-6 space-y-6">
+      <div className="flex-1 p-4 sm:p-6 space-y-6 max-w-6xl mx-auto w-full">
 
         <DashboardHeader />
 

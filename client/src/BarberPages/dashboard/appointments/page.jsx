@@ -23,25 +23,25 @@ export default function AppointmentsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 space-y-6 p-4 sm:p-6">
+      <div className="flex-1 space-y-3 p-4 sm:px-6 sm:py-3">
         <DashboardHeader />
 
         {/* Page Header */}
-         <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">
+            <h1 className="text-2xl font-bold text-foreground">
               {t("appointments.title")}
             </h1>
             <p className="text-muted-foreground">
               {t("appointments.subtitle")}
             </p>
           </div>
-          
+
         </div>
 
 
         {/* Staff List */}
-       <AppointmentsList />
+        <AppointmentsList />
 
         {/* Footer */}
         <DashboardFooter />

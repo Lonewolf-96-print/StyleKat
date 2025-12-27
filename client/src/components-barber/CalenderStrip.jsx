@@ -17,8 +17,9 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
   // Responsive day count
   useEffect(() => {
     const resize = () => {
-      if (window.innerWidth <= 768) setDaysToShow(6);
-      else setDaysToShow(17);
+      if (window.innerWidth <= 640) setDaysToShow(5);
+      else if (window.innerWidth <= 1024) setDaysToShow(7);
+      else setDaysToShow(10);
     };
     resize();
     window.addEventListener("resize", resize);
@@ -52,25 +53,25 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
   }, [selectedDate, allBookings]);
 
   return (
-    <div className="space-y-6 relative">
+    <div className="space-y-6 relative max-w-full">
 
       {/* Calendar Header with Arrows */}
-      <div className="flex items-center space-x-2 relative bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
+      <div className="flex items-center space-x-2 relative bg-white p-2 rounded-2xl shadow-sm border border-gray-100 w-full overflow-hidden">
 
         {/* 👈 LEFT ARROW */}
         <button
           onClick={() => setStartOffset((prev) => Math.max(prev - daysToShow, 0))}
           disabled={startOffset === 0}
           className={`p-2 rounded-full transition shrink-0 ${startOffset === 0
-              ? "text-gray-300 cursor-not-allowed"
-              : "text-gray-600 hover:bg-gray-100"
+            ? "text-gray-300 cursor-not-allowed"
+            : "text-gray-600 hover:bg-gray-100"
             }`}
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
 
         {/* DATE STRIP */}
-        <div className="flex overflow-x-auto space-x-3 py-2 px-1 scrollbar-hide w-full items-center">
+        <div className="flex overflow-x-auto space-x-2 md:space-x-3 py-2 px-1 scrollbar-hide w-full items-center">
           {days.map((date) => {
             const formatted = format(date, "yyyy-MM-dd");
             const isSelected = selectedDate === formatted;
@@ -82,10 +83,10 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
                 key={formatted}
                 onClick={() => setSelectedDate(formatted)}
                 className={`flex flex-col items-center justify-center min-w-[3.5rem] py-3 rounded-2xl transition-all duration-300 border ${isSelected
-                    ? "bg-gray-900 text-white border-gray-900 shadow-lg scale-105"
-                    : isTodayDate
-                      ? "bg-blue-50 text-blue-700 border-blue-200"
-                      : "bg-white text-gray-500 border-transparent hover:bg-gray-50"
+                  ? "bg-gray-900 text-white border-gray-900 shadow-lg scale-105"
+                  : isTodayDate
+                    ? "bg-blue-50 text-blue-700 border-blue-200"
+                    : "bg-white text-gray-500 border-transparent hover:bg-gray-50"
                   }`}
               >
                 <span className="text-[10px] uppercase font-bold tracking-wider mb-1">{format(date, "EEE")}</span>
@@ -93,8 +94,8 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
 
                 {/* Dot Indicator */}
                 <div className={`mt-1.5 w-1.5 h-1.5 rounded-full transition-colors ${isBooked
-                    ? (isSelected ? "bg-white" : "bg-green-500")
-                    : "bg-transparent"
+                  ? (isSelected ? "bg-white" : "bg-green-500")
+                  : "bg-transparent"
                   }`} />
               </button>
             );
@@ -142,9 +143,9 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
           displayedBookings.map((appointment) => (
             <Card key={appointment._id} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 ring-1 ring-gray-100">
               <div className={`h-1.5 w-full ${appointment.status === 'confirmed' ? 'bg-green-500' :
-                  appointment.status === 'pending' ? 'bg-yellow-500' :
-                    appointment.status === 'cancelled' ? 'bg-red-500' :
-                      'bg-blue-500'
+                appointment.status === 'pending' ? 'bg-yellow-500' :
+                  appointment.status === 'cancelled' ? 'bg-red-500' :
+                    'bg-blue-500'
                 }`} />
               <CardContent className="p-5">
                 <div className="flex items-start justify-between">

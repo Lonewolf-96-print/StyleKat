@@ -81,6 +81,9 @@ export function AppointmentsList() {
 
     const handleStatusUpdate = (updated) => {
       setAllBookings(prev => {
+        if (updated.status === "barber_deleted") {
+          return prev.filter(b => b._id !== updated._id);
+        }
         const map = new Map(prev.map(b => [b._id, b]));
         map.set(updated._id, updated);
         return [...map.values()];
@@ -203,7 +206,7 @@ export function AppointmentsList() {
 
   // ---------------- LAYOUT FIXED HERE ----------------
   return (
-    <div className="space-y-6">
+    <div className="space-y-3">
 
       {/* HEADER & FILTERS */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
