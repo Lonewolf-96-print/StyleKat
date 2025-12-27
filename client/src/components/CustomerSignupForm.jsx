@@ -11,6 +11,8 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Mail, Lock, User, MessageSquare, Store, Eye, Laugh, EyeOff } from "lucide-react";
 import { useAuthModal } from "../contexts/AuthModelContext";
+import { TermsModal } from "./terms-modal";
+import { Checkbox } from "./ui/checkbox";
 
 export function CustomerSignupForm() {
   const { setCustomer, setCustomerToken } = useCustomer();
@@ -26,10 +28,18 @@ export function CustomerSignupForm() {
     email: "",
     password: "",
   });
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
 
   const handleSignup = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!acceptedTerms) {
+      setError("You must accept the Terms and Conditions to create an account.");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -46,8 +56,6 @@ export function CustomerSignupForm() {
       if (!res.ok) {
         throw new Error(data.message || "Something went wrong");
       }
-
-
 
       setCustomer(data.user);
       setCustomerToken(data.token);
@@ -95,7 +103,6 @@ export function CustomerSignupForm() {
 
   return (
     <div className="min-h-screen w-full flex">
-
       {/* ---------------- LEFT SIDE: FORM ---------------- */}
       <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 sm:p-12 lg:p-24 bg-background transition-all duration-500">
         <div className="w-full max-w-sm space-y-8">
@@ -176,6 +183,28 @@ export function CustomerSignupForm() {
               </div>
             </div>
 
+            {/* Terms & Conditions */}
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="terms"
+                checked={acceptedTerms}
+                onCheckedChange={setAcceptedTerms}
+              />
+              <label
+                htmlFor="terms"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
+              >
+                I agree to the{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowTerms(true)}
+                  className="text-primary hover:underline font-semibold"
+                >
+                  Terms and Conditions
+                </button>
+              </label>
+            </div>
+
             {/* Submit */}
             <Button className="w-full h-11 mt-2 text-base font-medium shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all" disabled={isLoading}>
               {isLoading ? (
@@ -228,9 +257,7 @@ export function CustomerSignupForm() {
       </div>
 
       {/* ---------------- RIGHT SIDE: IMAGE ---------------- */}
-      <div
-        className="hidden lg:flex w-1/2 relative bg-gray-900 min-h-screen"
-      >
+      <div className="hidden lg:flex w-1/2 relative bg-gray-900 min-h-screen">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-70"
           style={{ backgroundImage: "url('/signup-user.jpg')" }}
@@ -246,6 +273,7 @@ export function CustomerSignupForm() {
           </p>
         </div>
       </div>
+      <TermsModal open={showTerms} onOpenChange={setShowTerms} />
     </div>
   );
 }

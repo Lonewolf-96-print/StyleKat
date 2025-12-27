@@ -99,9 +99,7 @@ export const ServiceInfo = () => {
                 <span>Search</span>
               </button>
             </div>
-            <p className="text-xs text-white/50 mt-4 font-light tracking-wide uppercase">
-              Popular: Greater Noida, Noida, New Delhi
-            </p>
+
           </div>
         </div>
       </section>

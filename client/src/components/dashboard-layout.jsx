@@ -18,7 +18,7 @@ export function DashboardLayout({ children }) {
           <Header onMenuClick={() => { }} />
 
           <main className="flex-1 w-full relative">
-            <div className="p-4 pb-24 lg:p-6 lg:pb-10 min-h-[80vh] w-full max-w-[1600px] mx-auto">{children}</div>
+            <div className="pt-4 pb-24 lg:pt-6 lg:pb-10 min-h-[80vh] w-full max-w-[1600px] mx-auto px-0">{children}</div>
             <div className="pb-24 lg:pb-0 w-full">
               <UserDashboardFooter />
             </div>

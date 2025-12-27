@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useLanguage } from "../components-barber/language-provider"
 import { useUser } from "../contexts/BarberContext"
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react"
-
+import X from "/x-logo.png"
 export function ScrollToTop() {
   const { pathname } = useLocation()
 
@@ -40,8 +40,17 @@ export default function UserDashboardFooter() {
 
             <div className="flex items-center gap-4">
               {[
-                { icon: <Twitter className="w-5 h-5" />, href: "https://x.com/StyleKatCo" },
                 { icon: <Instagram className="w-5 h-5" />, href: "https://www.instagram.com/stylekat.in?igsh=N21kdDVnd3o1ZWV4" },
+                {
+                  icon: (
+                    <img
+                      src={X}
+                      alt="X (Twitter)"
+                      className="w-5 h-5 object-contain"
+                    />
+                  ),
+                  href: "https://x.com/StyleKatCo",
+                },
                 { icon: <Facebook className="w-5 h-5" />, href: "https://www.facebook.com/share/1GDj63eeZY/" }
               ].map((social, i) => (
                 <a
