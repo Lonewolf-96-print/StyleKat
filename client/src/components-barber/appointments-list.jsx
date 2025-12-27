@@ -186,7 +186,13 @@ export function AppointmentsList() {
       case "confirmed":
       case "cancelled":
       case "completed":
-        return allBookings.filter((b) => b.status === selectedFilter);
+      case "in-service":
+      case "ongoing":
+        return allBookings.filter((b) =>
+          selectedFilter === "in-service"
+            ? (b.status === "in-service" || b.status === "ongoing")
+            : b.status === selectedFilter
+        );
 
       default:
         return allBookings;

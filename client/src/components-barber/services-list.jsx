@@ -87,6 +87,8 @@ export function ServicesList({ showAddButton = false }) {
       }
 
       // console.log("🧾 Service changes detected:", changeSummary);
+      const { _id, createdAt, updatedAt, __v, ...serviceData } = updatedService;
+
       const res = await fetch(`${API_URL}/api/services/${updatedService._id}`, {
         method: "PUT",
         headers: {
@@ -94,7 +96,7 @@ export function ServicesList({ showAddButton = false }) {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          ...updatedService,
+          ...serviceData,
           changeSummary, // 👈 send along for notifications
         }),
       });
@@ -130,7 +132,7 @@ export function ServicesList({ showAddButton = false }) {
   const handleToggleStatus = async (id) => {
     try {
 
-      const res = await fetch(`${API_URL}/${id}/toggle`, { method: "PATCH" });
+      const res = await fetch(`${API_URL}/api/services/${id}/toggle`, { method: "PATCH" });
       const data = await res.json();
       if (res.ok) {
         setServices((prev) => prev.map((s) => (s._id === id ? data.service : s)));
@@ -149,7 +151,7 @@ export function ServicesList({ showAddButton = false }) {
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this this service?")) return;
     try {
-      const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/api/services/${id}`, { method: "DELETE" });
       if (res.ok) {
         setServices((prev) => prev.filter((s) => s._id !== id));
         window.socket?.emit("serviceDeleted", { barberId, serviceId: id });

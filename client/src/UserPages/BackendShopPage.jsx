@@ -56,7 +56,7 @@ const BackendShopPage = () => {
   const minServicePrice = shop?.services?.length
     ? Math.min(...shop.services.map(s => Number(s.price) || 0))
     : 199;
-
+  console.log("Min Service Price:", minServicePrice);
   // Intersection Observer to hide sticky footer when booking form is visible
   useEffect(() => {
     const observer = new IntersectionObserver(

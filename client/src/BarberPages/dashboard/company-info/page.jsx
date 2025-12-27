@@ -84,66 +84,80 @@ export default function CompanyInfoPage() {
 
         <div className="p-6 lg:p-10 max-w-[1600px] mx-auto space-y-8">
 
-          {/* 1. HERO SECTION (CAROUSEL) */}
-          <div className="relative w-full h-[300px] lg:h-[450px] rounded-3xl overflow-hidden shadow-2xl group border border-gray-100/50">
+          {/* 1. HERO SECTION (Redesigned for Mobile) */}
+          <div className="relative w-full rounded-2xl md:rounded-3xl overflow-hidden shadow-sm md:shadow-2xl border border-gray-100 bg-white">
 
-            {/* CAROUSEL BACKGROUND */}
-            <div className="absolute inset-0 z-0 bg-gray-900" ref={emblaRef}>
-              <div className="flex h-full touch-pan-y">
-                {shopImages.map((src, idx) => (
-                  <div className="flex-[0_0_100%] min-w-0 relative h-full" key={idx}>
-                    <img
-                      src={src}
-                      alt={`Slide ${idx}`}
-                      className="absolute inset-0 w-full h-full object-cover opacity-90"
-                    />
-                  </div>
-                ))}
+            {/* IMAGE AREA (Mobile: 250px, Desktop: 450px) */}
+            <div className="relative h-[250px] lg:h-[450px] w-full group">
+              {/* CAROUSEL */}
+              <div className="absolute inset-0 z-0 bg-gray-900" ref={emblaRef}>
+                <div className="flex h-full touch-pan-y">
+                  {shopImages.map((src, idx) => (
+                    <div className="flex-[0_0_100%] min-w-0 relative h-full" key={idx}>
+                      <img
+                        src={src}
+                        alt={`Slide ${idx}`}
+                        className="absolute inset-0 w-full h-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* GRADIENT OVERLAY (Visible only on Desktop for text readability) */}
+              <div className="hidden lg:block absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none" />
+
+              {/* EDIT BUTTON (Mobile: Floating Top Right, Desktop: Top Right) */}
+              <div className="absolute top-3 right-3 lg:top-6 lg:right-6 z-30">
+                <Button
+                  onClick={() => setIsModalOpen(true)}
+                  variant="secondary"
+                  size="sm"
+                  className="bg-black/40 hover:bg-black/60 text-white backdrop-blur-md border border-white/20 shadow-md h-8 px-3 text-xs md:h-10 md:px-4 md:text-sm"
+                >
+                  <Camera size={14} className="md:w-4 md:h-4 mr-1.5" />
+                  Edit Photos
+                </Button>
               </div>
             </div>
 
-            {/* OVERLAY GRADIENT */}
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/90 via-black/30 to-black/10 pointer-events-none" />
-
-            {/* EDIT BUTTON (Top Right) */}
-            <div className="absolute top-4 right-4 md:top-6 md:right-6 z-30">
-              <Button
-                onClick={() => setIsModalOpen(true)}
-                variant="secondary"
-                size="sm"
-                className="bg-black/30 hover:bg-black/50 text-white backdrop-blur-md border border-white/20 gap-2 shadow-lg h-9 px-3 md:h-10 md:px-4"
-              >
-                <Camera size={16} className="md:w-[18px] md:h-[18px]" />
-                <span className="text-xs md:text-sm font-medium">Edit Photos</span>
-              </Button>
-            </div>
-
-            {/* CONTENT (Bottom Left) */}
-            <div className="absolute bottom-0 left-0 p-8 lg:p-12 w-full z-20">
-              <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                  <Badge className="mb-4 bg-primary/90 hover:bg-primary text-white border-none px-3 py-1 text-sm backdrop-blur-sm shadow-sm">
+            {/* CONTENT AREA */}
+            {/* Mobile: Below Image (White bg), Desktop: Overlay (Transparent) */}
+            <div className={`
+                relative z-20 w-full
+                p-5 lg:absolute lg:bottom-0 lg:left-0 lg:p-12
+                flex flex-col gap-4 lg:gap-6
+                bg-white lg:bg-transparent
+            `}>
+              <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 lg:gap-6">
+                <div className="space-y-2 lg:space-y-3">
+                  <Badge className="w-fit bg-primary/10 text-primary border-primary/20 lg:bg-primary lg:text-white lg:border-none px-2 py-0.5 text-xs lg:text-sm font-semibold">
                     Premium Salon
                   </Badge>
-                  <h1 className="text-4xl lg:text-7xl font-black text-white tracking-tight mb-3 drop-shadow-md">
+
+                  <h1 className="text-3xl lg:text-6xl font-black text-gray-900 lg:text-white tracking-tight leading-tight">
                     {barberData.salonName}
                   </h1>
-                  <p className="text-lg lg:text-xl text-gray-200 font-medium max-w-2xl drop-shadow-sm leading-relaxed">
-                    {tagline || "Experience the best grooming services in town. Professional cuts, styling, and premium treatments."}
+
+                  <p className="text-sm lg:text-xl text-gray-500 lg:text-gray-200 font-medium max-w-2xl leading-relaxed">
+                    {tagline || "Experience the best grooming services in town."}
                   </p>
                 </div>
 
-                {/* Rating Badge */}
-                <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl flex gap-6 text-white min-w-fit shadow-lg">
-                  <div className="text-center">
-                    <p className="text-2xl font-bold flex items-center justify-center gap-1">
-                      4.9 <Star size={16} fill="currentColor" className="text-yellow-400" />
+                {/* RATING BADGE */}
+                <div className="flex items-center gap-3 lg:block bg-gray-50 lg:bg-white/10 lg:backdrop-blur-md border border-gray-100 lg:border-white/20 p-3 lg:p-4 rounded-xl shadow-sm lg:shadow-lg min-w-fit">
+                  <div className="text-center flex flex-row lg:flex-col items-center gap-2 lg:gap-0">
+                    <p className="text-xl lg:text-2xl font-bold flex items-center gap-1 text-gray-900 lg:text-white">
+                      4.9 <Star size={16} fill="currentColor" className="text-yellow-500 lg:text-yellow-400" />
                     </p>
-                    <p className="text-xs uppercase opacity-80 font-medium tracking-wide">Rating</p>
+                    <p className="text-[10px] lg:text-xs uppercase text-gray-400 lg:text-white/80 font-bold tracking-wider">
+                      Rating
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* 2. MAIN GRID (Removed the old Shop Photos card) */}

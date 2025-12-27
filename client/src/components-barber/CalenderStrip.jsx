@@ -54,49 +54,48 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
   return (
     <div className="space-y-6 relative">
 
-      {/* Calendar Header with Left + Right Arrows */}
-      <div className="flex items-center space-x-2 relative">
+      {/* Calendar Header with Arrows */}
+      <div className="flex items-center space-x-2 relative bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
 
         {/* 👈 LEFT ARROW */}
         <button
           onClick={() => setStartOffset((prev) => Math.max(prev - daysToShow, 0))}
-          disabled={startOffset === 0} // disable when at today
-          className={`p-2 rounded-full border transition ${
-            startOffset === 0
-              ? "opacity-40 cursor-not-allowed"
-              : "bg-primary text-white hover:bg-primary/80"
-          }`}
+          disabled={startOffset === 0}
+          className={`p-2 rounded-full transition shrink-0 ${startOffset === 0
+              ? "text-gray-300 cursor-not-allowed"
+              : "text-gray-600 hover:bg-gray-100"
+            }`}
         >
           <ChevronLeft className="h-5 w-5" />
         </button>
 
         {/* DATE STRIP */}
-        <div className="flex overflow-x-auto space-x-2.5 py-3 px-2 bg-muted rounded-xl scrollbar-hide w-full">
+        <div className="flex overflow-x-auto space-x-3 py-2 px-1 scrollbar-hide w-full items-center">
           {days.map((date) => {
             const formatted = format(date, "yyyy-MM-dd");
             const isSelected = selectedDate === formatted;
             const isBooked = bookingDates.includes(formatted);
+            const isTodayDate = isSameDay(date, new Date());
 
             return (
               <button
                 key={formatted}
                 onClick={() => setSelectedDate(formatted)}
-                className={`flex flex-col items-center justify-center w-14 py-2 rounded-xl transition-all duration-200 ${
-                  isSelected
-                    ? "bg-primary text-white"
-                    : "bg-background border border-border hover:bg-accent"
-                }`}
+                className={`flex flex-col items-center justify-center min-w-[3.5rem] py-3 rounded-2xl transition-all duration-300 border ${isSelected
+                    ? "bg-gray-900 text-white border-gray-900 shadow-lg scale-105"
+                    : isTodayDate
+                      ? "bg-blue-50 text-blue-700 border-blue-200"
+                      : "bg-white text-gray-500 border-transparent hover:bg-gray-50"
+                  }`}
               >
-                <span className="text-xs font-medium">{format(date, "EEE")}</span>
-                <span className="text-lg font-semibold">{format(date, "d")}</span>
+                <span className="text-[10px] uppercase font-bold tracking-wider mb-1">{format(date, "EEE")}</span>
+                <span className={`text-lg font-bold ${isSelected ? "text-white" : "text-gray-900"}`}>{format(date, "d")}</span>
 
-                {isBooked && (
-                  <span
-                    className={`mt-1 w-2 h-2 rounded-full ${
-                      isSelected ? "bg-yellow-300" : "bg-green-500"
-                    }`}
-                  />
-                )}
+                {/* Dot Indicator */}
+                <div className={`mt-1.5 w-1.5 h-1.5 rounded-full transition-colors ${isBooked
+                    ? (isSelected ? "bg-white" : "bg-green-500")
+                    : "bg-transparent"
+                  }`} />
               </button>
             );
           })}
@@ -105,7 +104,7 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
         {/* 👉 RIGHT ARROW */}
         <button
           onClick={() => setStartOffset((prev) => prev + daysToShow)}
-          className="p-2 rounded-full bg-primary text-white hover:bg-primary/80"
+          className="p-2 rounded-full text-gray-600 hover:bg-gray-100 transition shrink-0"
         >
           <ChevronRight className="h-5 w-5" />
         </button>
@@ -114,87 +113,77 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
       {/* Booking Info Section */}
       <div className="relative space-y-4">
         {selectedDate && (
-          <button
-            onClick={() => setSelectedDate(null)}
-            className="absolute -top-3 right-2 text-gray-500 hover:text-red-500 transition"
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex justify-between items-center mb-4 px-1">
+            <h3 className="text-lg font-bold text-gray-800">
+              Bookings for {format(new Date(selectedDate), "MMM dd")}
+            </h3>
+            <button
+              onClick={() => setSelectedDate(null)}
+              className="p-2 bg-gray-100 hover:bg-red-50 hover:text-red-500 rounded-full transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         )}
 
         {!selectedDate ? (
-          <p className="text-center text-muted-foreground">
-            Select a date to view bookings
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+            <Calendar className="h-10 w-10 text-gray-300 mb-3" />
+            <p className="text-muted-foreground font-medium">Select a date to view bookings</p>
+          </div>
         ) : displayedBookings.length === 0 ? (
-          <p className="text-center text-muted-foreground">
-            No bookings on {format(new Date(selectedDate), "MMM dd, yyyy")}
-          </p>
+          <div className="flex flex-col items-center justify-center py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+            <Clock className="h-10 w-10 text-gray-300 mb-3" />
+            <p className="text-center text-muted-foreground">
+              No bookings on <span className="font-semibold text-gray-700">{format(new Date(selectedDate), "MMM dd, yyyy")}</span>
+            </p>
+          </div>
         ) : (
           displayedBookings.map((appointment) => (
-            <Card key={appointment._id}>
-              <CardContent className="p-6">
+            <Card key={appointment._id} className="overflow-hidden border-0 shadow-md hover:shadow-lg transition-all duration-300 ring-1 ring-gray-100">
+              <div className={`h-1.5 w-full ${appointment.status === 'confirmed' ? 'bg-green-500' :
+                  appointment.status === 'pending' ? 'bg-yellow-500' :
+                    appointment.status === 'cancelled' ? 'bg-red-500' :
+                      'bg-blue-500'
+                }`} />
+              <CardContent className="p-5">
                 <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-4 flex-1">
-
-                    <Avatar className="h-12 w-12">
-                      <AvatarFallback>
-                        {appointment.customerName
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
+                  {/* Avatar & Name */}
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-12 w-12 border-2 border-white shadow-sm ring-1 ring-gray-100">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-50 to-blue-100 text-blue-600 font-bold">
+                        {appointment.customerName.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
 
-                    <div className="flex-1 space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="font-semibold text-foreground">
-                            {appointment.customerName}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {appointment.service}
-                          </p>
-                        </div>
-                        <Badge className={statusColors[appointment.status]}>
-                          {t(`appointmentsPage.status.${appointment.status}`)}
-                        </Badge>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-                        <div className="flex items-center">
-                          <Calendar className="h-4 w-4 mr-2" />
-                          {format(parseISO(appointment.date), "MMM dd, yyyy")}
-                        </div>
-
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-2" />
-                          {appointment.time}
-                        </div>
-
-                        <div className="flex items-center">
-                          <Phone className="h-4 w-4 mr-2" />
-                          {appointment.customerPhone}
-                        </div>
-                      </div>
-
-                      <div className="text-sm">
-                        <span className="text-muted-foreground">
-                          {t("appointmentsPage.staff")}:{" "}
-                        </span>
-                        <span className="font-medium">
-                          {appointment.staffName}
-                        </span>
-
-                        <span className="text-muted-foreground ml-4">
-                          {t("appointmentsPage.price")}:{" "}
-                        </span>
-                        <span className="font-medium text-green-600">
-                          ₹{appointment.price}
-                        </span>
-                      </div>
-
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-lg leading-tight">{appointment.customerName}</h4>
+                      <p className="text-sm text-gray-500 font-medium">{appointment.service}</p>
                     </div>
+                  </div>
+
+                  <Badge className={`${statusColors[appointment.status] || "bg-gray-100 text-gray-700"} uppercase tracking-wide px-2.5 py-1 text-[10px] font-bold shadow-sm border-0`}>
+                    {t(`appointmentsPage.status.${appointment.status}`) || appointment.status}
+                  </Badge>
+                </div>
+
+                {/* Details Grid */}
+                <div className="mt-5 grid grid-cols-2 gap-4 bg-gray-50/80 rounded-xl p-4 border border-gray-100">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Clock className="h-4 w-4 text-blue-500" />
+                    <span className="font-semibold text-gray-900">{appointment.time}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Phone className="h-4 w-4 text-green-500" />
+                    <span>{appointment.customerPhone || "N/A"}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600 col-span-2">
+                    <span className="text-xs font-semibold text-gray-400 uppercase">Staff</span>
+                    <span className="font-medium text-gray-900">{appointment.staffName || "Any Staff"}</span>
+                  </div>
+                  <div className="flex items-center justify-between col-span-2 border-t border-gray-200 pt-3 mt-1">
+                    <span className="text-xs font-bold text-gray-400 uppercase">Total Price</span>
+                    <span className="text-lg font-bold text-green-600">₹{appointment.price}</span>
                   </div>
                 </div>
               </CardContent>
