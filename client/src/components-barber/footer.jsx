@@ -18,7 +18,7 @@ export default function DashboardFooter() {
   const barberId = localStorage.getItem("shopId")
 
   return (
-    <footer className="bg-slate-950 text-white pt-24 pb-12 relative overflow-hidden">
+    <footer className="bg-slate-950 text-white pt-12 pb-8 relative overflow-hidden">
       {/* Decorative gradient flare */}
       <div className="absolute top-0 right-0 w-[30rem] h-[30rem] bg-indigo-600/5 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
 

@@ -218,7 +218,7 @@ export default function SettingsPage() {
       <div className="lg:pl-72 flex flex-col min-h-screen transition-all duration-300">
 
         {/* Main Content Area */}
-        <main className="flex-1 p-4 sm:p-8 space-y-8 w-full">
+        <main className="flex-1 p-4 sm:p-6 space-y-6 w-full">
           <DashboardHeader />
 
           <div>
