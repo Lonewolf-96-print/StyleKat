@@ -112,6 +112,12 @@ export const NotificationProvider = ({ children }) => {
     });
   }, []);
 
+  const clearAll = useCallback(() => {
+    setNotifications([]);
+    persist([]);
+    setUnreadCount(0);
+  }, []);
+
   /* -------------------- SOCKET -------------------- */
 
   useEffect(() => {
@@ -231,6 +237,7 @@ export const NotificationProvider = ({ children }) => {
         addNotification,
         markAsUnread,
         markAllAsRead,
+        clearAll,
       }}
     >
       {children}

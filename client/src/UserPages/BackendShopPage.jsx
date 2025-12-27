@@ -290,7 +290,8 @@ const BackendShopPage = () => {
       {/* MOBILE STICKY BOOK BUTTON */}
       {/* Shown only when map/details are in view, hidden when booking form becomes visible */}
       {showStickyFooter && (
-        <div className={`fixed left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-40 flex items-center justify-between transition-transform duration-300 ${customer ? "bottom-16" : "bottom-0"}`}>
+        <div className={`fixed left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-40 flex items-center justify-center transition-transform duration-300 ${customer ? "bottom-16" : "bottom-0"}`}>
+
           {/* <div className="flex flex-col">
             <span className="text-xs text-gray-500 font-medium">Starting from</span>
             <span className="text-xl font-bold text-gray-900">₹{minServicePrice}</span>

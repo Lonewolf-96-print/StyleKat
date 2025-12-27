@@ -1,6 +1,7 @@
 import { useEffect } from "react"
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useLanguage } from "../components-barber/language-provider"
+import { useUser } from "../contexts/BarberContext"
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from "lucide-react"
 
 export function ScrollToTop() {
@@ -15,6 +16,8 @@ export function ScrollToTop() {
 
 export default function UserDashboardFooter() {
   const { t } = useLanguage()
+  const { user } = useUser()
+  const navigate = useNavigate()
 
   return (
     <footer className="bg-slate-950 text-white pt-24 pb-12 relative overflow-hidden">
@@ -66,9 +69,18 @@ export default function UserDashboardFooter() {
                   { to: "/profile", label: "Profile" }
                 ].map((link) => (
                   <li key={link.to}>
-                    <Link to={link.to} className="text-slate-400 hover:text-white transition-colors font-light">
+                    <div
+                      onClick={() => {
+                        if (!user) {
+                          navigate("/login/user");
+                        } else {
+                          navigate(link.to);
+                        }
+                      }}
+                      className="text-slate-400 hover:text-white transition-colors font-light cursor-pointer"
+                    >
                       {link.label}
-                    </Link>
+                    </div>
                   </li>
                 ))}
               </ul>
