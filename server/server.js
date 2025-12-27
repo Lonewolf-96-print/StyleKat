@@ -259,6 +259,7 @@ io.on("connection", (socket) => {
   --------------------------------------------- */
   socket.on("newBookingRequest", async (bookingData) => {
     try {
+      console.log("[DEPLOY DEBUG] newBookingRequest received via Socket");
       if (!bookingData.barberId || !bookingData.date) {
         return socket.emit("booking:error", { message: "Invalid booking data" });
       }
@@ -318,6 +319,7 @@ io.on("connection", (socket) => {
   --------------------------------------------- */
   socket.on("updateBookingStatus", async ({ bookingId, status }) => {
     try {
+      console.log("[DEPLOY DEBUG] updateBookingStatus received via Socket");
       if (!bookingId) return;
 
       const booking = await Booking.findByIdAndUpdate(
@@ -643,6 +645,6 @@ app.post("/api/notifications/test-direct", async (req, res) => {
   server.listen(PORT, () => {
     // console.log(`🚀 Server running on port ${PORT}`);
     // console.log("Socket.IO ready ✅");
-
+    console.log(`[DEPLOY DEBUG] Server Started. Version: ${new Date().toISOString()}`);
   });
 })();
