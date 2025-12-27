@@ -118,7 +118,7 @@ export const CustomerLoginForm = () => {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="password">Password</Label>
-                  <Link to="#" className="text-xs text-primary hover:underline font-medium">Forgot password?</Link>
+                  {/* <Link to="#" className="text-xs text-primary hover:underline font-medium">Forgot password?</Link> */}
                 </div>
                 <div className="relative group">
                   <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground group-focus-within:text-primary transition-colors" />
