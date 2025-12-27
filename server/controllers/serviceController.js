@@ -49,7 +49,7 @@ export const updateService = async (req, res) => {
 
     // ✅ Emit to the correct barber room (shop-${barberId})
     const shopRoom = `shop-${req.barber._id}`;
-    console.log(`🔁 Emitting serviceUpdated to ${shopRoom}`);
+    // console.log(`🔁 Emitting serviceUpdated to ${shopRoom}`);
 
     req.io.to(shopRoom).emit("serviceUpdated", {
       type: "serviceUpdated",

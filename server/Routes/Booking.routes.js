@@ -277,18 +277,18 @@ router.post("/request", protectUser, async (req, res) => {
     // console.log("✅ Booking created and emitted:", saved._id);
 
     // 7️⃣ WEB PUSH: Notify Barber
-    console.log("[Push Debug] Triggering New Booking Push for Barber (REST):", saved.barberId);
+    // console.log("[Push Debug] Triggering New Booking Push for Barber (REST):", saved.barberId);
     await NotificationService.send(
       saved.barberId,
       'barber',
       'New Booking Request',
       `New appointment from ${customerName || 'Customer'}`,
-      '/dashboard/bookings' // Barber URL
+      '/dashboard/appointments' // Barber URL (Fixed)
     );
 
     return res.status(201).json({ message: "Booking created successfully", booking: saved });
   } catch (err) {
-    console.error("❌ Error creating booking:", err);
+    // console.error("❌ Error creating booking:", err);
     return res.status(500).json({ message: "Failed to create booking", error: err.message });
   }
 });
@@ -420,13 +420,13 @@ router.delete("/my/:id", protectUser, async (req, res) => {
     }
 
     // WEB PUSH: Notify Barber of Cancellation
-    console.log("[Push Debug] Triggering Cancellation Push for Barber (REST):", booking.barberId);
+    // console.log("[Push Debug] Triggering Cancellation Push for Barber (REST):", booking.barberId);
     await NotificationService.send(
       booking.barberId,
       'barber',
       'Booking Cancelled',
       `Booking by ${booking.customerName} has been cancelled.`,
-      '/dashboard/bookings'
+      '/dashboard/appointments'
     );
 
     return res.json({
@@ -521,13 +521,13 @@ router.put("/status/:id", protect, async (req, res) => {
 
     // WEB PUSH: Notify User
     if (booking.userId && status !== "barber_deleted") {
-      console.log("[Push Debug] Triggering Status Update Push for User (REST):", booking.userId);
+      // console.log("[Push Debug] Triggering Status Update Push for User (REST):", booking.userId);
       await NotificationService.send(
         booking.userId,
         'user',
         `Booking ${status.charAt(0).toUpperCase() + status.slice(1)}`,
         `Your appointment at ${booking.shopName || 'the salon'} is now ${status}.`,
-        '/dashboard/appointments' // User URL
+        '/my-bookings' // User URL (Fixed)
       );
     }
 

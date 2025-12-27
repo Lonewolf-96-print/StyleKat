@@ -156,7 +156,7 @@ export default function BackendBookingForm({ shop, barberId }) {
   // Join ONLY the correct barberId room
   useEffect(() => {
     if (!socket || !selectedStaff) return;
-    console.log("🔵 Joining staff room:", selectedStaff._id);
+    // console.log("🔵 Joining staff room:", selectedStaff._id);
     socket.emit("joinStaffRoom", selectedStaff._id);
     socket.on("bookingTime:all", (data) => {
       // data = { "2025-12-01": [ ... ], ... }
@@ -420,7 +420,7 @@ export default function BackendBookingForm({ shop, barberId }) {
     }
 
     try {
-      console.log("Booking payload:", body);
+      // console.log("Booking payload:", body);
       const res = await fetch(`${API_URL}/api/bookings/request`, {
         method: "POST",
         headers: {

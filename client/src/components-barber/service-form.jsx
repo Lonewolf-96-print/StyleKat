@@ -102,7 +102,7 @@ export function ServiceForm({ serviceId, existingService }) {
       });
       const data = await res.json();
       if (res.ok) {
-        navigate("/dashboard/services");
+        navigate(`/dashboard/company-info/${barberId}`);
         window.socket?.emit("serviceAdded", {
           barberId,
           service: data.service,

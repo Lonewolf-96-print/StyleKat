@@ -20,6 +20,13 @@ const statusColors = {
   completed: "bg-green-500/10 text-green-700",
   cancelled: "bg-red-500/10 text-red-700",
 };
+function toTitleCase(str) {
+  return str
+    .toLowerCase()
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+}
 const getStatusColor = (status) => {
   switch (status) {
     case "pending": return "#eab308"; // yellow-500
@@ -60,7 +67,7 @@ const getStatusBadge = (status) => {
     case "confirmed":
       return { label: "Confirmed", className: "bg-green-100 text-green-800 border-green-200" };
     case "in-service":
-      return { label: "In Service", className: "bg-orange-100 text-orange-800 border-orange-200" };
+      return { label: "Started", className: "bg-orange-100 text-orange-800 border-orange-200" };
     case "completed":
       return { label: "Completed", className: "bg-blue-100 text-blue-800 border-blue-200" };
     case "cancelled":
@@ -290,7 +297,7 @@ export default function BookingsDashboardPage() {
           </div>
 
           <div className="flex gap-2 mt-4 flex-wrap">
-            {["pending", "accepted", "completed", "cancelled"].map((status) => (
+            {["pending", "accepted", "in-service", "completed", "cancelled"].map((status) => (
               <Button
                 key={status}
                 size="sm"
@@ -299,7 +306,7 @@ export default function BookingsDashboardPage() {
                   setFilterStatus(filterStatus === status ? null : status)
                 }
               >
-                {status}
+                {status === "in-service" ? "Started" : status}
               </Button>
             ))}
           </div>
@@ -327,8 +334,8 @@ export default function BookingsDashboardPage() {
                     {/* CARD HEADER */}
                     <div className="p-5 border-b bg-gray-50/50 flex justify-between items-start">
                       <div>
-                        <h3 className="font-bold text-lg truncate" title={booking.shopName}>
-                          {booking.shopName || "Unspecified Salon"}
+                        <h3 className="font-bold text-lg truncate" title={toTitleCase(booking.shopName)}>
+                          {toTitleCase(booking.shopName) || "Unspecified Salon"}
                         </h3>
                         <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                           <Calendar className="w-3 h-3" />
@@ -345,8 +352,8 @@ export default function BookingsDashboardPage() {
                       {/* Service & Price */}
                       <div className="flex justify-between items-center">
                         <div>
-                          <p className="text-xs font-semibold text-muted-foreground uppercase">Service</p>
-                          <p className="font-medium text-gray-900">{booking.service}</p>
+                          <p className="text-xs font-semibold text-muted-foreground">Service</p>
+                          <p className="font-medium text-gray-900">{toTitleCase(booking.service)}</p>
                         </div>
                         <div className="text-right">
                           <p className="text-xs font-semibold text-muted-foreground uppercase">Price</p>
@@ -362,15 +369,15 @@ export default function BookingsDashboardPage() {
                         <UserBadge
                           label="Customer Name"
                           name={
-                            booking.customerName ||
-                            booking.customer?.name ||
-                            booking.user?.name ||
+                            toTitleCase(booking.customerName) ||
+                            toTitleCase(booking.customer?.name) ||
+                            toTitleCase(booking.user?.name) ||
                             "You"
                           }
                         />
                         <UserBadge
                           label="Staff Name"
-                          name={booking.staffName || "Any Staff"}
+                          name={toTitleCase(booking.staffName) || "Any Staff"}
                         />
                       </div>
 

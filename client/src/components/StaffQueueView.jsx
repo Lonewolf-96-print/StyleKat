@@ -24,7 +24,13 @@ export default function StaffQueueView({ barberId }) {
   /*                             FILTER & LOGIC                                 */
   /* -------------------------------------------------------------------------- */
   const VALID_STATUSES = ["confirmed", "accepted", "ongoing", "in-service"];
-
+  function toTitleCase(str) {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
   const filterToday = (arr) => {
     return arr.map((staff) => {
       // 1. Filter Current
@@ -309,7 +315,7 @@ export default function StaffQueueView({ barberId }) {
                 {current ? (
                   <div className="bg-blue-50 border border-blue-100 rounded-xl p-3">
                     <div className="flex justify-between items-start mb-2">
-                      <span className="font-bold text-blue-900">{current.customerName}</span>
+                      <span className="font-bold text-blue-900">{toTitleCase(current.customerName)}</span>
                       <span className="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">{currentRemain} min left</span>
                     </div>
                     <div className="flex items-center text-sm text-blue-700/80 gap-2">
@@ -343,7 +349,7 @@ export default function StaffQueueView({ barberId }) {
                     {visibleList.map((b) => (
                       <div key={b._id} className="flex justify-between items-center p-2 rounded-lg bg-white border border-gray-100 hover:border-gray-200 transition-colors">
                         <div className="flex flex-col">
-                          <span className="text-sm font-semibold text-gray-800">{b.customerName}</span>
+                          <span className="text-sm font-semibold text-gray-800">{toTitleCase(b.customerName)}</span>
                           <span className="text-[10px] text-gray-500">{b.service}</span>
                         </div>
                         <div className="text-right">

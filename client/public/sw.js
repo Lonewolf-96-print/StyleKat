@@ -4,8 +4,8 @@ self.addEventListener("push", (event) => {
 
     const options = {
         body: body,
-        icon: "/main-logo.png", // Using existing asset
-        badge: "/main-logo.png", // Using existing asset
+        icon: "/New-logo.png", // Updated logo
+        badge: "/New-logo.png", // Updated logo
         vibrate: [200, 100, 200],
         sound: "/notify.mp3",
         data: {

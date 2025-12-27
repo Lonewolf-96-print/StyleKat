@@ -47,9 +47,39 @@ const BackendShopPage = () => {
   // Map state
   const [showMap, setShowMap] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [showStickyFooter, setShowStickyFooter] = useState(true);
 
   // Refs for scrolling
   const bookingSectionRef = useRef(null);
+
+  // Helper: Get Min Price (User requested Min)
+  const minServicePrice = shop?.services?.length
+    ? Math.min(...shop.services.map(s => Number(s.price) || 0))
+    : 199;
+
+  // Intersection Observer to hide sticky footer when booking form is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Hide if booking form is intersecting (visible), show if not
+        // Actually, we want to show ONLY if user is ABOVE the form.
+        // If entry.isIntersecting -> Hide
+        // If entry.boundingClientRect.top > 0 (Below viewport) -> Show
+        // If entry.boundingClientRect.top < 0 (Scrolled past) -> Hide (or Show? "only if user present somewhere above")
+
+        // Logic: Show if Form IS NOT visible AND Form is BELOW the fold.
+        // Simplest: If intersecting, Hide.
+        setShowStickyFooter(!entry.isIntersecting);
+      },
+      { threshold: 0.1 } // Trigger when 10% of form is visible
+    );
+
+    if (bookingSectionRef.current) {
+      observer.observe(bookingSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [loading, shop]);
 
   // Capitalize Helper
   function capitalizeText(str = "") {
@@ -251,19 +281,22 @@ const BackendShopPage = () => {
         </div>
       </div>
 
-      {/* MOBILE STICKY BOOOK BUTTON */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-50 flex items-center justify-between">
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-500 font-medium">Starting from</span>
-          <span className="text-xl font-bold text-gray-900">₹{shop.price || 199}</span>
+      {/* MOBILE STICKY BOOK BUTTON */}
+      {/* Shown only when map/details are in view, hidden when booking form becomes visible */}
+      {showStickyFooter && (
+        <div className={`fixed left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] md:hidden z-40 flex items-center justify-between transition-transform duration-300 ${customer ? "bottom-16" : "bottom-0"}`}>
+          <div className="flex flex-col">
+            <span className="text-xs text-gray-500 font-medium">Starting from</span>
+            <span className="text-xl font-bold text-gray-900">₹{minServicePrice}</span>
+          </div>
+          <Button
+            onClick={scrollToBooking}
+            className="px-8 bg-red-500 hover:bg-red-600 text-white font-bold text-lg rounded-lg shadow-md"
+          >
+            Book Now
+          </Button>
         </div>
-        <Button
-          onClick={scrollToBooking}
-          className="px-8 bg-red-500 hover:bg-red-600 text-white font-bold text-lg rounded-lg shadow-md"
-        >
-          Book Now
-        </Button>
-      </div>
+      )}
 
     </div>
   );

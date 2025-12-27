@@ -85,7 +85,7 @@ export const barberSignup = async (req, res) => {
 
     // Default services to create for the barber
     const defaultServices = [
-      { name: "Haircut", price: 250, duration: 30, isActive: true },
+      { name: "Haircut", price: 80, duration: 30, isActive: true },
 
 
     ];
@@ -134,7 +134,7 @@ export const barberLogin = async (req, res) => {
 
     const { email, password } = req.body;
     const barber = await Barber.findOne({ email }).select("+password");
-    console.log("🧩 Barber found:", barber);
+    // console.log("🧩 Barber found:", barber);
     if (!barber) {
       return res.status(404).json({ message: "Barber not found" });
     }
@@ -153,7 +153,7 @@ export const barberLogin = async (req, res) => {
     // ✅ Fix: generate the token correctly
     const token = generateToken(barber._id, "barber", barber._id);
 
-    console.log("🔐 Barber logged in:", barber);
+    // console.log("🔐 Barber logged in:", barber);
     res.json({
       message: "Login successful",
       // ✅ send token explicitly
@@ -178,7 +178,7 @@ export const logout = (req, res) => {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log("Error in logout controller", error.message);
+    // console.log("Error in logout controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -36,7 +36,7 @@ const services = [
   { id: "styling", name: "Hair Styling" },
   { id: "highlights", name: "Highlights" },
 ]
-
+const barberId = localStorage.getItem("shopId");
 const workingDays = [
   { id: "monday", name: "Monday", short: "Mon" },
   { id: "tuesday", name: "Tuesday", short: "Tue" },
@@ -128,7 +128,7 @@ export function StaffForm({ staffId, initialData, onSuccess, isModal = false }) 
       if (onSuccess) {
         onSuccess(data);
       } else {
-        navigate("/dashboard/staff");
+        navigate(`/dashboard/company-info/${barberId}`);
       }
 
     } catch (err) {
@@ -166,7 +166,7 @@ export function StaffForm({ staffId, initialData, onSuccess, isModal = false }) 
     <form onSubmit={handleSubmit} className={`space-y-6 ${isModal ? "p-1" : ""}`}>
       {/* Back Button - Only show if NOT in modal */}
       {!isModal && (
-        <Link to="/dashboard/staff">
+        <Link to={`/dashboard/company-info/${barberId}`}>
           <Button variant="ghost" size="sm" className="mb-4">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Staff

@@ -204,7 +204,7 @@ export function AppointmentsList() {
 
 
         <div className="flex p-1 bg-gray-100/80 rounded-xl border">
-          {["all", "today", "pending", "confirmed", "completed"].map((filter) => (
+          {["all", "today", "pending", "confirmed", "in-service", "completed"].map((filter) => (
             <button
               key={filter}
               onClick={() => setSelectedFilter(filter)}
@@ -213,7 +213,7 @@ export function AppointmentsList() {
                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-200/50"
                 }`}
             >
-              {filter}
+              {filter === "in-service" ? "Started" : filter}
             </button>
           ))}
         </div>
@@ -265,7 +265,7 @@ export function AppointmentsList() {
                         <span className="text-xs text-muted-foreground">ID: #{capitalizeAll(appointment._id.slice(-5))}</span>
                       </div>
                       <Badge className={`${statusColors[appointment.status]} border-0 capitalize px-2.5 py-0.5`}>
-                        {appointment.status}
+                        {appointment.status === "in-service" ? "Started" : appointment.status}
                       </Badge>
                     </div>
 
