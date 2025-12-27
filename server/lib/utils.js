@@ -1,19 +1,17 @@
 import jwt from "jsonwebtoken";
 
-export const generateToken = (userId, role, shopId=null,res) => {
+export const generateToken = (userId, role, shopId = null, res) => {
   const payload = { id: userId, role }
-  
+
 
   if (payload.role === "barber" && shopId) {
     payload.shopId = shopId.toString();
-    console.log("Barber logged in for shopId:", shopId);
+    // console.log("Barber logged in for shopId:", shopId);
   }
-  else {
-    console.log("Generating token for user with role:", role);
-  }
+
   if (!process.env.JWT_SECRET) {
-  console.error("❌ JWT_SECRET is not defined!");
-}
+    console.error("❌ JWT_SECRET is not defined!");
+  }
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "30d",
   });
@@ -24,6 +22,6 @@ export const generateToken = (userId, role, shopId=null,res) => {
   //   secure: process.env.NODE_ENV !== "development",
   // });
 
-  console.log("Generated JWT token payload:", payload);
+  // console.log("Generated JWT token payload:", payload);
   return token;
 };

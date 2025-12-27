@@ -67,6 +67,7 @@ const getStatusBadge = (status) => {
     case "confirmed":
       return { label: "Confirmed", className: "bg-green-100 text-green-800 border-green-200" };
     case "in-service":
+    case "ongoing":
       return { label: "Started", className: "bg-orange-100 text-orange-800 border-orange-200" };
     case "completed":
       return { label: "Completed", className: "bg-blue-100 text-blue-800 border-blue-200" };
@@ -297,7 +298,7 @@ export default function BookingsDashboardPage() {
           </div>
 
           <div className="flex gap-2 mt-4 flex-wrap">
-            {["pending", "accepted", "in-service", "completed", "cancelled"].map((status) => (
+            {["pending", "confirmed", "in-service", "completed", "cancelled"].map((status) => (
               <Button
                 key={status}
                 size="sm"
@@ -306,7 +307,7 @@ export default function BookingsDashboardPage() {
                   setFilterStatus(filterStatus === status ? null : status)
                 }
               >
-                {status === "in-service" ? "Started" : status}
+                {status === "in-service" ? "started" : status}
               </Button>
             ))}
           </div>

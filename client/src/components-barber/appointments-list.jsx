@@ -203,12 +203,12 @@ export function AppointmentsList() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
 
 
-        <div className="flex p-1 bg-gray-100/80 rounded-xl border">
+        <div className="flex p-1 bg-gray-100/80 rounded-xl border overflow-x-auto whitespace-nowrap scrollbar-hide w-full max-w-full">
           {["all", "today", "pending", "confirmed", "in-service", "completed"].map((filter) => (
             <button
               key={filter}
               onClick={() => setSelectedFilter(filter)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 capitalize ${selectedFilter === filter
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 capitalize shrink-0 ${selectedFilter === filter
                 ? "bg-white text-gray-900 shadow-sm"
                 : "text-gray-500 hover:text-gray-900 hover:bg-gray-200/50"
                 }`}

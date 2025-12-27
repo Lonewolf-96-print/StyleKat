@@ -6,7 +6,9 @@ const router = express.Router();
 // ✅ Get single barber (shop) details
 router.get("/:id", async (req, res) => {
   try {
-    const barber = await Barber.findById(req.params.id).select("-password");
+    const barber = await Barber.findById(req.params.id)
+      .select("-password")
+      .populate("services");
 
     // console.log("Barber fetched:", barber);
     if (!barber) {
