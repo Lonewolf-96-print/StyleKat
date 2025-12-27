@@ -53,9 +53,9 @@ const BackendShopPage = () => {
   const bookingSectionRef = useRef(null);
 
   // Helper: Get Min Price (User requested Min)
-  const minServicePrice = shop?.services?.length
-    ? Math.min(...shop.services.map(s => Number(s.price) || 0))
-    : 199;
+  // const minServicePrice = shop?.services?.length
+  //   ? Math.min(...shop.services.map(s => Number(s.price) || 0))
+  //   : 199;
 
   // Intersection Observer to hide sticky footer when booking form is visible
   useEffect(() => {
@@ -80,12 +80,12 @@ const BackendShopPage = () => {
 
     return () => observer.disconnect();
   }, [loading, shop]);
-  useEffect(() => {
-    console.log("Min Service Price:", minServicePrice);
-    console.log("Shop details", shop);
-    // console.log("Shop Services:", shop?.services);
-    console.log("Min pricing", Math.min(...shop.services.map(s => Number(s.price))));
-  }, []);
+  // useEffect(() => {
+  //   console.log("Min Service Price:", minServicePrice);
+  //   console.log("Shop details", shop);
+  //   console.log("Shop Services:", shop?.services);
+  //   console.log("Min pricing", Math.min(...shop.services.map(s => Number(s.price))));
+  // }, []);
 
   // Capitalize Helper
   function capitalizeText(str = "") {
