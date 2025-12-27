@@ -54,8 +54,7 @@ export const NotificationService = {
     },
 
     async sendPush(recipient, title, body, url) {
-        const payload = JSON.stringify({ title, body, url });
-
+        console.log(`[Push Debug] Preparing to send push to ${recipient.email || recipient._id}`);
         // Clean up dead subscriptions
         const newSubscriptions = [];
 

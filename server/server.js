@@ -298,6 +298,7 @@ io.on("connection", (socket) => {
       await broadcastShopQueue(created.barberId, created.date);
 
       // 7️⃣ WEB PUSH: Notify Barber
+      console.log("[Push Debug] Triggering New Booking Push for Barber:", created.barberId);
       await NotificationService.send(
         created.barberId,
         'barber',
@@ -338,6 +339,7 @@ io.on("connection", (socket) => {
         // WEB PUSH: Notify User
         // Only if user exists (booking.userId)
         if (booking.userId) {
+          console.log("[Push Debug] Triggering Status Update Push for User:", booking.userId);
           await NotificationService.send(
             booking.userId,
             'user',
