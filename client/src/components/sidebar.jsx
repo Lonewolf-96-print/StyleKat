@@ -107,7 +107,7 @@ export function Sidebar() {
         <div className="hidden lg:flex flex-col gap-4 p-6 w-full mt-auto bg-gradient-to-t from-[#0f172a] to-transparent">
           <div className="bg-[#1e293b] rounded-xl p-4 border border-white/5">
             <h4 className="text-xs font-semibold text-slate-300 mb-1">Need Help?</h4>
-            <p className="text-[10px] text-slate-500 mb-2">Contact Us:support@stylekat.in</p>
+            <p className="text-[10px] text-slate-500 mb-2">Contact Us: support@stylekat.in</p>
             <div className="text-[10px] text-center text-slate-600 mt-2 font-mono">
               v1.0.0
             </div>

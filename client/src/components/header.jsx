@@ -28,7 +28,7 @@ export function Header({ onMenuClick }) {
   if (loading) return null;
 
   return (
-    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between">
+    <header className="bg-card border-b border-border px-6 py-4 flex items-center justify-between w-full">
       <div className="flex-1" />
 
       <div className="flex items-center gap-4">
