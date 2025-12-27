@@ -8,6 +8,7 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
 import { blockedTimesStore } from "../server.js";
 import { protectUser } from "../middleware/user.middleware.js";
+import { NotificationService } from "../services/NotificationService.js";
 
 dayjs.extend(customParseFormat);
 
@@ -274,6 +275,17 @@ router.post("/request", protectUser, async (req, res) => {
     req.io.to(shopRoom).emit("booking:new", saved);
 
     // console.log("✅ Booking created and emitted:", saved._id);
+
+    // 7️⃣ WEB PUSH: Notify Barber
+    console.log("[Push Debug] Triggering New Booking Push for Barber (REST):", saved.barberId);
+    await NotificationService.send(
+      saved.barberId,
+      'barber',
+      'New Booking Request',
+      `New appointment from ${customerName || 'Customer'}`,
+      '/dashboard/bookings' // Barber URL
+    );
+
     return res.status(201).json({ message: "Booking created successfully", booking: saved });
   } catch (err) {
     console.error("❌ Error creating booking:", err);
@@ -407,6 +419,16 @@ router.delete("/my/:id", protectUser, async (req, res) => {
       });
     }
 
+    // WEB PUSH: Notify Barber of Cancellation
+    console.log("[Push Debug] Triggering Cancellation Push for Barber (REST):", booking.barberId);
+    await NotificationService.send(
+      booking.barberId,
+      'barber',
+      'Booking Cancelled',
+      `Booking by ${booking.customerName} has been cancelled.`,
+      '/dashboard/bookings'
+    );
+
     return res.json({
       success: true,
       message: "Booking cancelled",
@@ -496,6 +518,18 @@ router.put("/status/:id", protect, async (req, res) => {
 
     req.io.to(`user-${booking.userId}`).emit("bookingStatusUpdate", booking);
     req.io.to(`shop-${booking.shopId}`).emit("bookingStatusUpdate", booking);
+
+    // WEB PUSH: Notify User
+    if (booking.userId && status !== "barber_deleted") {
+      console.log("[Push Debug] Triggering Status Update Push for User (REST):", booking.userId);
+      await NotificationService.send(
+        booking.userId,
+        'user',
+        `Booking ${status.charAt(0).toUpperCase() + status.slice(1)}`,
+        `Your appointment at ${booking.shopName || 'the salon'} is now ${status}.`,
+        '/dashboard/appointments' // User URL
+      );
+    }
 
     return res.json(booking);
   } catch (err) {
