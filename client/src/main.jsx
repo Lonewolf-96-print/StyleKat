@@ -14,7 +14,7 @@ import { CustomerProvider, useCustomer } from './contexts/CustomerContext.jsx';
 import { AuthModalProvider } from './contexts/AuthModelContext.jsx';
 import { BarberNotificationProvider } from './contexts/BarberNotificationContext.jsx';
 const client = import.meta.env.VITE_CLIENT_ID
-
+console.log("Google Client ID:", client)
 createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <CustomerProvider>
