@@ -82,7 +82,8 @@ const BackendShopPage = () => {
   }, [loading, shop]);
   useEffect(() => {
     console.log("Min Service Price:", minServicePrice);
-    console.log("Shop Services:", shop?.services);
+    console.log("Shop details", shop);
+    // console.log("Shop Services:", shop?.services);
     console.log("Min pricing", Math.min(...shop.services.map(s => Number(s.price))));
   }, []);
 
