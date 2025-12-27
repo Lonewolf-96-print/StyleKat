@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { ScrollArea } from "./ui/scroll-area"; // You might need a ScrollArea component or just use div with overflow
+// You might need a ScrollArea component or just use div with overflow
 
 export function TermsModal({ open, onOpenChange }) {
     return (
