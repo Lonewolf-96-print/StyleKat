@@ -129,7 +129,7 @@ export const BarberNotificationProvider = ({ children }) => {
     });
 
     const handleNewNotification = (data, type, defaultMsg) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      // Removed global audio trigger to handle per-event logic
       addNotification({
         id: data._id || Date.now().toString(),
         type: type,
@@ -140,6 +140,7 @@ export const BarberNotificationProvider = ({ children }) => {
     };
 
     socket.on("newBookingRequest", (booking) => {
+      new Audio("/notify.mp3").play().catch((e) => console.log("Audio play failed", e));
       handleNewNotification(booking, "newBookingRequest", `New booking from ${booking.customerName}`);
     });
 

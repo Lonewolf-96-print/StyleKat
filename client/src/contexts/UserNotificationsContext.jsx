@@ -152,7 +152,7 @@ export const NotificationProvider = ({ children }) => {
     /* -------- EVENTS -------- */
 
     socket.on("booking:new", (booking) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      new Audio("/notify.mp3").play().catch((e) => console.log("Audio play failed", e));
       addNotification({
         type: "booking:new",
         message: `New booking from ${booking.customerName}`,
@@ -161,7 +161,7 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socket.on("user:bookingCreated", (booking) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      // No audio for self-action
       addNotification({
         type: "booking:new",
         message: `Booking request sent to ${booking.shopName || "salon"}`,
@@ -175,7 +175,7 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socket.on("bookingStatusUpdate", (info) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      new Audio("/notify.mp3").play().catch((e) => console.log("Audio play failed", e));
       addNotification({
         id: info._id ?? info.bookingId ?? crypto.randomUUID(),
         type: "bookingStatusUpdate",
@@ -195,7 +195,7 @@ export const NotificationProvider = ({ children }) => {
 
 
     socket.on("booking:updated", (info) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      new Audio("/notify.mp3").play().catch((e) => console.log("Audio play failed", e));
       addNotification({
         type: "bookingUpdated",
         message: `Booking updated`,
@@ -204,7 +204,7 @@ export const NotificationProvider = ({ children }) => {
     });
 
     socket.on("notification", (n) => {
-      new Audio("/notification.mp3").play().catch((e) => console.log("Audio play failed", e));
+      new Audio("/notify.mp3").play().catch((e) => console.log("Audio play failed", e));
       addNotification(n);
     });
 

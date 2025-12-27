@@ -7,7 +7,7 @@ self.addEventListener("push", (event) => {
         icon: "/main-logo.png", // Using existing asset
         badge: "/main-logo.png", // Using existing asset
         vibrate: [200, 100, 200],
-        sound: "/notification.mp3",
+        sound: "/notify.mp3",
         data: {
             url: url || "/",
         },
