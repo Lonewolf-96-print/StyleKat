@@ -38,6 +38,14 @@ const statusStripColors = {
   cancelled: "bg-red-500",
   "in-service": "bg-purple-500",
 };
+function capitalizeName(name) {
+  return name
+    .toLowerCase()
+    .split(" ")
+    .filter(Boolean)
+    .map(word => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+}
 
 export function AppointmentsList() {
   const { t } = useTranslation();
@@ -272,7 +280,7 @@ export function AppointmentsList() {
                       </Avatar>
                       <div className="space-y-1">
                         <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
-                          {appointment.customerName}
+                          {capitalizeName(appointment.customerName)}
                         </h3>
                         <div className="flex items-center text-sm text-muted-foreground">
                           <Phone className="h-3 w-3 mr-1" />
