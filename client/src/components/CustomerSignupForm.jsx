@@ -12,7 +12,7 @@ import { Label } from "../components/ui/label";
 import { Mail, Lock, User, MessageSquare, Store, Eye, Laugh, EyeOff } from "lucide-react";
 import { useAuthModal } from "../contexts/AuthModelContext";
 import { TermsModal } from "./terms-modal";
-import { Checkbox } from "./ui/checkbox";
+import { Checkbox } from "../components/ui/checkbox";
 
 export function CustomerSignupForm() {
   const { setCustomer, setCustomerToken } = useCustomer();
