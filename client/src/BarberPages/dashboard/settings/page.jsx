@@ -210,192 +210,197 @@ export default function SettingsPage() {
     );
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen gap-6">
+    <div className="min-h-screen bg-gray-50">
       {/* Sidebar (Fixed) */}
       <DashboardSidebar />
 
-      {/* Desktop Layout Spacer */}
-      <div className="hidden lg:block w-64 flex-shrink-0" />
+      {/* Main Layout Wrapper */}
+      <div className="lg:pl-72 flex flex-col min-h-screen transition-all duration-300">
 
-      {/* Main Content */}
-      <div className="flex-1 p-4 sm:p-6 space-y-6 max-w-6xl mx-auto w-full">
+        {/* Main Content Area */}
+        <main className="flex-1 p-4 sm:p-8 space-y-8 w-full">
+          <DashboardHeader />
 
-        <DashboardHeader />
-
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">{t("settings.title")}</h1>
-          <p className="text-muted-foreground">{t("settings.subtitle")}</p>
-        </div>
-
-        {/* Hero / Identity Section */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Left Column: Identity & Contact */}
-          <div className="xl:col-span-2 space-y-6">
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Salon Details</CardTitle>
-                <CardDescription>How your business appears to customers</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="salonName">{t("settings.salonName")}</Label>
-                    <Input
-                      id="salonName"
-                      value={formData.salonName}
-                      onChange={handleChange}
-
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ownerName">{t("settings.ownerName")}</Label>
-                    <Input
-                      id="ownerName"
-                      value={formData.ownerName}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Details</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone">{t("settings.phoneNumber")}</Label>
-                    <Input id="phone" value={formData.phone} onChange={handleChange} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">{t("settings.email")}</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="website">Website (Optional)</Label>
-                  <Input
-                    id="website"
-                    value={formData.website}
-                    onChange={handleChange}
-                    placeholder="https://..."
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">{t("settings.title")}</h1>
+            <p className="text-muted-foreground mt-1">{t("settings.subtitle")}</p>
           </div>
 
-          {/* Right Column: Location & Notifications */}
-          <div className="space-y-6">
+          {/* Hero / Identity Section */}
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+            {/* Left Column: Identity & Contact */}
+            <div className="xl:col-span-2 space-y-8">
 
-            {/* Notification Settings */}
-            <NotificationSettings
-              role="barber"
-              userId={shopId}
-              initialPreferences={formData.notificationPreferences}
-            />
+              <Card className="border-0 shadow-sm ring-1 ring-gray-200">
+                <CardHeader>
+                  <CardTitle>Salon Details</CardTitle>
+                  <CardDescription>How your business appears to customers</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="salonName">{t("settings.salonName")}</Label>
+                      <Input
+                        id="salonName"
+                        value={formData.salonName}
+                        onChange={handleChange}
+                        className="bg-gray-50/50"
 
-            <Card className="h-full flex flex-col">
-              <CardHeader>
-                <CardTitle>Location</CardTitle>
-                <CardDescription>Address & Map Position</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4 flex-1">
-                <div className="space-y-2">
-                  <Label htmlFor="address">{t("settings.address")}</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    className="min-h-[100px]"
-                  />
-                </div>
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="ownerName">{t("settings.ownerName")}</Label>
+                      <Input
+                        id="ownerName"
+                        value={formData.ownerName}
+                        onChange={handleChange}
+                        className="bg-gray-50/50"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                <div className="grid grid-cols-1 gap-4">
+              <Card className="border-0 shadow-sm ring-1 ring-gray-200">
+                <CardHeader>
+                  <CardTitle>Contact Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">{t("settings.phoneNumber")}</Label>
+                      <Input id="phone" value={formData.phone} onChange={handleChange} className="bg-gray-50/50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="email">{t("settings.email")}</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="bg-gray-50/50"
+                      />
+                    </div>
+                  </div>
                   <div className="space-y-2">
-                    <Label htmlFor="city">City</Label>
-                    <Input id="city" value={formData.city} onChange={handleChange} onBlur={handleBlur} />
+                    <Label htmlFor="website">Website (Optional)</Label>
+                    <Input
+                      id="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      placeholder="https://..."
+                      className="bg-gray-50/50"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+            </div>
+
+            {/* Right Column: Location & Notifications */}
+            <div className="space-y-8">
+
+              {/* Notification Settings */}
+              <NotificationSettings
+                role="barber"
+                userId={shopId}
+                initialPreferences={formData.notificationPreferences}
+              />
+
+              <Card className="h-full flex flex-col border-0 shadow-sm ring-1 ring-gray-200">
+                <CardHeader>
+                  <CardTitle>Location</CardTitle>
+                  <CardDescription>Address & Map Position</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 flex-1">
+                  <div className="space-y-2">
+                    <Label htmlFor="address">{t("settings.address")}</Label>
+                    <Textarea
+                      id="address"
+                      value={formData.address}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      className="min-h-[100px] bg-gray-50/50"
+                    />
                   </div>
 
-                </div>
+                  <div className="grid grid-cols-1 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input id="city" value={formData.city} onChange={handleChange} onBlur={handleBlur} className="bg-gray-50/50" />
+                    </div>
 
-
-                <div className="pt-4 border-t">
-                  <div className="flex items-center justify-between mb-2">
-                    <Label>Map Location</Label>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setShopCoords(formData.coords || [20.5937, 78.9629]);
-                        setIsMapOpen(true);
-                      }}
-                    >
-                      <MapPin className="mr-1 h-3.5 w-3.5" />
-                      Update on Map
-                    </Button>
                   </div>
 
-                  {/* Mini Map Preview */}
-                  <div className="h-48 min-h-[12rem] w-full rounded-lg overflow-hidden border border-gray-200 relative">
 
-                    {formData.coords && formData.coords.lat ? (
-                      <MapContainer
-                        ref={mapRef}
-                        center={[formData.coords.lat, formData.coords.lng]}
-                        zoom={14}
-                        scrollWheelZoom={false}
-                        dragging={false}
-                        zoomControl={false}
-                        style={{ height: "100%", width: "100%" }}
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center justify-between mb-2">
+                      <Label>Map Location</Label>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setShopCoords(formData.coords || [20.5937, 78.9629]);
+                          setIsMapOpen(true);
+                        }}
                       >
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <Marker position={[formData.coords.lat, formData.coords.lng]} />
-                      </MapContainer>
-                    ) : (
-                      <div className="h-full w-full flex items-center justify-center text-muted-foreground text-sm">
-                        No location set
-                      </div>
+                        <MapPin className="mr-1 h-3.5 w-3.5" />
+                        Update on Map
+                      </Button>
+                    </div>
+
+                    {/* Mini Map Preview */}
+                    <div className="h-48 min-h-[12rem] w-full rounded-lg overflow-hidden border border-gray-200 relative">
+
+                      {formData.coords && formData.coords.lat ? (
+                        <MapContainer
+                          ref={mapRef}
+                          center={[formData.coords.lat, formData.coords.lng]}
+                          zoom={14}
+                          scrollWheelZoom={false}
+                          dragging={false}
+                          zoomControl={false}
+                          style={{ height: "100%", width: "100%" }}
+                        >
+                          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                          <Marker position={[formData.coords.lat, formData.coords.lng]} />
+                        </MapContainer>
+                      ) : (
+                        <div className="h-full w-full flex items-center justify-center text-muted-foreground text-sm">
+                          No location set
+                        </div>
+                      )}
+                    </div>
+                    {formData.coords?.lat && (
+                      <p className="text-xs text-muted-foreground mt-2 text-right">
+                        {formData.coords.lat.toFixed(6)}, {formData.coords.lng.toFixed(6)}
+                      </p>
                     )}
                   </div>
-                  {formData.coords?.lat && (
-                    <p className="text-xs text-muted-foreground mt-2 text-right">
-                      {formData.coords.lat.toFixed(6)}, {formData.coords.lng.toFixed(6)}
-                    </p>
-                  )}
-                </div>
 
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
+
           </div>
 
+          {/* Save Button */}
+          <div className="flex justify-end pt-4">
+            <Button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center w-full sm:w-auto h-11 px-8 text-base shadow-lg hover:shadow-xl transition-all"
+            >
+              <Save className="mr-2 h-5 w-5" />
+              {saving ? "Saving..." : t("settings.saveSettings")}
+            </Button>
+          </div>
+
+        </main>
+
+        <div className="mt-auto">
+          <DashboardFooter />
         </div>
-
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <Button
-            onClick={handleSave}
-            disabled={saving}
-            className="flex items-center w-full sm:w-auto"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            {saving ? "Saving..." : t("settings.saveSettings")}
-          </Button>
-        </div>
-
-
-
-        <DashboardFooter />
       </div >
     </div >
   );

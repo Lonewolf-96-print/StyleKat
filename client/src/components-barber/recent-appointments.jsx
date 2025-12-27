@@ -81,6 +81,10 @@ export function RecentAppointments() {
     // console.log("Username", customerName);
     // console.log("Booking:", bookings)
   }, [token]);
+  const visibleBookings = todayBookings.filter(
+    (booking) =>
+      booking.status?.toLowerCase() !== "barber_deleted"
+  );
   return (
 
     <Card className="border-0 shadow-md">
@@ -114,7 +118,7 @@ export function RecentAppointments() {
           <div className="p-8 text-center text-muted-foreground bg-gray-50/50">
             Bookings are hidden.
           </div>
-        ) : todayBookings.length === 0 ? (
+        ) : visibleBookings.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-12 text-center">
             <div className="h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center mb-3">
               <Calendar className="h-6 w-6 text-gray-400" />
@@ -124,7 +128,7 @@ export function RecentAppointments() {
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {todayBookings.map((appointment) => (
+            {visibleBookings.map((appointment) => (
               <div key={appointment._id} className="p-4 hover:bg-gray-50/50 transition-colors group">
                 <div className="flex items-start gap-4">
                   {/* Time Column */}

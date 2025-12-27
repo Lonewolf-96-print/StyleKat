@@ -19,7 +19,7 @@ export default function CalendarStrip({ allBookings = [], statusColors }) {
     const resize = () => {
       if (window.innerWidth <= 640) setDaysToShow(5);
       else if (window.innerWidth <= 1024) setDaysToShow(7);
-      else setDaysToShow(10);
+      else setDaysToShow(15);
     };
     resize();
     window.addEventListener("resize", resize);

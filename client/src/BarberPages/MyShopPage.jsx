@@ -241,171 +241,170 @@ export default function MyShopPage() {
   // 5️⃣ RENDER
   // ---------------------------------------------------------
   return (
-    <div className="flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-gray-50">
 
+      {/* Fixed Sidebar */}
+      <DashboardSidebar />
 
+      {/* Main Layout Wrapper */}
+      <div className="lg:pl-72 flex flex-col min-h-screen transition-all duration-300">
 
-      <div className="w-full lg:w-64 flex-shrink-0">
+        {/* Main Content */}
+        <div className="flex-1 p-4 sm:p-8 space-y-8 w-full">
+          <DashboardHeader />
 
-        <DashboardSidebar />
-      </div>
-
-
-
-      <div className="flex-1 p-6 space-y-6">
-
-
-
-        <DashboardHeader />
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">{t("myShop.title")}</h1>
-            <p className="text-muted-foreground">{t("myShop.subtitle")}</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">{t("myShop.title")}</h1>
+              <p className="text-muted-foreground mt-1">{t("myShop.subtitle")}</p>
+            </div>
           </div>
-        </div>
-        <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {sortedQueue.map((seat) => (
-            <SeatCard key={seat.staffId} seat={{ name: seat.staffName }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-              <div className="relative space-y-3">
+            {sortedQueue.map((seat) => (
+              <SeatCard key={seat.staffId} seat={{ name: seat.staffName }}>
 
-                {/* 🔥 SERVICE STARTED BADGE */}
-                {(seat.current?.status === "in-service" || seat.serviceStarted) && (
-                  <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded shadow">
-                    Service Started
-                  </div>
-                )}
+                <div className="relative space-y-3">
 
-                {seat.current ? (
-                  <div className="p-3 bg-blue-50 rounded">
-                    <p className="text-sm text-gray-700">
-                      <span className="font-semibold">Customer : </span>
-                      {seat.current.customerName || "No one on chair"}
-
-                    </p>
-                    <div className="text-sm text-gray-600">
-                      {seat.current.service || "Waiting..."}
+                  {/* 🔥 SERVICE STARTED BADGE */}
+                  {(seat.current?.status === "in-service" || seat.serviceStarted) && (
+                    <div className="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded shadow">
+                      Service Started
                     </div>
+                  )}
 
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="w-4 h-4" />
+                  {seat.current ? (
+                    <div className="p-3 bg-blue-50 rounded border border-blue-100">
+                      <p className="text-sm text-gray-700">
+                        <span className="font-semibold">Customer : </span>
+                        {seat.current.customerName || "No one on chair"}
 
-                      {seat.current.startTime
-                        ? `Expected Start Time: ${formatTime(seat.current.startTime)} `
-                        : "Not started"}
-                    </div>
-
-                    {/* 🔥 BUTTONS */}
-                    {/* BUTTONS */}
-                    <div className="flex gap-2 mt-2">
-
-                      {/* START BUTTON — only visible if service not started */}
-                      {seat.current && seat.current.status !== "in-service" && (
-                        <Button
-                          size="sm"
-                          variant="default"
-                          onClick={async () => {
-                            await handleStartService(seat.current);
-
-                            // mark this seat as "service started"
-                            setStaff((prev) =>
-                              prev.map((s) =>
-                                s._id === seat.staffId
-                                  ? { ...s, serviceStarted: true }
-                                  : s
-                              )
-                            );
-                          }}
-                        >
-                          Start
-                        </Button>
-                      )}
-
-                      {/* FINISH button appears always when customer exists */}
-                      {seat.current && (
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleFinishService(seat.current)}
-                        >
-                          Finish
-                        </Button>
-                      )}
-                    </div>
-
-                  </div>
-                ) : (
-                  <div className="p-3 bg-gray-50 rounded text-sm text-gray-600">
-                    Chair free
-                  </div>
-                )}
-
-                {/* QUEUE LIST */}
-                {/* QUEUE LIST */}
-                <div className="flex-1 min-h-0 flex flex-col">
-                  <div className="text-xs text-muted-foreground mb-2 flex justify-between items-center">
-                    <span>Up next</span>
-                    <span className="bg-secondary px-2 py-0.5 rounded-full text-[10px] text-secondary-foreground">
-                      {seat.queue.length} in waiting
-                    </span>
-                  </div>
-
-                  {seat.queue.length === 0 ? (
-                    <div className="text-sm text-gray-500 py-4 text-center italic">No queued customers</div>
-                  ) : (
-                    <>
-                      <div className="max-h-[160px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
-                        {seat.queue.slice(0, 10).map((q) => (
-                          <div
-                            key={q._id}
-                            className="p-2 border rounded-md flex justify-between items-center bg-card/50 hover:bg-accent/5 transition-colors"
-                          >
-                            <div className="min-w-0">
-                              <div className="font-medium truncate text-sm">{q.customerName}</div>
-                              <div className="text-xs text-muted-foreground truncate">{q.service}</div>
-                            </div>
-                            <div className="flex flex-col items-end shrink-0 ml-2">
-                              {/* TIME */}
-                              <div className="text-xs font-mono text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                                {q.startTime
-                                  ? new Date(q.startTime).toLocaleTimeString([], {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })
-                                  : q.time}
-                              </div>
-
-                              {/* 🔥 PENDING BADGE */}
-                              {q.status === "pending" && (
-                                <span className="mt-1 text-[10px] px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-700 font-medium border border-yellow-200">
-                                  Pending
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        ))}
+                      </p>
+                      <div className="text-sm text-gray-600">
+                        {seat.current.service || "Waiting..."}
                       </div>
 
-                      {seat.queue.length > 10 && (
-                        <div className="pt-2 text-center border-t mt-2">
-                          <span className="text-xs text-muted-foreground">
-                            + {seat.queue.length - 10} more bookings
-                          </span>
-                          {/* You could add a dialog trigger here to view all */}
-                        </div>
-                      )}
-                    </>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                        <Clock className="w-3.5 h-3.5" />
+
+                        {seat.current.startTime
+                          ? `Start: ${formatTime(seat.current.startTime)} `
+                          : "Not started"}
+                      </div>
+
+                      {/* 🔥 BUTTONS */}
+                      <div className="flex gap-2 mt-3">
+
+                        {/* START BUTTON — only visible if service not started */}
+                        {seat.current && seat.current.status !== "in-service" && (
+                          <Button
+                            size="sm"
+                            className="w-full bg-blue-600 hover:bg-blue-700"
+                            onClick={async () => {
+                              await handleStartService(seat.current);
+
+                              // mark this seat as "service started"
+                              setStaff((prev) =>
+                                prev.map((s) =>
+                                  s._id === seat.staffId
+                                    ? { ...s, serviceStarted: true }
+                                    : s
+                                )
+                              );
+                            }}
+                          >
+                            Start
+                          </Button>
+                        )}
+
+                        {/* FINISH button appears always when customer exists */}
+                        {seat.current && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="w-full"
+                            onClick={() => handleFinishService(seat.current)}
+                          >
+                            Finish
+                          </Button>
+                        )}
+                      </div>
+
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-gray-50/50 border border-dashed border-gray-200 rounded text-sm text-gray-500 text-center italic">
+                      Chair is currently free
+                    </div>
                   )}
+
+                  {/* QUEUE LIST */}
+                  <div className="flex-1 min-h-0 flex flex-col pt-2">
+                    <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 flex justify-between items-center">
+                      <span>Up next</span>
+                      <span className="bg-gray-100 px-2 py-0.5 rounded-full text-[10px] text-gray-600 font-bold border border-gray-200">
+                        {seat.queue.length}
+                      </span>
+                    </div>
+
+                    {seat.queue.length === 0 ? (
+                      <div className="text-sm text-gray-400 py-6 text-center italic bg-gray-50/30 rounded border border-transparent">No queued customers</div>
+                    ) : (
+                      <>
+                        <div className="max-h-[160px] overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+                          {seat.queue.slice(0, 10).map((q) => (
+                            <div
+                              key={q._id}
+                              className="p-2.5 border rounded-lg flex justify-between items-center bg-white shadow-sm hover:shadow-md transition-all"
+                            >
+                              <div className="min-w-0">
+                                <div className="font-semibold text-gray-900 truncate text-sm">{q.customerName}</div>
+                                <div className="text-xs text-gray-500 truncate">{q.service}</div>
+                              </div>
+                              <div className="flex flex-col items-end shrink-0 ml-2">
+                                {/* TIME */}
+                                <div className="text-[10px] font-mono font-medium text-gray-500 bg-gray-100 px-1.5 py-0.5 rounded">
+                                  {q.startTime
+                                    ? new Date(q.startTime).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })
+                                    : q.time}
+                                </div>
+
+                                {/* 🔥 PENDING BADGE */}
+                                {q.status === "pending" && (
+                                  <span className="mt-1 text-[10px] px-1.5 py-0.5 rounded bg-yellow-50 text-yellow-600 font-bold border border-yellow-100">
+                                    Pending
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {seat.queue.length > 10 && (
+                          <div className="pt-2 text-center border-t border-dashed mt-2">
+                            <span className="text-xs text-muted-foreground font-medium hover:text-blue-600 cursor-pointer">
+                              + {seat.queue.length - 10} more bookings
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+
                 </div>
+              </SeatCard>
 
-              </div>
-            </SeatCard>
+            ))}
+          </div>
 
-          ))}
         </div>
 
-        <DashboardFooter />
+        <div className="mt-auto">
+          <DashboardFooter />
+        </div>
       </div>
     </div>
   );
